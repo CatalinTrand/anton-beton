@@ -1,6 +1,7 @@
 {
   "register_instead": "No account? Register instead",
   "i_want_concrete_here": "I want concrete here",
+  "address_search": "Choose delivery address",
   "destination": "Destination",
   "yes": "Yes",
   "no": "No",
@@ -66,7 +67,7 @@
   "no_account": "Don't have account?",
   "step": "Step",
   "phone_number": "Phone number",
-  "address": "Address",
+  "address": "Type address here...",
   "change_profile_photo": "Change profile photo",
   "agree_terms": "I agree with the terms and conditions.",
   "agree_privacy": "I agree with the privacy policy",

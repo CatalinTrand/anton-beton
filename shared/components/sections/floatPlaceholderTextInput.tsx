@@ -80,7 +80,7 @@ const FloatPlaceholderTextInput = (props) => {
                 backgroundColor: !isFocused ? Colors.borderGrey : 'transparent',
                 borderWidth: !isFocused ? 0 : 1,
                 borderColor: !isFocused ? 'transparent' : Colors.orange,
-              },
+              }, extraStyle
             ]}
             value={value}
             onFocus={handleFocus}
