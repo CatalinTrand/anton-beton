@@ -4,7 +4,7 @@ import MapView from "react-native-maps";
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import I18n from '../../shared/I18n/I18n';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, ImageBackground, Image} from 'react-native';
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {CustomIcons} from "../../shared/themes";
@@ -76,6 +76,8 @@ const MapScreen = ({route, navigation}) => {
       .catch(error => console.warn(error));
   };
 
+  let markerIcon = require("../assets/images/flag_marker.png");
+
   return (
     <View style={MapScreenLtrStyle.container}>
       <View style={MapScreenLtrStyle.topPart}>
@@ -132,7 +134,8 @@ const MapScreen = ({route, navigation}) => {
                 key={1}
                 coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
                 title={I18n.t('destination')}
-              /> : null
+                icon={markerIcon}
+              />: null
             }
           </MapView>
       }
