@@ -26,6 +26,7 @@ import ProfilePicker from '../../screens/profilePicker';
 import DocumentSelector from "../../screens/documentSelector";
 import PaymentScreen from "../../screens/paymentScreen";
 import MapScreen from "../../screens/mapScreen";
+import AppointmentScreen from "../../screens/appointmentScreen";
 
 const HomeStackNavigator = () => {
   const Stack = createStackNavigator();
@@ -164,6 +165,7 @@ const MainAppNavigation = () => {
     >
       <Stack.Screen name="HomeStackNavigator" component={HomeStackNavigator} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
+      <Stack.Screen name="AppointmentScreen" component={AppointmentScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfile} />
       <Stack.Screen name="ScheduleCalendar" component={ScheduleCalendar} />
       <Stack.Screen name="ProfilePicker" component={ProfilePicker} />

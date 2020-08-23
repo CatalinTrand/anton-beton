@@ -113,6 +113,28 @@ const GlobalLtrStyle = StyleSheet.create({
     height: 10,
     borderRadius: 100,
   },
+  lang_switcher: {
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selected_lang: {
+    marginLeft: 7,
+    marginRight: 7,
+    fontSize: Fonts.regular,
+    color: Colors.primaryDark,
+    textDecorationLine: "underline",
+    textDecorationStyle: "solid",
+    textDecorationColor: Colors.primaryDark
+  },
+  unselected_lang: {
+    marginLeft: 7,
+    marginRight: 7,
+    fontSize: Fonts.regular,
+    color: Colors.darkGrey
+  }
 });
 
 export default GlobalLtrStyle;

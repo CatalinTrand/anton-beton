@@ -69,8 +69,27 @@ const MapScreenLtrStyle = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+  button_disabled: {
+    marginTop: 'auto',
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 7,
+    borderColor: Colors.lightGrey,
+    borderWidth: 1,
+    backgroundColor: Colors.grey,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
   button_text: {
     color: Colors.white,
+    fontSize: Fonts.regular
+  },
+  button_disabled_text: {
+    color: Colors.darkGrey,
     fontSize: Fonts.regular
   }
 });

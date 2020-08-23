@@ -14,9 +14,12 @@ import Header from "../components/sections/header";
 import FloatPlaceholderTextInput from "../../shared/components/sections/floatPlaceholderTextInput";
 
 let _mapView: MapView | null;
-let once = false;
 
 const MapScreen = ({route, navigation}) => {
+
+  let once = false;
+  let { lng } = route.params;
+  I18n.locale = lng;
 
   // @ts-ignore
   Geocoder.init("AIzaSyD6mSS2a-dROWPXMaS6f8VFIj53B6uLSCU");
@@ -54,6 +57,22 @@ const MapScreen = ({route, navigation}) => {
     });
   };
 
+  const loadAppointmentScreen = () => {
+    if (marker.latitude == null)
+      return;
+
+    // @ts-ignore
+    Geocoder.from(marker.latitude, marker.longitude)
+      .then(json => {
+        let addressComponent = json.results[0].formatted_address;
+        navigation.navigate('AppointmentScreen', {
+          destination_coords: marker,
+          destination_name: addressComponent
+        });
+      })
+      .catch(error => console.warn(error));
+  };
+
   const searchAddress = (address) => {
     // @ts-ignore
     Geocoder.from(address)
@@ -85,6 +104,7 @@ const MapScreen = ({route, navigation}) => {
           placement="left"
           leftComponent={
             <CustomIcons
+              style={{marginTop: 15}}
               size={Fonts.medium}
               color={Colors.black}
               name="arrow-back"
@@ -92,7 +112,7 @@ const MapScreen = ({route, navigation}) => {
             />
           }
           centerComponent={
-            <View style={MapScreenLtrStyle.title}>
+            <View style={[MapScreenLtrStyle.title, {marginTop: 15}]}>
               <Text style={MapScreenLtrStyle.title_text}>{I18n.t('address_search')}</Text>
             </View>
           }
@@ -135,12 +155,14 @@ const MapScreen = ({route, navigation}) => {
                 coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
                 title={I18n.t('destination')}
                 icon={markerIcon}
-              />: null
+              /> : null
             }
           </MapView>
       }
-      <TouchableOpacity style={MapScreenLtrStyle.button}>
-        <Text style={MapScreenLtrStyle.button_text}>{I18n.t('i_want_concrete_here')}</Text>
+      <TouchableOpacity style={marker.latitude != null ? MapScreenLtrStyle.button : MapScreenLtrStyle.button_disabled}
+                        onPress={() => loadAppointmentScreen()}>
+        <Text
+          style={marker.latitude != null ? MapScreenLtrStyle.button_text : MapScreenLtrStyle.button_disabled_text}>{I18n.t('i_want_concrete_here')}</Text>
       </TouchableOpacity>
     </View>
   );

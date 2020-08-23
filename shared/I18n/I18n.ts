@@ -3,7 +3,7 @@ import en from './locales/en.json';
 import ro from './locales/ro.json';
 
 I18n.locale = 'ro';
-I18n.default = 'en';
+I18n.default = 'ro';
 
 I18n.fallbacks = true;
 I18n.translations = {
