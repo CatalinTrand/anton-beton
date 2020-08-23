@@ -5,20 +5,20 @@
 
 ### Pasul 1
 
-'''
+```
 npm install
-'''
+```
 
 
 ### Pasul 2
 Editat node_modules/react-native-maps/lib/blablabla/AirMapModule.java si adaugat functia:
 
-'''
+```
 @Override    
 public boolean canOverrideExistingModule() {        
   return true;    
 }
-'''
+```
 
 in acea clasa.
 
