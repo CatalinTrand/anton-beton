@@ -69,7 +69,28 @@ const appointmentScreenLtrStyle = StyleSheet.create({
   },
   delivery_time_value: {
     fontSize: Fonts.medium
-  }
+  },
+  quantity_container: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    padding: 15,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  quantity_unit: {
+    marginLeft: 0,
+    paddingLeft: 0,
+    fontSize: Fonts.h6,
+  },
+  price_unit: {
+    marginTop: 10,
+    marginLeft: 0,
+    paddingLeft: 0,
+    fontSize: Fonts.regular,
+  },
 });
 
 export default appointmentScreenLtrStyle;

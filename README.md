@@ -1,5 +1,5 @@
 # Anton
-###Aplicatie de livrat beton printr-un sistem tip
+### Aplicatie de livrat beton printr-un sistem tip licitatie.
 
 ## Instructiuni de instalare
 
