@@ -29,6 +29,7 @@ const AppointmentScreen = ({route, navigation}) => {
     <View style={AppointmentScreenLtrStyle.container}>
       <Header
         placement="left"
+        containerPaddingBottom={10}
         leftComponent={
           <CustomIcons
             size={Fonts.medium}
@@ -44,7 +45,7 @@ const AppointmentScreen = ({route, navigation}) => {
           </View>
         }
         rightComponent={null}
-        noBorder={true}
+        noBorder={false}
       />
       <ScrollView>
         <View style={AppointmentScreenLtrStyle.inputs}>

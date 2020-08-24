@@ -91,7 +91,17 @@ const MapScreenLtrStyle = StyleSheet.create({
   button_disabled_text: {
     color: Colors.darkGrey,
     fontSize: Fonts.regular
-  }
+  },
+  recenter_button: {
+    backgroundColor: Colors.lightGrey,
+    padding: 5,
+    opacity: 0.6,
+    borderRadius: 10,
+    marginTop: 'auto',
+    marginBottom: 0,
+    marginLeft: 'auto',
+    marginRight: 10,
+  },
 });
 
 export default MapScreenLtrStyle;

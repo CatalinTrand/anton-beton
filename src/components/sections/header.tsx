@@ -13,6 +13,7 @@ const Header = (props): JSX.Element => {
         justifyContent: 'space-around',
         shadowColor: Colors.black,
         marginBottom: props.noBorder ? -5 : 0,
+        paddingBottom: props.containerPaddingBottom ? props.containerPaddingBottom : 0,
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 1,
         shadowRadius: 2,

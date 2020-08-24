@@ -4,7 +4,7 @@ import MapView from "react-native-maps";
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import I18n from '../../shared/I18n/I18n';
-import {Text, View, TouchableOpacity, ImageBackground, Image} from 'react-native';
+import {Text, View, TouchableOpacity, ImageBackground, Image, Dimensions} from 'react-native';
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {CustomIcons} from "../../shared/themes";
@@ -20,13 +20,16 @@ const MapScreen = ({route, navigation}) => {
   let once = false;
   let { lng } = route.params;
   I18n.locale = lng;
+  const defaultLatZoom = 3.88 * 0.00522;
+  const defaultLngZoom = 3.88 * Dimensions.get("window").width / Dimensions.get("window").height * 0.00522;
 
   // @ts-ignore
   Geocoder.init("AIzaSyD6mSS2a-dROWPXMaS6f8VFIj53B6uLSCU");
 
   const [marker, setMarker] = useState({latitude: null, longitude: null});
-  const [mapRegion, setMapRegion] = useState({latitude: 0, longitude: 0, latitudeDelta: 1, longitudeDelta: 1});
+  const [mapRegion, setMapRegion] = useState({latitude: 0, longitude: 0, latitudeDelta: defaultLatZoom, longitudeDelta: defaultLngZoom});
   const [address, setAddress] = useState('');
+  const [width, setWidth] = useState('99.9%');
 
   const monitorPosition = () => {
     Geolocation.getCurrentPosition(position => {
@@ -34,8 +37,8 @@ const MapScreen = ({route, navigation}) => {
           setMapRegion({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 1,
-            longitudeDelta: 1,
+            latitudeDelta: defaultLatZoom,
+            longitudeDelta: defaultLngZoom,
           });
       },
       error => {
@@ -88,11 +91,25 @@ const MapScreen = ({route, navigation}) => {
               longitude: location.lng
             },
             zoom: 15,
-          },);
+          });
         }
-        setMapRegion({latitude: location.lat, longitude: location.lng, latitudeDelta: 1, longitudeDelta: 1});
+        setMapRegion({latitude: location.lat, longitude: location.lng, latitudeDelta: defaultLatZoom, longitudeDelta: defaultLngZoom});
       })
       .catch(error => console.warn(error));
+  };
+
+  const recenterMap = () => {
+    if(_mapView == null || mapRegion.latitude == 0)
+      return;
+
+    _mapView.animateCamera({
+      center: {
+        latitude: mapRegion.latitude,
+        longitude: mapRegion.longitude
+      },
+      zoom: 15,
+    });
+    setWidth('100.01%');
   };
 
   let markerIcon = require("../assets/images/flag_marker.png");
@@ -139,7 +156,8 @@ const MapScreen = ({route, navigation}) => {
       {
         mapRegion.latitude == 0 ? null :
           <MapView
-            style={MapScreenLtrStyle.map}
+            style={[MapScreenLtrStyle.map,{width: width}]}
+            onMapReady={() => setWidth( '100%' )}
             customMapStyle={MapStyle}
             initialRegion={mapRegion}
             onPress={(e) => handleMapPress(e)}
@@ -159,8 +177,15 @@ const MapScreen = ({route, navigation}) => {
             }
           </MapView>
       }
-      <TouchableOpacity style={marker.latitude != null ? MapScreenLtrStyle.button : MapScreenLtrStyle.button_disabled}
-                        onPress={() => loadAppointmentScreen()}>
+      <TouchableOpacity style={MapScreenLtrStyle.recenter_button} onPress={() => recenterMap()}>
+        <CustomIcons
+          size={Fonts.h5}
+          color={Colors.black}
+          style={{opacity: 1}}
+          name="target"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={marker.latitude != null ? MapScreenLtrStyle.button : MapScreenLtrStyle.button_disabled} onPress={() => loadAppointmentScreen()}>
         <Text
           style={marker.latitude != null ? MapScreenLtrStyle.button_text : MapScreenLtrStyle.button_disabled_text}>{I18n.t('i_want_concrete_here')}</Text>
       </TouchableOpacity>

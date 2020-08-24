@@ -22,8 +22,6 @@ const appointmentScreenLtrStyle = StyleSheet.create({
   inputs: {
     padding: 15,
     marginTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: Colors.grey,
   },
   delivery_address: {
     marginTop: 10,

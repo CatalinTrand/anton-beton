@@ -24,3 +24,5 @@ in acea clasa.
 
 ### Pasul 3
 La node_modules/moment/moment.js, codul trebuie inlocuit cu acesta : https://momentjs.com/downloads/moment-with-locales.js
+
+De asemenea, de cautat sectiunea de 'ro' si scris numele intregi de luni cu majuscula.
