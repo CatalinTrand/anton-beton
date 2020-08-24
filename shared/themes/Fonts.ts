@@ -22,6 +22,7 @@ const size = {
   medium: responsiveFont(14),
   small: responsiveFont(12),
   tiny: responsiveFont(8.5),
+  iconMap: responsiveFont(23),
 };
 
 export default size;

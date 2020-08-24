@@ -12,6 +12,7 @@ import Fonts from "../../shared/themes/Fonts";
 import Colors from "../../shared/themes/Colors";
 import Header from "../components/sections/header";
 import FloatPlaceholderTextInput from "../../shared/components/sections/floatPlaceholderTextInput";
+import BottomTabNavigator from "../components/navigation/bottomTabNavigator";
 
 let _mapView: MapView | null;
 
@@ -112,7 +113,12 @@ const MapScreen = ({route, navigation}) => {
     setWidth('100.01%');
   };
 
+  const openSettings = () => {
+
+  };
+
   let markerIcon = require("../assets/images/flag_marker.png");
+  let calculatedHeight = Dimensions.get("window").height - 45;
 
   return (
     <View style={MapScreenLtrStyle.container}>
@@ -121,11 +127,11 @@ const MapScreen = ({route, navigation}) => {
           placement="left"
           leftComponent={
             <CustomIcons
-              style={{marginTop: 15}}
-              size={Fonts.medium}
+              style={{marginTop: 15,marginLeft: 10}}
+              size={Fonts.h6}
               color={Colors.black}
-              name="arrow-back"
-              onPress={navigation.goBack}
+              name="cog"
+              onPress={() => openSettings()}
             />
           }
           centerComponent={
@@ -156,7 +162,7 @@ const MapScreen = ({route, navigation}) => {
       {
         mapRegion.latitude == 0 ? null :
           <MapView
-            style={[MapScreenLtrStyle.map,{width: width}]}
+            style={[MapScreenLtrStyle.map,{width: width, height: calculatedHeight}]}
             onMapReady={() => setWidth( '100%' )}
             customMapStyle={MapStyle}
             initialRegion={mapRegion}
@@ -179,7 +185,7 @@ const MapScreen = ({route, navigation}) => {
       }
       <TouchableOpacity style={MapScreenLtrStyle.recenter_button} onPress={() => recenterMap()}>
         <CustomIcons
-          size={Fonts.h5}
+          size={Fonts.iconMap}
           color={Colors.black}
           style={{opacity: 1}}
           name="target"
@@ -189,6 +195,7 @@ const MapScreen = ({route, navigation}) => {
         <Text
           style={marker.latitude != null ? MapScreenLtrStyle.button_text : MapScreenLtrStyle.button_disabled_text}>{I18n.t('i_want_concrete_here')}</Text>
       </TouchableOpacity>
+      <BottomTabNavigator route={route} navigation={navigation} selected={1}/>
     </View>
   );
 };

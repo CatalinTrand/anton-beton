@@ -52,11 +52,10 @@ const MapScreenLtrStyle = StyleSheet.create({
     left: 0,
     zIndex: -1,
     width: '100%',
-    height: '100%',
   },
   button: {
     marginTop: 'auto',
-    marginBottom: 20,
+    marginBottom: 70,
     padding: 10,
     borderRadius: 7,
     borderColor: Colors.lightGrey,
@@ -71,7 +70,7 @@ const MapScreenLtrStyle = StyleSheet.create({
   },
   button_disabled: {
     marginTop: 'auto',
-    marginBottom: 20,
+    marginBottom: 70,
     padding: 10,
     borderRadius: 7,
     borderColor: Colors.lightGrey,

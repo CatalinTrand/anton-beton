@@ -27,6 +27,7 @@ import DocumentSelector from "../../screens/documentSelector";
 import PaymentScreen from "../../screens/paymentScreen";
 import MapScreen from "../../screens/mapScreen";
 import AppointmentScreen from "../../screens/appointmentScreen";
+import RequestListScreen from "../../screens/requestListScreen";
 
 const HomeStackNavigator = () => {
   const Stack = createStackNavigator();
@@ -42,15 +43,15 @@ const AppBottomTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="HomeStackNavigator"
+      initialRouteName="RequestListScreen"
       activeColor={Colors.black}
       inactiveColor={Colors.grey}
       labeled={false}
       barStyle={{ backgroundColor: Colors.white }}
     >
       <Tab.Screen
-        name="Profile"
-        component={HomeStackNavigator}
+        name="MapScreen"
+        component={MapScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <CustomIcons name="circle-plus" color={color} size={Fonts.regular} />
@@ -58,36 +59,11 @@ const AppBottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Favorites"
-        component={HomeStackNavigator}
+        name="RequestListScreen"
+        component={RequestListScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <CustomIcons name="heart" color={color} size={Fonts.regular} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="HomeStackNavigator"
-        component={HomeStackNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <CustomIcons name="home" color={color} size={Fonts.regular} />,
-        }}
-      />
-      <Tab.Screen
-        name="Wallet"
-        component={HomeStackNavigator}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <CustomIcons name="wallet" color={color} size={Fonts.regular} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={HomeStackNavigator}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <CustomIcons name="hamburger-menu" color={color} size={Fonts.regular} />
+            <CustomIcons name="list-numbered" color={color} size={Fonts.regular} />
           ),
         }}
       />
@@ -166,6 +142,7 @@ const MainAppNavigation = () => {
       <Stack.Screen name="HomeStackNavigator" component={HomeStackNavigator} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
       <Stack.Screen name="AppointmentScreen" component={AppointmentScreen} />
+      <Stack.Screen name="RequestListScreen" component={RequestListScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfile} />
       <Stack.Screen name="ScheduleCalendar" component={ScheduleCalendar} />
       <Stack.Screen name="ProfilePicker" component={ProfilePicker} />

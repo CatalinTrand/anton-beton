@@ -22,6 +22,7 @@ const Colors = {
   orange: '#ff6a39',
   orangeOpacity: 'rgba(255,106,57,0.5)',
   lightOrange: '#FFBE9D',
+  lightOrange2: '#ff813a',
   turquoise: '#4EDCCA',
   green: '#00CBB2',
   grey: '#BFC4C5',

@@ -1,7 +1,7 @@
 import AppointmentScreenLtrStyle from '../../shared/styles/appointmentScreen.ltr.style';
 import moment from 'moment';
 import * as React from "react";
-import {ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Alert, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {CustomIcons} from "../../shared/themes";
 import Fonts from "../../shared/themes/Fonts";
 import Colors from "../../shared/themes/Colors";
@@ -24,6 +24,19 @@ const AppointmentScreen = ({route, navigation}) => {
   const [isVisibleTimePicker, setTimePickerVisibility] = useState(false);
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
+
+  const sendRequest = () => {
+    //TODO - send request to server with data
+
+    Alert.alert(
+      I18n.t('request_made_title'),
+      I18n.t('request_made_msg'),
+      [
+        { text: "Ok", onPress: () => navigation.navigate('RequestListScreen') }
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View style={AppointmentScreenLtrStyle.container}>
@@ -141,7 +154,7 @@ const AppointmentScreen = ({route, navigation}) => {
       </ScrollView>
       <RegularButton
         title={I18n.t('send_request')}
-        onPress={() => console.log("send request")}
+        onPress={() => sendRequest()}
         buttonStyle={[
           GlobalLtrStyle.buttonStyle,
           {
