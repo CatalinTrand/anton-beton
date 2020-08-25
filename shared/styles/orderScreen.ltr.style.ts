@@ -140,6 +140,7 @@ const OrderScreenLtrStyle = StyleSheet.create({
   list_item_right: {
     width: '40%',
     padding: 0,
+    paddingTop: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
