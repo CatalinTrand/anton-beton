@@ -59,6 +59,11 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     marginLeft: 12,
     fontSize: Fonts.regular
   },
+  list_item_date_time: {
+    fontSize: Fonts.medium,
+    color: Colors.darkGrey,
+    paddingLeft: 10,
+  },
   list_item_details: {
     display: 'flex',
     flexDirection: 'row',

@@ -11,10 +11,11 @@ import * as React from "react";
 import {useState} from "react";
 import GlobalLtrStyle from "../../shared/styles/global.ltr.style";
 import RegularButton from "../../shared/components/buttons/regularButton";
+import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
 
 const PaymentScreen = ({route, navigation}) => {
 
-  const {time, date, pacient, doctor, documents} = route.params;
+  const {request, offer} = route.params;
 
   const [state, setState] = useState({
     cardName: "",
@@ -60,15 +61,8 @@ const PaymentScreen = ({route, navigation}) => {
   };
 
   const prettyDate = (date) => {
-    let day = date.split('-')[0];
-    if (day.length == 2 && day[0] == '0')
-      day = day.substring(1);
-    let month = date.split('-')[1];
-    if (month.length == 2 && month[0] == '0')
-      month = month.substring(1);
-    let year = date.split('-')[2];
-
-    return day + " " + I18n.t('month_' + month) + ", " + year;
+    let separator = "/";
+    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
   return (
@@ -83,80 +77,67 @@ const PaymentScreen = ({route, navigation}) => {
             onPress={navigation.goBack}
           />
         }
-        centerComponent={null}
+        centerComponent={
+          <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
+            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('summary_and_payment')}</Text>
+          </View>
+        }
         rightComponent={null}
         noBorder={true}
       />
       <ScrollView style={{marginTop: 10}}>
-        <View style={PaymentScreenLtrStyle.header_text}>
-          <Text style={PaymentScreenLtrStyle.header_step_text}>{I18n.t('step').toUpperCase()} 4/4</Text>
-          <Text style={PaymentScreenLtrStyle.header_schedule_text}>{I18n.t('summary_and_payment')}</Text>
+      <View style={{padding: 20}}>
+        <Text>{I18n.t('request') + " #" + request.id}</Text>
+        <View>
+          <Text>{I18n.t('short_address')}</Text>
+          <Text>{request.address}</Text>
         </View>
-        <View style={PaymentScreenLtrStyle.appointment}>
-          <View style={PaymentScreenLtrStyle.doctor_details}>
-            <View style={PaymentScreenLtrStyle.doctor_details_left}>
-              <UserAvatar
-                imageURL={doctor.imgUrl}
-                firstName={doctor.firstName}
-                lastName={doctor.lastName}
-                theme={Colors.borderGrey}
-                size={Metrics.icons.large}
-              />
-            </View>
-            <View style={PaymentScreenLtrStyle.doctor_details_right}>
-              <Text style={PaymentScreenLtrStyle.doctor_details_specialization}>{doctor.specialization}</Text>
-              <Text
-                style={PaymentScreenLtrStyle.doctor_details_name}>{doctor.name}</Text>
-            </View>
-          </View>
-          <View style={PaymentScreenLtrStyle.date}>
-            <Text style={PaymentScreenLtrStyle.date_text}>{I18n.t('date')}</Text>
-            <Text style={PaymentScreenLtrStyle.date_value}>{prettyDate(date)}</Text>
-          </View>
-          <View style={PaymentScreenLtrStyle.time}>
-            <Text style={PaymentScreenLtrStyle.time_text}>{I18n.t('time')}</Text>
-            <Text style={PaymentScreenLtrStyle.time_value}>{time}</Text>
-          </View>
-          <View style={PaymentScreenLtrStyle.price}>
-            <View style={PaymentScreenLtrStyle.price_top}>
-              <Text style={PaymentScreenLtrStyle.price_top_left}>
-                {I18n.t('appointment_price')}
-              </Text>
-              <Text style={PaymentScreenLtrStyle.price_top_right}>
-                RON 15
-              </Text>
-            </View>
-            <View style={PaymentScreenLtrStyle.price_bottom}>
-              <Text style={PaymentScreenLtrStyle.price_bottom_text}>{I18n.t('rest_of_payment')}</Text>
-              <Text style={PaymentScreenLtrStyle.price_bottom_text}>RON {doctor.price - 15}</Text>
-            </View>
-          </View>
+        <View>
+          <Text>{I18n.t('date_time')}</Text>
+          <Text>{prettyDate(request.date) + ", " + request.time}</Text>
         </View>
+        <View>
+          <Text>{I18n.t('quantity')}</Text>
+          <Text>{request.quantity + " m³"}</Text>
+        </View>
+        <View>
+          <Text>{I18n.t('set_price')}</Text>
+          <Text>{offer.price + " RON"}</Text>
+        </View>
+        <View>
+          <Text>{I18n.t('advance_price')}</Text>
+          <Text>{offer.advance_price + " RON"}</Text>
+        </View>
+        <View>
+          <Text>{I18n.t('total_payment')}</Text>
+          <Text>{offer.advance_price + " RON"}</Text>
+        </View>
+      </View>
         <View style={PaymentScreenLtrStyle.card_details}>
           <TextInput
             editable
-            style={[PaymentScreenLtrStyle.card_inputs, { width: '100%'}]}
+            style={[PaymentScreenLtrStyle.card_inputs, {width: '100%'}]}
             placeholder={I18n.t("card_holder")}
             maxLength={40}
             onChangeText={text => setCardName(text)}
             value={state.cardName}/>
           <TextInput
             editable
-            style={[PaymentScreenLtrStyle.card_inputs, { width: '100%'}]}
+            style={[PaymentScreenLtrStyle.card_inputs, {width: '100%'}]}
             placeholder={I18n.t("card_number")}
             maxLength={16}
             onChangeText={text => setCardNumber(text)}
             value={state.cardNumber}/>
           <TextInput
             editable
-            style={[PaymentScreenLtrStyle.card_inputs, { width: '47%'}]}
+            style={[PaymentScreenLtrStyle.card_inputs, {width: '47%'}]}
             placeholder={I18n.t("card_expiration_date")}
             maxLength={4}
             onChangeText={text => setCardExpirationDate(text)}
             value={state.expirationDate}/>
           <TextInput
             editable
-            style={[PaymentScreenLtrStyle.card_inputs, { width: '47%'}]}
+            style={[PaymentScreenLtrStyle.card_inputs, {width: '47%'}]}
             placeholder={I18n.t("card_cvv")}
             maxLength={3}
             onChangeText={text => setCardCvv(text)}
@@ -164,8 +145,8 @@ const PaymentScreen = ({route, navigation}) => {
         </View>
       </ScrollView>
       <RegularButton
-        title={I18n.t('confirm_appointment')}
-        onPress={() => console.warn("confirmed appointment") }
+        title={I18n.t('confirm_order')}
+        onPress={() => console.warn("confirmed")}
         buttonStyle={[
           GlobalLtrStyle.buttonStyle,
           {

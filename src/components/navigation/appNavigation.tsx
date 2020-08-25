@@ -3,17 +3,13 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import MainScreen from '../../screens/mainScreen';
 import { CustomIcons, Fonts, Colors } from '../../../shared/themes';
-import SearchSpecialists from '../../screens/searchSpecialists';
-import SpecializationScreen from '../../screens/specializationScreen';
 import DoctorProfile from '../../screens/doctorProfile';
 import GetDoctor from '../../screens/getDoctor';
 import LoginScreen from '../../screens/auth/loginScreen';
 import RegisterScreen from '../../screens/auth/registerScreen';
 import TermsAndConditions from '../../screens/staticScreens/termsAndConditions';
 import PrivacyPolicy from '../../screens/staticScreens/privacyPolicy';
-import CheckPhoneNumberScreen from '../../screens/auth/checkPhoneNumber';
 import PaymentVisitScreen from '../../screens/auth/paymentVisit';
 import SearchDoctorScreen from '../../screens/searchForDoctor';
 import AddCreditCardScreen from '../../screens/auth/addCreditCard';
@@ -28,6 +24,7 @@ import PaymentScreen from "../../screens/paymentScreen";
 import MapScreen from "../../screens/mapScreen";
 import AppointmentScreen from "../../screens/appointmentScreen";
 import RequestListScreen from "../../screens/requestListScreen";
+import OrderScreen from "../../screens/orderScreen";
 
 const HomeStackNavigator = () => {
   const Stack = createStackNavigator();
@@ -143,6 +140,7 @@ const MainAppNavigation = () => {
       <Stack.Screen name="MapScreen" component={MapScreen} />
       <Stack.Screen name="AppointmentScreen" component={AppointmentScreen} />
       <Stack.Screen name="RequestListScreen" component={RequestListScreen} />
+      <Stack.Screen name="OrderScreen" component={OrderScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfile} />
       <Stack.Screen name="ScheduleCalendar" component={ScheduleCalendar} />
       <Stack.Screen name="ProfilePicker" component={ProfilePicker} />

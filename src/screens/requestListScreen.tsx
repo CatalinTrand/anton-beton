@@ -5,7 +5,6 @@ import BottomTabNavigator from "../components/navigation/bottomTabNavigator";
 import {CustomIcons} from "../../shared/themes";
 import Fonts from "../../shared/themes/Fonts";
 import Colors from "../../shared/themes/Colors";
-import MapScreenLtrStyle from "../../shared/styles/mapScreen.ltr.style";
 import I18n from "../../shared/I18n/I18n";
 import Header from "../components/sections/header";
 
@@ -22,6 +21,8 @@ const RequestListScreen = ({route, navigation}) => {
       coordinates: {lat: 45.34, lng: 21.55},
       quantity: 5000,
       maxPrice: 30000,
+      date: '12/7/2021',
+      time: '12:00',
       offers: 4,
     },
     {
@@ -30,6 +31,8 @@ const RequestListScreen = ({route, navigation}) => {
       coordinates: {lat: 45.34, lng: 21.55},
       quantity: 15000,
       maxPrice: 300000,
+      date: '12/7/2021',
+      time: '12:00',
       offers: 1,
     },
     {
@@ -38,6 +41,8 @@ const RequestListScreen = ({route, navigation}) => {
       coordinates: {lat: 45.34, lng: 21.55},
       quantity: 3400,
       maxPrice: 35000,
+      date: '12/7/2021',
+      time: '12:00',
       offers: 0,
     },
     {
@@ -46,6 +51,8 @@ const RequestListScreen = ({route, navigation}) => {
       coordinates: {lat: 45.34, lng: 21.55},
       quantity: 1000,
       maxPrice: 10000,
+      date: '12/7/2021',
+      time: '12:00',
       offers: 7,
     },
     {
@@ -54,9 +61,16 @@ const RequestListScreen = ({route, navigation}) => {
       coordinates: {lat: 45.34, lng: 21.55},
       quantity: 4000,
       maxPrice: 20000,
+      date: '12/7/2021',
+      time: '12:00',
       offers: 3,
     },
   ];
+
+  const prettyDate = (date) => {
+    let separator = "/";
+    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
+  };
 
   return (
     <View style={RequestListScreenLtrStyle.container}>
@@ -82,11 +96,12 @@ const RequestListScreen = ({route, navigation}) => {
       />
       <ScrollView contentContainerStyle={RequestListScreenLtrStyle.list}>
         {requests.map((request, idx) =>
-          <TouchableOpacity key={idx} style={RequestListScreenLtrStyle.list_item} onPress={() => console.log("clicked request id " + request.id)}>
+          <TouchableOpacity key={idx} style={RequestListScreenLtrStyle.list_item} onPress={() => navigation.navigate('OrderScreen', {request})}>
             <View style={RequestListScreenLtrStyle.title_contents}>
               <Text style={RequestListScreenLtrStyle.list_item_title}>{I18n.t('request') + " #" + request.id}</Text>
               <Text style={RequestListScreenLtrStyle.offers_count}>{request.offers + " " + I18n.t('offers')}</Text>
             </View>
+            <Text style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.date) + ", " + request.time}</Text>
             <View style={RequestListScreenLtrStyle.list_item_details}>
               <View style={RequestListScreenLtrStyle.list_item_address}>
                 <Text style={RequestListScreenLtrStyle.list_item_address_title}>{I18n.t('short_address')}</Text>
