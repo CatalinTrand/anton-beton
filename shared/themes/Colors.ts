@@ -25,6 +25,7 @@ const Colors = {
   lightOrange2: '#ff813a',
   turquoise: '#4EDCCA',
   green: '#00CBB2',
+  lightGreen: '#00e8cf',
   grey: '#BFC4C5',
   red: '#EB3300',
 };

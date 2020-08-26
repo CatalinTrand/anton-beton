@@ -15,15 +15,67 @@ const PaymentScreenLtrStyle = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: Fonts.h3,
   },
-  appointment: {
-    marginTop: 15,
-    marginLeft: 15,
-    marginRight: 15,
-    borderWidth: 1,
-    borderRadius: 7,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderColor: Colors.grey,
+  order_details: {
+    padding: 20
+  },
+  order_title: {
+    fontSize: Fonts.regular,
+    color: Colors.orange,
+    fontWeight: 'bold',
+    paddingBottom: 10,
+  },
+  supplier_name: {
+    fontSize: Fonts.medium,
+    color: Colors.orange,
+    paddingBottom: 10,
+  },
+  address: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    paddingBottom: 10,
+  },
+  address_title: {
+    fontSize: Fonts.medium,
+    color: Colors.darkGrey,
+    fontWeight: 'bold',
+    paddingBottom: 5,
+  },
+  address_value: {
+    fontSize: Fonts.small,
+    color: Colors.darkGrey,
+  },
+  detail: {
+    width: '70%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+  },
+  detail_title: {
+    fontSize: Fonts.small,
+    color: Colors.black,
+    fontWeight: 'bold',
+  },
+  detail_value: {
+    fontSize: Fonts.small,
+    color: Colors.darkGrey,
+  },
+  total_payment: {
+    width: '100%',
+    borderTopWidth: 1,
+    borderTopColor: Colors.grey,
+    paddingTop: 10,
+    marginTop: 10,
+  },
+  total_payment_title: {
+    fontSize: Fonts.h6,
+    color: Colors.black,
+    fontWeight: 'bold',
+  },
+  total_payment_value: {
+    fontSize: Fonts.regular,
+    color: Colors.darkGrey,
   },
   card_details: {
     padding: 15,

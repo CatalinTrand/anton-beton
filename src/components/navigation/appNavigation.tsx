@@ -25,6 +25,7 @@ import MapScreen from "../../screens/mapScreen";
 import AppointmentScreen from "../../screens/appointmentScreen";
 import RequestListScreen from "../../screens/requestListScreen";
 import OrderScreen from "../../screens/orderScreen";
+import DeliveryListScreen from "../../screens/deliveryListScreen";
 
 const HomeStackNavigator = () => {
   const Stack = createStackNavigator();
@@ -141,11 +142,13 @@ const MainAppNavigation = () => {
       <Stack.Screen name="AppointmentScreen" component={AppointmentScreen} />
       <Stack.Screen name="RequestListScreen" component={RequestListScreen} />
       <Stack.Screen name="OrderScreen" component={OrderScreen} />
+      <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+      <Stack.Screen name="DeliveryListScreen" component={DeliveryListScreen} />
+
       <Stack.Screen name="DoctorProfile" component={DoctorProfile} />
       <Stack.Screen name="ScheduleCalendar" component={ScheduleCalendar} />
       <Stack.Screen name="ProfilePicker" component={ProfilePicker} />
       <Stack.Screen name="DocumentSelector" component={DocumentSelector} />
-      <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen name="GetDoctor" component={GetDoctor} />
       <Stack.Screen name="Auth" component={AuthNavigation} />
     </Stack.Navigator>

@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {Colors, Metrics, Fonts} from '../themes';
 
-const RequestListScreenLtrStyle = StyleSheet.create({
+const DeliveryListScreen = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
@@ -52,10 +52,15 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  offers_count: {
+  item_in_delivery: {
     color: Colors.primary,
     marginLeft: 12,
     fontSize: Fonts.regular
+  },
+  list_item_supplier_name: {
+    fontSize: Fonts.regular,
+    color: Colors.darkGrey,
+    paddingLeft: 10,
   },
   list_item_date_time: {
     fontSize: Fonts.medium,
@@ -115,4 +120,4 @@ const RequestListScreenLtrStyle = StyleSheet.create({
   },
 });
 
-export default RequestListScreenLtrStyle;
+export default DeliveryListScreen;

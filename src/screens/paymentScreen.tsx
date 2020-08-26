@@ -3,7 +3,7 @@ import Colors from "../../shared/themes/Colors";
 import Header from "../components/sections/header";
 import {CustomIcons} from "../../shared/themes";
 import Fonts from "../../shared/themes/Fonts";
-import {SafeAreaView, ScrollView, Text, TextInput, View} from "react-native";
+import {Alert, SafeAreaView, ScrollView, Text, TextInput, View} from "react-native";
 import I18n from "../../shared/I18n/I18n";
 import UserAvatar from "../../shared/components/sections/userAvatar";
 import Metrics from "../../shared/themes/Metrics";
@@ -65,6 +65,17 @@ const PaymentScreen = ({route, navigation}) => {
     return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
+  const paymentMade = () => {
+    Alert.alert(
+      I18n.t('payment_made_title'),
+      I18n.t('payment_made_msg'),
+      [
+        { text: "Ok", onPress: () => navigation.navigate('DeliveryListScreen') }
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
       <Header
@@ -86,33 +97,34 @@ const PaymentScreen = ({route, navigation}) => {
         noBorder={true}
       />
       <ScrollView style={{marginTop: 10}}>
-      <View style={{padding: 20}}>
-        <Text>{I18n.t('request') + " #" + request.id}</Text>
-        <View>
-          <Text>{I18n.t('short_address')}</Text>
-          <Text>{request.address}</Text>
+        <View style={PaymentScreenLtrStyle.order_details}>
+          <Text style={PaymentScreenLtrStyle.order_title}>{I18n.t('request') + " #" + request.id}</Text>
+          <Text style={PaymentScreenLtrStyle.supplier_name}>{offer.supplier_name}</Text>
+          <View style={PaymentScreenLtrStyle.address}>
+            <Text style={PaymentScreenLtrStyle.address_title}>{I18n.t('short_address')}</Text>
+            <Text style={PaymentScreenLtrStyle.address_value}>{request.address}</Text>
+          </View>
+          <View style={PaymentScreenLtrStyle.detail}>
+            <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('date_time')}</Text>
+            <Text style={PaymentScreenLtrStyle.detail_value}>{prettyDate(request.date) + ", " + request.time}</Text>
+          </View>
+          <View style={PaymentScreenLtrStyle.detail}>
+            <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('quantity')}</Text>
+            <Text style={PaymentScreenLtrStyle.address_value}>{request.quantity + " m³"}</Text>
+          </View>
+          <View style={PaymentScreenLtrStyle.detail}>
+            <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('set_price')}</Text>
+            <Text style={PaymentScreenLtrStyle.address_value}>{offer.price + " RON"}</Text>
+          </View>
+          <View style={PaymentScreenLtrStyle.detail}>
+            <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('advance_price')}</Text>
+            <Text style={PaymentScreenLtrStyle.address_value}>{offer.advance_price + " RON"}</Text>
+          </View>
+          <View style={PaymentScreenLtrStyle.total_payment}>
+            <Text style={PaymentScreenLtrStyle.total_payment_title}>{I18n.t('total_payment')}</Text>
+            <Text style={PaymentScreenLtrStyle.total_payment_value}>{offer.advance_price + " RON"}</Text>
+          </View>
         </View>
-        <View>
-          <Text>{I18n.t('date_time')}</Text>
-          <Text>{prettyDate(request.date) + ", " + request.time}</Text>
-        </View>
-        <View>
-          <Text>{I18n.t('quantity')}</Text>
-          <Text>{request.quantity + " m³"}</Text>
-        </View>
-        <View>
-          <Text>{I18n.t('set_price')}</Text>
-          <Text>{offer.price + " RON"}</Text>
-        </View>
-        <View>
-          <Text>{I18n.t('advance_price')}</Text>
-          <Text>{offer.advance_price + " RON"}</Text>
-        </View>
-        <View>
-          <Text>{I18n.t('total_payment')}</Text>
-          <Text>{offer.advance_price + " RON"}</Text>
-        </View>
-      </View>
         <View style={PaymentScreenLtrStyle.card_details}>
           <TextInput
             editable
@@ -146,7 +158,7 @@ const PaymentScreen = ({route, navigation}) => {
       </ScrollView>
       <RegularButton
         title={I18n.t('confirm_order')}
-        onPress={() => console.warn("confirmed")}
+        onPress={() => paymentMade()}
         buttonStyle={[
           GlobalLtrStyle.buttonStyle,
           {
