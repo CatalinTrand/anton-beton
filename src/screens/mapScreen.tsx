@@ -175,6 +175,7 @@ const MapScreen = ({route, navigation}) => {
             {marker.latitude != null ?
               // @ts-ignore
               <MapView.Marker
+                style={{marginLeft: 2}}
                 key={1}
                 coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
                 title={I18n.t('destination')}

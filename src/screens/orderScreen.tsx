@@ -29,6 +29,7 @@ const OrderScreen = ({route, navigation}) => {
       time: "12:30",
       price: 30000,
       advance_price: 3000,
+      concrete_type: 1,
     },
     {
       supplier_id: 2,
@@ -36,6 +37,7 @@ const OrderScreen = ({route, navigation}) => {
       time: "12:00",
       price: 35000,
       advance_price: 2000,
+      concrete_type: 2,
     },
     {
       supplier_id: 3,
@@ -43,6 +45,7 @@ const OrderScreen = ({route, navigation}) => {
       time: "12:45",
       price: 20000,
       advance_price: 5000,
+      concrete_type: 1,
     },
     {
       supplier_id: 4,
@@ -50,6 +53,7 @@ const OrderScreen = ({route, navigation}) => {
       time: "12:30",
       price: 30000,
       advance_price: 3000,
+      concrete_type: 2,
     },
   ];
 
@@ -124,6 +128,10 @@ const OrderScreen = ({route, navigation}) => {
                 <View style={OrderScreenLtrStyle.list_item_time}>
                   <Text style={OrderScreenLtrStyle.list_item_time_title}>{I18n.t('time')}</Text>
                   <Text style={OrderScreenLtrStyle.list_item_time_value}>{offer.time}</Text>
+                </View>
+                <View style={OrderScreenLtrStyle.list_item_time}>
+                  <Text style={OrderScreenLtrStyle.list_item_detail_title}>{I18n.t('concrete_type')}</Text>
+                  <Text style={OrderScreenLtrStyle.list_item_detail_value}>{I18n.t('concrete_type_' + offer.concrete_type)}</Text>
                 </View>
               </View>
               <View style={OrderScreenLtrStyle.list_item_right}>

@@ -109,6 +109,10 @@ const PaymentScreen = ({route, navigation}) => {
             <Text style={PaymentScreenLtrStyle.detail_value}>{prettyDate(request.date) + ", " + request.time}</Text>
           </View>
           <View style={PaymentScreenLtrStyle.detail}>
+            <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('concrete_type')}</Text>
+            <Text style={PaymentScreenLtrStyle.address_value}>{I18n.t('concrete_type_' + offer.concrete_type)}</Text>
+          </View>
+          <View style={PaymentScreenLtrStyle.detail}>
             <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('quantity')}</Text>
             <Text style={PaymentScreenLtrStyle.address_value}>{request.quantity + " m³"}</Text>
           </View>
