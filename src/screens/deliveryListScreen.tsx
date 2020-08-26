@@ -70,6 +70,28 @@ const DeliveryListScreen = ({route, navigation}) => {
     return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
+  const pressedDelivery = (delivery) => {
+    if(delivery.inDelivery)
+      Alert.alert(
+        I18n.t('order_in_delivery_title'),
+        I18n.t('order_in_delivery_msg'),
+        [
+          { text: "Ok", onPress: () =>  navigation.navigate('ViewTruckMapScreen', {id: delivery.id, supplier_id: delivery.supplier_id}) },
+          { text: "Cancel", onPress: () => {}, style: 'cancel' }
+        ],
+        { cancelable: true }
+      );
+    else
+      Alert.alert(
+        I18n.t('order_not_in_delivery_title'),
+        I18n.t('order_not_in_delivery_msg'),
+        [
+          { text: "Ok", onPress: () => {}, style: 'cancel' }
+        ],
+        { cancelable: true }
+      );
+  };
+
   return (
     <View style={DeliveryListScreenLtrStyle.container}>
       <Header
@@ -94,7 +116,7 @@ const DeliveryListScreen = ({route, navigation}) => {
       />
       <ScrollView contentContainerStyle={DeliveryListScreenLtrStyle.list}>
         {deliveries.map((delivery, idx) =>
-          <TouchableOpacity key={idx} style={[DeliveryListScreenLtrStyle.list_item, {backgroundColor: delivery.inDelivery? Colors.lightGreen : Colors.white}]} onPress={() => {return; if(delivery.inDelivery) navigation.navigate('ViewTruckMap', {supplier_id: delivery.supplier_id})} }>
+          <TouchableOpacity key={idx} style={[DeliveryListScreenLtrStyle.list_item, {backgroundColor: delivery.inDelivery? Colors.lightGreen : Colors.white}]} onPress={() => {pressedDelivery(delivery)} }>
             <View style={DeliveryListScreenLtrStyle.title_contents}>
               <Text style={DeliveryListScreenLtrStyle.list_item_title}>{I18n.t('request') + " #" + delivery.id}</Text>
               {delivery.inDelivery ? <Text style={DeliveryListScreenLtrStyle.item_in_delivery}>{I18n.t('in_delivery')}</Text> : null}
