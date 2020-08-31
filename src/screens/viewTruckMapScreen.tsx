@@ -4,12 +4,12 @@ import Colors from "../../shared/themes/Colors";
 import Header from "../components/sections/header";
 import {CustomIcons} from "../../shared/themes";
 import Fonts from "../../shared/themes/Fonts";
-import {Dimensions, SafeAreaView, Text, View} from "react-native";
+import {Alert, Dimensions, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
 import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
 import I18n from "../../shared/I18n/I18n";
-import MapScreenLtrStyle from "../../shared/styles/mapScreen.ltr.style";
 import MapStyle from "../assets/mapStyle";
 import MapView from "react-native-maps";
+import MapViewDirections from 'react-native-maps-directions';
 import {useState} from "react";
 
 let _mapView: MapView | null;
@@ -23,6 +23,30 @@ const ViewTruckMapScreen = ({route, navigation}) => {
   const [mapRegion, setMapRegion] = useState({latitude: 10, longitude: 10, latitudeDelta: 1, longitudeDelta: 1});
   const [eta, setEta] = useState('Calculating...');
 
+  const distanceBetween2Points = (p1, p2) => {
+    // in metres
+    const R = 6371000; // metres
+    const t1 = p1.lat * Math.PI/180;
+    const t2 = p2.lat * Math.PI/180;
+    const dt = (p2.lat - p1.lat) * Math.PI/180;
+    const dg = (p2.lng - p1.lng) * Math.PI/180;
+
+    const a = Math.sin(dt/2) * Math.sin(dt/2) + Math.cos(t1) * Math.cos(t2) * Math.sin(dg/2) * Math.sin(dg/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c;
+  };
+
+  const middleZoom = (pos1, pos2) => {
+    let middleLat = (pos1.lat + pos2.lat ) / 2;
+    let deviceWidth = Dimensions.get('window').width - 30;
+    let distance = distanceBetween2Points(pos1,pos2);
+
+    let zoom = Math.log2(156543.03392 * Math.cos(middleLat * Math.PI / 180) * (deviceWidth - 30) / distance);
+
+    return Math.floor(zoom);
+  };
+
   const initializeState = () => {
     //TODO - get locations from server
     let truckLocation = {lat: 45.0, lng: 21.0};
@@ -30,8 +54,6 @@ const ViewTruckMapScreen = ({route, navigation}) => {
 
     let middleLat = (truckLocation.lat + destination.lat) / 2.0;
     let middleLng = (truckLocation.lng + destination.lng) / 2.0;
-
-    //let metersPerPx = 156543.03392 * Math.cos(middleLat * Math.PI / 180) / Math.pow(2, zoom);
 
     setMapRegion({
       latitude: middleLat,
@@ -48,8 +70,31 @@ const ViewTruckMapScreen = ({route, navigation}) => {
           latitude: middleLat,
           longitude: middleLng
         },
-        zoom: 10,
+        zoom: middleZoom(truckLocation, destination),
       });
+  };
+
+  const finishOrder = () => {
+    //TODO - send request to server with data
+
+    Alert.alert(
+      I18n.t('finish_order_title'),
+      I18n.t('finish_order_msg'),
+      [
+        { text: "Ok", onPress: () => {} },
+        { text: "Cancel", onPress: () => {}, style: 'cancel' }
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const prettyDuration = (mins) => {
+    let hours = mins / 60;
+    if(hours < 1) {
+      return Math.floor(mins) + "m";
+    } else {
+      return Math.floor(hours) + "h " + (mins - Math.floor(hours)*60)+ "m";
+    }
   };
 
   let markerIcon = require("../assets/images/flag_marker.png");
@@ -88,6 +133,12 @@ const ViewTruckMapScreen = ({route, navigation}) => {
         onPress={(e) => {
         }}
       >
+        <MapViewDirections
+          origin={{latitude: truckMarker.lat, longitude: truckMarker.lng}}
+          destination={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}
+          apikey="AIzaSyD6mSS2a-dROWPXMaS6f8VFIj53B6uLSCU"
+          onReady={(result) => setEta(prettyDuration(result.duration))}
+        />
         {truckMarker.lat != 0 ?
           // @ts-ignore
           <MapView.Marker
@@ -110,6 +161,10 @@ const ViewTruckMapScreen = ({route, navigation}) => {
         }
       </MapView>
       <Text style={ViewTruckMapScreenLtrStyle.eta}>{"ETA: " + eta}</Text>
+      <TouchableOpacity style={ViewTruckMapScreenLtrStyle.button} onPress={() => finishOrder()}>
+        <Text
+          style={ViewTruckMapScreenLtrStyle.button_text}>{I18n.t('finish_order')}</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

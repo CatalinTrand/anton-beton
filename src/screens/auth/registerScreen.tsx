@@ -84,7 +84,7 @@ const RegisterScreen = ({ navigation }): JSX.Element => {
                   onChange={(value) => setPassword(value)}
                 />
                 <FloatPlaceholderTextInput
-                  extraStyle={{ marginTop: Metrics.doubleBaseMargin }}
+                  extraStyle={{  }}
                   label={I18n.t('last_name')}
                   value={lastName}
                   type="regular"
