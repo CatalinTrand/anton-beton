@@ -8,6 +8,7 @@ const ViewTruckMapScreenLtrStyle = StyleSheet.create({
   },
   eta: {
     position: 'absolute',
+    fontWeight: 'bold',
     zIndex: 2,
     top: 75,
     left: 5,
@@ -15,6 +16,8 @@ const ViewTruckMapScreenLtrStyle = StyleSheet.create({
     backgroundColor: Colors.lightGrey
   },
   button: {
+    maxHeight: 60,
+    marginTop: -60,
     zIndex: 2,
     margin: 10,
     marginLeft: 'auto',
