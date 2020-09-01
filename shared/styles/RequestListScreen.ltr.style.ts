@@ -3,6 +3,7 @@ import {Colors, Metrics, Fonts} from '../themes';
 
 const RequestListScreenLtrStyle = StyleSheet.create({
   container: {
+    zIndex: 1,
     width: '100%',
     height: '100%',
     backgroundColor: Colors.white,
@@ -69,17 +70,18 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     alignContent: 'center',
   },
   list_item_address: {
-    width: '53%',
+    width: '51%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignContent: 'center',
-    padding: 10
+    padding: 10,
+    paddingRight: 5,
   },
   list_item_address_title: {
     fontSize: Fonts.regular,
     fontWeight: 'bold',
-    paddingBottom: 10,
+    paddingBottom: 5,
   },
   list_item_address_value: {
     fontSize: Fonts.small,
@@ -87,9 +89,9 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     color: Colors.darkGrey,
   },
   list_item_additional_details: {
-    width: '47%',
+    width: '49%',
     padding: 0,
-    paddingRight: 10,
+    paddingRight: 5,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',

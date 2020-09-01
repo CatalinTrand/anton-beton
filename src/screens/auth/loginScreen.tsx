@@ -20,7 +20,7 @@ const LoginScreen = ({navigation}): JSX.Element => {
   const dispatch = useDispatch();
 
   const onLoginPress = () => {
-    navigation.navigate('MapScreen',{lng});
+    navigation.navigate('DisplayScreen',{lng});
     return;
 
     const params = new URLSearchParams();

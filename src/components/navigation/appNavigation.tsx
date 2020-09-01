@@ -27,6 +27,9 @@ import RequestListScreen from "../../screens/requestListScreen";
 import OrderScreen from "../../screens/orderScreen";
 import DeliveryListScreen from "../../screens/deliveryListScreen";
 import ViewTruckMapScreen from "../../screens/viewTruckMapScreen";
+import DisplayScreen from "../../screens/displayScreen";
+import SupplierOpenOrdersScreen from "../../screens/SupplierOpenOrdersScreen";
+import SupplierOngoingOrdersScreen from "../../screens/SupplierOngoingOrdersScreen";
 
 const HomeStackNavigator = () => {
   const Stack = createStackNavigator();
@@ -139,7 +142,10 @@ const MainAppNavigation = () => {
       }}
     >
       <Stack.Screen name="HomeStackNavigator" component={HomeStackNavigator} />
+      <Stack.Screen name="DisplayScreen" component={DisplayScreen} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
+      <Stack.Screen name="SupplierOpenOrdersScreen" component={SupplierOpenOrdersScreen} />
+      <Stack.Screen name="SupplierOngoingOrdersScreen" component={SupplierOngoingOrdersScreen} />
       <Stack.Screen name="AppointmentScreen" component={AppointmentScreen} />
       <Stack.Screen name="RequestListScreen" component={RequestListScreen} />
       <Stack.Screen name="OrderScreen" component={OrderScreen} />

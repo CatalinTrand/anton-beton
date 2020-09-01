@@ -16,6 +16,8 @@ import CustomCheckboxLtrStyle from '../../../shared/styles/customCheckbox.ltr.st
 import LabeledDatePicker from '../../../shared/components/sections/customLabeledDatePicker';
 
 const RegisterScreen = ({navigation}): JSX.Element => {
+
+  const [lng, setLng] = useState(I18n.locale);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [lastName, setLastName] = useState('');
@@ -26,7 +28,7 @@ const RegisterScreen = ({navigation}): JSX.Element => {
   const [agreePolicy, setAgreePolicy] = useState(false);
 
   const onRegisterPress = () => {
-    navigation.navigate('MapScreen');
+    navigation.navigate('DisplayScreen', {lng});
     return;
 
     const params = new URLSearchParams();

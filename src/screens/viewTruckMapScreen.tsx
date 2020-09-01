@@ -137,8 +137,8 @@ const ViewTruckMapScreen = ({route, navigation}) => {
           origin={{latitude: truckMarker.lat, longitude: truckMarker.lng}}
           destination={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}
           apikey="AIzaSyD6mSS2a-dROWPXMaS6f8VFIj53B6uLSCU"
-          strokeWidth={2}
-          strokeColor="blue"
+          strokeWidth={3}
+          strokeColor={Colors.primary}
           onReady={(result) => setEta(prettyDuration(result.duration))}
         />
         {truckMarker.lat != 0 ?
