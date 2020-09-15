@@ -17,6 +17,7 @@ import LabeledDatePicker from '../../../shared/components/sections/customLabeled
 
 const RegisterScreen = ({navigation}): JSX.Element => {
 
+  I18n.locale = 'ro';
   const [lng, setLng] = useState(I18n.locale);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');

@@ -82,7 +82,7 @@ const LoginScreen = ({navigation}): JSX.Element => {
                     <Text style={{marginLeft: 10}}>{I18n.t('forgot_password')}</Text>
                   </View>
                 </TouchableOpacity>
-                <View style={GlobalLtrStyle.lang_switcher}>
+                <View style={[GlobalLtrStyle.lang_switcher,{display: 'none'}]}>
                   <TouchableOpacity onPress={() => {I18n.locale = 'ro'; setLng('ro')}}>
                     <Text style={lng == 'ro' ? GlobalLtrStyle.selected_lang : GlobalLtrStyle.unselected_lang}>RO</Text>
                   </TouchableOpacity>

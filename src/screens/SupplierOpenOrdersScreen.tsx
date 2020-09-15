@@ -120,6 +120,10 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
     return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
+  const openOrder = (request) => {
+    navigation.navigate('SupplierViewOpenOrderScreen', {request});
+  };
+
   return (
     <View style={RequestListScreenLtrStyle.container}>
       <Header
@@ -185,10 +189,9 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
       <ScrollView contentContainerStyle={RequestListScreenLtrStyle.list}>
         {requests.map((request, idx) =>
           (selectedFilterValue != I18n.t('all')) && (request.alreadyBid == (selectedFilterValue == I18n.t('no_licitation')) ) ? null :
-          <TouchableOpacity key={idx} style={[RequestListScreenLtrStyle.list_item]} onPress={() => {
-          }}>
+          <TouchableOpacity key={idx} style={[RequestListScreenLtrStyle.list_item]} onPress={() => {openOrder(request)}}>
             <View style={RequestListScreenLtrStyle.title_contents}>
-              <Text style={RequestListScreenLtrStyle.list_item_title}>{I18n.t('request') + " #" + request.id}</Text>
+              <Text style={[RequestListScreenLtrStyle.list_item_title, request.alreadyBid ? {color: Colors.green} : {}]}>{I18n.t('request') + " #" + request.id}</Text>
               <Text style={RequestListScreenLtrStyle.offers_count}>{request.offers + " " + I18n.t('offers')}</Text>
             </View>
             <Text

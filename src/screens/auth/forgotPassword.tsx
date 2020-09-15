@@ -10,6 +10,9 @@ import RegularButton from '../../../shared/components/buttons/regularButton';
 import FloatPlaceholderTextInput from '../../../shared/components/sections/floatPlaceholderTextInput';
 
 const ForgotPasswordScreen = ({ navigation }): JSX.Element => {
+
+  I18n.locale = 'ro';
+
   const onPress = () => {
     navigation.navigate('Auth', { screen: 'NewPassword' });
   };
