@@ -1,6 +1,6 @@
 import SupplierViewOpenOrderScreenLtrStyle from "../../shared/styles/supplierViewOpenOrderScreen.ltr.style";
 import * as React from "react";
-import {Alert, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Alert, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import RequestListScreenLtrStyle from "../../shared/styles/RequestListScreen.ltr.style";
 import Header from "../components/sections/header";
 import {CustomIcons} from "../../shared/themes";
@@ -13,15 +13,22 @@ import GlobalLtrStyle from "../../shared/styles/global.ltr.style";
 import RegularButton from "../../shared/components/buttons/regularButton";
 import moment from "moment";
 import AppointmentScreenLtrStyle from "../../shared/styles/appointmentScreen.ltr.style";
+import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
+import Constants from '../../shared/constants/otherConstants.json';
+import RNPickerSelect from 'react-native-picker-select';
+
+let set = false;
 
 const SupplierViewOpenOrderScreen = ({route, navigation}) => {
 
   const {request} = route.params;
 
+  const [concreteType, setConcreteType] = useState("1");
   const [time, setTime] = useState(new Date());
   const [price, setPrice] = useState('');
   const [advance_price, setAdvancePrice] = useState('');
   const [isVisibleTimePicker, setTimePickerVisibility] = useState(false);
+  const [height, setHeight] = useState(100);
 
   const hasNotApplied = !request.alreadyBid;
 
@@ -53,6 +60,22 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
     );
   };
 
+  const renderConcreteOptions = () => {
+
+    let result = [] as any;
+
+    for(let i = 1; i <= Constants.NR_OF_CONCRETE_TYPES; i++) {
+      // @ts-ignore
+      result.push(
+        {
+          value: i+"",
+          label: I18n.t("concrete_type_" + i)
+        });
+    }
+
+    return result;
+  };
+
   return (
     <View style={RequestListScreenLtrStyle.container}>
       <Header
@@ -75,9 +98,38 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
         rightComponent={null}
         noBorder={false}
       />
-      <View style={SupplierViewOpenOrderScreenLtrStyle.container}>
+      <ScrollView contentContainerStyle={SupplierViewOpenOrderScreenLtrStyle.container}>
         <View style={SupplierViewOpenOrderScreenLtrStyle.order_details}>
-
+          <View style={OrderScreenLtrStyle.order_details}
+                onLayout={(event) => {
+                  if (!set) {
+                    set = true;
+                    setHeight(event.nativeEvent.layout.height - 15);
+                  }
+                }}>
+            <View style={OrderScreenLtrStyle.order_address}>
+              <Text style={OrderScreenLtrStyle.order_address_title}>{I18n.t('short_address')}</Text>
+              <Text style={OrderScreenLtrStyle.order_address_value}>{request.address}</Text>
+              <View style={OrderScreenLtrStyle.order_detail}>
+                <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('quantity')}</Text>
+                <Text style={OrderScreenLtrStyle.order_detail_value}>{request.quantity + " m³"}</Text>
+              </View>
+            </View>
+            <View style={[OrderScreenLtrStyle.order_additional_details, {height: height}]}>
+              <View style={OrderScreenLtrStyle.order_detail}>
+                <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('date')}</Text>
+                <Text style={OrderScreenLtrStyle.order_detail_value}>{prettyDate(request.date)}</Text>
+              </View>
+              <View style={OrderScreenLtrStyle.order_detail}>
+                <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('time')}</Text>
+                <Text style={OrderScreenLtrStyle.order_detail_value}>{request.time}</Text>
+              </View>
+              <View style={OrderScreenLtrStyle.order_detail}>
+                <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('price')}</Text>
+                <Text style={OrderScreenLtrStyle.order_detail_value}>{request.maxPrice + " RON"}</Text>
+              </View>
+            </View>
+          </View>
         </View>
         {
           !hasNotApplied ?
@@ -99,41 +151,51 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
               </View>
               <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
                 <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 20}]}>{I18n.t("set_price")}</Text>
-                <TextInput
-                  style={{
-                    backgroundColor: Colors.lightGrey,
-                    width: '50%',
-                    padding: 10,
-                    margin: 15,
-                    borderRadius: 7,
-                    marginBottom: 20
-                  }}
-                  placeholder={I18n.t('enter_price')}
-                  keyboardType="number-pad"
-                  value={offerData.price}
-                  editable={false}
-                />
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInput
+                    style={{
+                      backgroundColor: Colors.lightGrey,
+                      width: '50%',
+                      padding: 10,
+                      margin: 15,
+                      borderRadius: 7,
+                      marginBottom: 20
+                    }}
+                    placeholder={I18n.t('enter_price')}
+                    keyboardType="number-pad"
+                    value={offerData.price}
+                    editable={false}
+                  />
+                  <Text style={{fontSize: Fonts.regular, paddingBottom: 10}}>RON</Text>
+                </View>
               </View>
               <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
                 <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 20}]}>{I18n.t("appointment_price")}</Text>
-                <TextInput
-                  style={{
-                    backgroundColor: Colors.lightGrey,
-                    width: '50%',
-                    padding: 10,
-                    margin: 15,
-                    borderRadius: 7,
-                    marginBottom: 0
-                  }}
-                  placeholder={I18n.t('enter_price')}
-                  keyboardType="number-pad"
-                  value={offerData.advance_price}
-                  editable={false}
-                />
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInput
+                    style={{
+                      backgroundColor: Colors.lightGrey,
+                      width: '50%',
+                      padding: 10,
+                      margin: 15,
+                      borderRadius: 7,
+                      marginBottom: 0
+                    }}
+                    placeholder={I18n.t('enter_price')}
+                    keyboardType="number-pad"
+                    value={offerData.advance_price}
+                    editable={false}
+                  />
+                  <Text style={{fontSize: Fonts.regular, paddingTop: 10}}>RON</Text>
+                </View>
               </View>
             </View> :
-            <View style={SupplierViewOpenOrderScreenLtrStyle.offer_input}>
-              <Text>{I18n.t("concrete_type_" + offerData.concrete_type)}</Text>
+            <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_input,{height: 'auto', paddingLeft: 10}]}>
+              <Text style={{paddingLeft: 5, paddingBottom: 10, fontSize: Fonts.regular, fontWeight: 'bold'}}>{I18n.t("concrete_type")}</Text>
+              <RNPickerSelect
+                onValueChange={(value) => setConcreteType(value)}
+                items={renderConcreteOptions()}
+              />
               <View style={AppointmentScreenLtrStyle.delivery_time_container}>
                 <CustomIcons
                   size={Fonts.h4}
@@ -159,34 +221,48 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                   }}
                 />
                 : null}
-              <TextInput
-                style={{
-                  backgroundColor: Colors.lightGrey,
-                  width: '50%',
-                  padding: 10,
-                  margin: 15,
-                  borderRadius: 7,
-                  marginBottom: 0
-                }}
-                placeholder={I18n.t('enter_price')}
-                keyboardType="number-pad"
-                value={price}
-                onChangeText={(value) => setPrice(value)}
-              />
-              <TextInput
-                style={{
-                  backgroundColor: Colors.lightGrey,
-                  width: '50%',
-                  padding: 10,
-                  margin: 15,
-                  borderRadius: 7,
-                  marginBottom: 0
-                }}
-                placeholder={I18n.t('enter_price')}
-                keyboardType="number-pad"
-                value={advance_price}
-                onChangeText={(value) => setAdvancePrice(value)}
-              />
+              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
+                <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("appointment_price")}</Text>
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: 20}}>
+                  <TextInput
+                    style={{
+                      backgroundColor: Colors.lightGrey,
+                      width: '50%',
+                      padding: 10,
+                      margin: 15,
+                      marginLeft: 10,
+                      borderRadius: 7,
+                      marginBottom: 0
+                    }}
+                    placeholder={I18n.t('enter_price')}
+                    keyboardType="number-pad"
+                    value={price}
+                    onChangeText={(value) => setPrice(value)}
+                  />
+                  <Text style={{fontSize: Fonts.regular, paddingTop: 10}}>RON</Text>
+                </View>
+              </View>
+              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
+                <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("set_price")}</Text>
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInput
+                    style={{
+                      backgroundColor: Colors.lightGrey,
+                      width: '50%',
+                      padding: 10,
+                      margin: 15,
+                      marginLeft: 10,
+                      borderRadius: 7,
+                      marginBottom: 0
+                    }}
+                    placeholder={I18n.t('enter_price')}
+                    keyboardType="number-pad"
+                    value={advance_price}
+                    onChangeText={(value) => setAdvancePrice(value)}
+                  />
+                  <Text style={{fontSize: Fonts.regular, paddingTop: 10}}>RON</Text>
+                </View>
+            </View>
               <RegularButton
                 title={I18n.t('send_offer')}
                 onPress={() => sendOffer()}
@@ -194,7 +270,8 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                   GlobalLtrStyle.buttonStyle,
                   {
                     width: '90%',
-                    marginTop: 20,
+                    marginTop: 40,
+                    marginRight: 15,
                     backgroundColor: Colors.orange,
                   },
                 ]}
@@ -202,7 +279,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
               />
             </View>
         }
-      </View>
+      </ScrollView>
     </View>
   );
 };

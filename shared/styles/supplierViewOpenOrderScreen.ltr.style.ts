@@ -6,13 +6,10 @@ const SupplierViewOpenOrderScreenLtrStyle = StyleSheet.create({
 
   },
   order_details: {
-    paddingTop: 20,
     paddingBottom: 20,
   },
   offer_details: {
-    marginTop: 20,
-    paddingTop: 20,
-    borderTopWidth: 1,
+
   },
   offer_input: {
 

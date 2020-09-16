@@ -71,7 +71,9 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
       offers: 3,
       alreadyBid: true,
     },
-  ]);
+  ].sort((a, b) => {
+    return b.id - a.id;
+  }));
 
   const openSettings = () => {
 
