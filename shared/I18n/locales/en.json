@@ -42,6 +42,7 @@
   "concrete_type_1": "Concrete 1",
   "concrete_type_2": "Concrete 2",
   "order_details": "Details for Order",
+  "start_delivery": "Start delivery",
   "finish_order": "Finish order",
   "finish_order_title": "Finish order",
   "finish_order_msg": "Are you sure do you want to mark this order as finished?",
