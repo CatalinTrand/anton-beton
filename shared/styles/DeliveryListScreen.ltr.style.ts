@@ -17,7 +17,7 @@ const DeliveryListScreen = StyleSheet.create({
   title_text: {
     fontSize: Fonts.h5,
     fontWeight: 'bold',
-    color: Colors.orange,
+    color: Colors.black,
   },
   list: {
     width: '100%',

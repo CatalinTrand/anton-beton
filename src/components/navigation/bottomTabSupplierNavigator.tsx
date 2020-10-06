@@ -12,7 +12,7 @@ const BottomTabSupplierNavigator = ({route, navigation, selected}) => {
   return (
     <View style={{position: 'absolute', top: 'auto', bottom: 0, left: 0,display: 'flex', flexDirection: 'row',width: '100%', height: 50, zIndex: 1, borderTopWidth: 1, borderColor: Colors.lightGrey, marginBottom: 0}}>
       <TouchableOpacity style={selectedItem == 1 ?
-        {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.lightOrange2} :
+        {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.yellow} :
         {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white, borderColor: Colors.lightGrey, borderWidth: 1}
       }
         onPress={selectedItem == 1 ? () => {} : () => { setSelected(1); navigation.navigate('SupplierOpenOrdersScreen')}}
@@ -25,7 +25,7 @@ const BottomTabSupplierNavigator = ({route, navigation, selected}) => {
         />
       </TouchableOpacity>
       <TouchableOpacity style={selectedItem == 2 ?
-        {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.lightOrange2} :
+        {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.yellow} :
         {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white, borderColor: Colors.lightGrey, borderWidth: 1}
       }
         onPress={selectedItem == 2 ? () => {} : () => { navigation.navigate('SupplierOngoingOrdersScreen')}}

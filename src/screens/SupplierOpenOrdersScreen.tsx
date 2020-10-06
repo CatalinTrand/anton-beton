@@ -142,7 +142,7 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[RequestListScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={RequestListScreenLtrStyle.title_text}>{I18n.t('requests_in_your_range')}</Text>
+            <Text style={[RequestListScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('requests_in_your_range')}</Text>
           </View>
         }
         rightComponent={null}
@@ -193,8 +193,7 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
           (selectedFilterValue != I18n.t('all')) && (request.alreadyBid == (selectedFilterValue == I18n.t('no_licitation')) ) ? null :
           <TouchableOpacity key={idx} style={[RequestListScreenLtrStyle.list_item]} onPress={() => {openOrder(request)}}>
             <View style={RequestListScreenLtrStyle.title_contents}>
-              <Text style={[RequestListScreenLtrStyle.list_item_title, request.alreadyBid ? {color: Colors.green} : {}]}>{I18n.t('request') + " #" + request.id}</Text>
-              <Text style={RequestListScreenLtrStyle.offers_count}>{request.offers + " " + I18n.t('offers')}</Text>
+              <Text style={[RequestListScreenLtrStyle.list_item_title, request.alreadyBid ? {color: Colors.green} : {color: Colors.black}]}>{I18n.t('request') + " #" + request.id}</Text>
             </View>
             <Text
               style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.date) + ", " + request.time}</Text>

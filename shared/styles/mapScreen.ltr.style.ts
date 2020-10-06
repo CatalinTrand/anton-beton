@@ -22,7 +22,7 @@ const MapScreenLtrStyle = StyleSheet.create({
   title_text: {
     fontSize: Fonts.h5,
     fontWeight: 'bold',
-    color: Colors.orange,
+    color: Colors.black,
   },
   searchAddress: {
     zIndex: 0,
@@ -58,8 +58,6 @@ const MapScreenLtrStyle = StyleSheet.create({
     marginBottom: 70,
     padding: 10,
     borderRadius: 7,
-    borderColor: Colors.lightGrey,
-    borderWidth: 1,
     backgroundColor: Colors.orange,
     display: 'flex',
     justifyContent: 'center',
@@ -84,7 +82,7 @@ const MapScreenLtrStyle = StyleSheet.create({
     marginRight: 'auto',
   },
   button_text: {
-    color: Colors.white,
+    color: Colors.black,
     fontSize: Fonts.regular
   },
   button_disabled_text: {

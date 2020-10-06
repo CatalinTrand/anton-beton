@@ -54,7 +54,7 @@ const AppointmentScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[AppointmentScreenLtrStyle.title, {marginTop: 10}]}>
-            <Text style={AppointmentScreenLtrStyle.title_text}>{I18n.t('delivery_requirements')}</Text>
+            <Text style={[AppointmentScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('delivery_requirements')}</Text>
           </View>
         }
         rightComponent={null}

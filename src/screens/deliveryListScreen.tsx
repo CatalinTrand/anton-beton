@@ -37,7 +37,6 @@ const DeliveryListScreen = ({route, navigation}) => {
       price: 20000,
       date: '15/7/2021',
       time: '17:00',
-      inDelivery: true,
     },
     {
       id: 10007,
@@ -49,7 +48,6 @@ const DeliveryListScreen = ({route, navigation}) => {
       price: 30000,
       date: '12/7/2021',
       time: '12:00',
-      inDelivery: false,
     },
     {
       id: 10008,
@@ -61,7 +59,6 @@ const DeliveryListScreen = ({route, navigation}) => {
       price: 30000,
       date: '12/7/2021',
       time: '12:00',
-      inDelivery: false,
     },
   ];
 
@@ -71,24 +68,17 @@ const DeliveryListScreen = ({route, navigation}) => {
   };
 
   const pressedDelivery = (delivery) => {
-    if(delivery.inDelivery)
-      Alert.alert(
-        I18n.t('order_in_delivery_title'),
-        I18n.t('order_in_delivery_msg'),
-        [
-          { text: "Ok", onPress: () =>  navigation.navigate('ViewTruckMapScreen', {id: delivery.id, supplier_id: delivery.supplier_id}) },
-          { text: "Cancel", onPress: () => {}, style: 'cancel' }
-        ],
-        { cancelable: true }
-      );
+    if (delivery.inDelivery)
+      navigation.navigate('ViewTruckMapScreen', {id: delivery.id, supplier_id: delivery.supplier_id});
     else
       Alert.alert(
-        I18n.t('order_not_in_delivery_title'),
-        I18n.t('order_not_in_delivery_msg'),
+        I18n.t('cancel_order_title'),
+        I18n.t('cancel_order_msg'),
         [
-          { text: "Ok", onPress: () => {}, style: 'cancel' }
+          { text: I18n.t("cancel_order"), onPress: () => {} },
+          { text: I18n.t("back"), onPress: () => {}, style: 'cancel' }
         ],
-        { cancelable: true }
+        { cancelable: false }
       );
   };
 
@@ -108,7 +98,7 @@ const DeliveryListScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[DeliveryListScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={DeliveryListScreenLtrStyle.title_text}>{I18n.t('orders_for_delivery')}</Text>
+            <Text style={DeliveryListScreenLtrStyle.title_text}>{I18n.t('finished_orders')}</Text>
           </View>
         }
         rightComponent={null}
@@ -116,13 +106,17 @@ const DeliveryListScreen = ({route, navigation}) => {
       />
       <ScrollView contentContainerStyle={DeliveryListScreenLtrStyle.list}>
         {deliveries.map((delivery, idx) =>
-          <TouchableOpacity key={idx} style={[DeliveryListScreenLtrStyle.list_item, {backgroundColor: delivery.inDelivery? Colors.lightGreen : Colors.white}]} onPress={() => {pressedDelivery(delivery)} }>
+          <TouchableOpacity key={idx}
+                            style={[DeliveryListScreenLtrStyle.list_item, {backgroundColor: delivery.inDelivery ? Colors.lightGreen : Colors.white}]}
+                            onPress={() => {
+                              //pressedDelivery(delivery)
+                            }}>
             <View style={DeliveryListScreenLtrStyle.title_contents}>
               <Text style={DeliveryListScreenLtrStyle.list_item_title}>{I18n.t('request') + " #" + delivery.id}</Text>
-              {delivery.inDelivery ? <Text style={DeliveryListScreenLtrStyle.item_in_delivery}>{I18n.t('in_delivery')}</Text> : null}
             </View>
             <Text style={DeliveryListScreenLtrStyle.list_item_supplier_name}>{delivery.supplier_name}</Text>
-            <Text style={DeliveryListScreenLtrStyle.list_item_date_time}>{prettyDate(delivery.date) + ", " + delivery.time}</Text>
+            <Text
+              style={DeliveryListScreenLtrStyle.list_item_date_time}>{prettyDate(delivery.date) + ", " + delivery.time}</Text>
             <View style={DeliveryListScreenLtrStyle.list_item_details}>
               <View style={DeliveryListScreenLtrStyle.list_item_address}>
                 <Text style={DeliveryListScreenLtrStyle.list_item_address_title}>{I18n.t('short_address')}</Text>

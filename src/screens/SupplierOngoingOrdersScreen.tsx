@@ -53,6 +53,10 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
     return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
+  const cancelOrder = () => {
+
+  };
+
   const finishOrder = () => {
     //TODO - send request to server with data
 
@@ -89,7 +93,7 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[RequestListScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={RequestListScreenLtrStyle.title_text}>{I18n.t('ongoing_orders')}</Text>
+            <Text style={[RequestListScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('ongoing_orders')}</Text>
           </View>
         }
         rightComponent={null}
@@ -128,12 +132,15 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
             position: 'absolute',
             zIndex: 11
           }}>
-            <Text style={{width: '100%', paddingBottom: 20, textAlign: "center", fontSize: Fonts.regular, fontWeight: 'bold', color: Colors.orange}}>{I18n.t('request') + " #" + openRequest.id}</Text>
+            <Text style={{width: '100%', paddingBottom: 20, textAlign: "center", fontSize: Fonts.regular, fontWeight: 'bold', color: Colors.black}}>{I18n.t('request') + " #" + openRequest.id}</Text>
             <TouchableOpacity style={{width: '70%'}} onPress={() => Linking.openURL(encodeURI(wazeLink(openRequest)))} >
               <Text style={{display: 'flex', fontSize: Fonts.medium, marginBottom: 20, textAlign: "center", backgroundColor: Colors.orange, width: '100%', paddingTop: 10, paddingBottom: 10}}>{I18n.t('start_delivery')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{width: '70%'}} onPress={() => finishOrder()}>
               <Text style={{display: 'flex', fontSize: Fonts.medium, marginBottom: 50, textAlign: "center", backgroundColor: Colors.orange, width: '100%', paddingTop: 10, paddingBottom: 10}}>{I18n.t('finish_order')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{width: '70%', marginTop: 30}} onPress={() => cancelOrder()}>
+              <Text style={{display: 'flex', fontSize: Fonts.medium, marginBottom: 50, textAlign: "center", backgroundColor: Colors.white, borderWidth: 1, borderColor: Colors.black, width: '100%', paddingTop: 10, paddingBottom: 10}}>{I18n.t('cancel_order')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setOpenRequest(null)}>
               <Text style={{color: Colors.primary, fontWeight: 'bold', fontSize: Fonts.medium}}>{I18n.t('cancel')}</Text>

@@ -18,7 +18,19 @@ const RequestListScreenLtrStyle = StyleSheet.create({
   title_text: {
     fontSize: Fonts.h5,
     fontWeight: 'bold',
-    color: Colors.orange,
+    color: Colors.black,
+  },
+  select_view: {
+    width: '100%',
+    paddingLeft: 15,
+    paddingBottom: 5,
+    paddingTop: 5,
+    marginBottom: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.lightGrey,
   },
   list: {
     width: '100%',
@@ -46,7 +58,7 @@ const RequestListScreenLtrStyle = StyleSheet.create({
   },
   list_item_title: {
     fontSize: Fonts.h6,
-    color: Colors.orange,
+    color: Colors.black,
     fontWeight: 'bold',
     display: 'flex',
     flexDirection: 'row',

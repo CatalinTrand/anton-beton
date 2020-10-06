@@ -74,20 +74,6 @@ const ViewTruckMapScreen = ({route, navigation}) => {
       });
   };
 
-  const finishOrder = () => {
-    //TODO - send request to server with data
-
-    Alert.alert(
-      I18n.t('finish_order_title'),
-      I18n.t('finish_order_msg'),
-      [
-        { text: "Ok", onPress: () => {} },
-        { text: "Cancel", onPress: () => {}, style: 'cancel' }
-      ],
-      { cancelable: false }
-    );
-  };
-
   const prettyDuration = (mins) => {
     let hours = mins / 60;
     if(hours < 1) {
@@ -116,7 +102,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('delivery_progress') + " #" + id}</Text>
+            <Text style={[OrderScreenLtrStyle.title_text,{color: Colors.black}]}>{I18n.t('delivery_progress') + " #" + id}</Text>
           </View>
         }
         rightComponent={null}
@@ -163,10 +149,6 @@ const ViewTruckMapScreen = ({route, navigation}) => {
         }
       </MapView>
       <Text style={ViewTruckMapScreenLtrStyle.eta}>{"ETA: " + eta}</Text>
-      <TouchableOpacity style={ViewTruckMapScreenLtrStyle.button} onPress={() => finishOrder()}>
-        <Text
-          style={ViewTruckMapScreenLtrStyle.button_text}>{I18n.t('finish_order')}</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

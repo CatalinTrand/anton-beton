@@ -92,7 +92,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[RequestListScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={RequestListScreenLtrStyle.title_text}>{I18n.t('order_details') + "#" + request.id}</Text>
+            <Text style={[RequestListScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('order_details') + "#" + request.id}</Text>
           </View>
         }
         rightComponent={null}

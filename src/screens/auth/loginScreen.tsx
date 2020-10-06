@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Keyboard, Text, View, ScrollView, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import {Keyboard, Text, View, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Image} from 'react-native';
 import {useDispatch} from 'react-redux';
 import loginPageStyle from '../../../shared/styles/auth.ltr.style';
 import Header from '../../components/sections/header';
@@ -34,9 +34,10 @@ const LoginScreen = ({navigation}): JSX.Element => {
       <ScrollView contentContainerStyle={loginPageStyle.containerView}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={GlobalLtrStyle.centeredView}>
-            <Text style={[GlobalLtrStyle.bigHeader, {color: Colors.orange, width: '100%', textAlign: 'center'}]}>
-              Anton
-            </Text>
+            <Image
+              style={{maxWidth: '50%', maxHeight: '20%', marginLeft: 'auto', marginRight: 'auto', marginBottom: 20, marginTop: 20}}
+              source={require("../../assets/images/bild.png")}
+            />
             <View style={[DoctorProfileLtrStyle.row, {justifyContent: 'space-between'}]}>
               <LoginOptions navigation={navigation}/>
             </View>
@@ -61,6 +62,7 @@ const LoginScreen = ({navigation}): JSX.Element => {
                     GlobalLtrStyle.buttonStyle,
                     {
                       marginTop: 50,
+                      color: Colors.black,
                       backgroundColor: Colors.orange,
                     },
                   ]}
