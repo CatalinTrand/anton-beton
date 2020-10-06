@@ -1,5 +1,5 @@
 import RequestListScreenLtrStyle from '../../shared/styles/RequestListScreen.ltr.style';
-import {Alert, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Linking, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import * as React from "react";
 import BottomTabNavigator from "../components/navigation/bottomTabNavigator";
 import {CustomIcons} from "../../shared/themes";
@@ -11,10 +11,6 @@ import {useState} from "react";
 import {Picker} from "@react-native-community/picker";
 
 const RequestListScreen = ({route, navigation}) => {
-
-  const openSettings = () => {
-
-  };
 
   const initial_requests = [
     {
@@ -87,6 +83,7 @@ const RequestListScreen = ({route, navigation}) => {
 
   const [requests, setRequests] = useState(initial_requests);
   const [selectedFilterValue, setSelectedFilterValue] = useState(I18n.t('all'));
+  const [openSettings, setOpenSettings] = useState(false);
 
   const prettyDate = (date) => {
     let separator = "/";
@@ -132,7 +129,7 @@ const RequestListScreen = ({route, navigation}) => {
             size={Fonts.h6}
             color={Colors.black}
             name="cog"
-            onPress={() => openSettings()}
+            onPress={() => setOpenSettings(true)}
           />
         }
         centerComponent={
@@ -143,6 +140,55 @@ const RequestListScreen = ({route, navigation}) => {
         rightComponent={null}
         noBorder={false}
       />
+      {openSettings ?
+        [
+          <View style={{
+            backgroundColor: Colors.lightGrey,
+            opacity: 0.6,
+            position: 'absolute',
+            zIndex: 10,
+            top: 0,
+            left: 0,
+            display: 'flex',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}></View>,
+          <View style={{
+            opacity: 1,
+            borderRadius: 5,
+            backgroundColor: Colors.white,
+            borderWidth: 1,
+            borderColor: Colors.black,
+            display: 'flex',
+            flexDirection: 'column',
+            width: '80%',
+            paddingTop: 30,
+            paddingBottom: 30,
+            marginLeft: '10%',
+            marginRight: '10%',
+            marginTop: '40%',
+            marginBottom: 'auto',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            zIndex: 11
+          }}>
+            <Text style={{width: '100%', paddingBottom: 30, textAlign: "center", fontSize: Fonts.h6, fontWeight: 'bold', color: Colors.black}}>{I18n.t('settings')}</Text>
+            <TouchableOpacity style={{marginBottom: 40, display: 'flex', flexDirection: 'row'}} onPress={() => navigation.navigate('MyCardsScreen')}>
+              <CustomIcons
+                style={{marginRight: 5}}
+                size={Fonts.h6}
+                color={Colors.green}
+                name="credit-card"
+              /><Text style={{color: Colors.green, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('my_cards')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setOpenSettings(false)}>
+              <Text style={{color: Colors.primary, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('back')}</Text>
+            </TouchableOpacity>
+          </View>] : null
+      }
       <View style={RequestListScreenLtrStyle.select_view}>
         <View style={{width: '50%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
           <CustomIcons
@@ -168,7 +214,7 @@ const RequestListScreen = ({route, navigation}) => {
           <TouchableOpacity key={idx} style={
             [RequestListScreenLtrStyle.list_item,
               {
-                backgroundColor: request.state == 2 ? (request.inDelivery ? Colors.lightGreen : Colors.yellow) : Colors.white
+                backgroundColor: Colors.white
               }
               ]}
               onPress={() => {
@@ -178,7 +224,7 @@ const RequestListScreen = ({route, navigation}) => {
                   pressedDelivery(request);
               }}>
             <View style={RequestListScreenLtrStyle.title_contents}>
-              <Text style={RequestListScreenLtrStyle.list_item_title}>{I18n.t('request') + " #" + request.id}</Text>
+              <Text style={[RequestListScreenLtrStyle.list_item_title,{color: request.state == 2 ? (request.inDelivery ? Colors.lightGreen : Colors.yellow) : Colors.black}]}>{I18n.t('request') + " #" + request.id}</Text>
               <Text style={RequestListScreenLtrStyle.offers_count}>{request.state == 1 ? (request.offers + " " + I18n.t('offers')) : (request.supplier_name)}</Text>
             </View>
             <Text style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.date) + ", " + request.time}</Text>

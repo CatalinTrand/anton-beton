@@ -12,10 +12,29 @@ import {useState} from "react";
 import GlobalLtrStyle from "../../shared/styles/global.ltr.style";
 import RegularButton from "../../shared/components/buttons/regularButton";
 import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
+import RequestListScreenLtrStyle from "../../shared/styles/RequestListScreen.ltr.style";
+import {Picker} from "@react-native-community/picker";
 
 const PaymentScreen = ({route, navigation}) => {
 
   const {request, offer} = route.params;
+
+  const myCards = [ // TODO - get from local storage
+    {
+      type: "Mastercard",
+      cardName: "Ionescu George",
+      cardNumber: "1234 1234 1234 1234",
+      expirationDate: "05/21",
+      cvv: "222"
+    },
+    {
+      type: "Visa",
+      cardName: "Popescu Vasile",
+      cardNumber: "2345 2345 2345 2345",
+      expirationDate: "08/23",
+      cvv: "345",
+    }
+  ];
 
   const [state, setState] = useState({
     cardName: "",
@@ -76,6 +95,8 @@ const PaymentScreen = ({route, navigation}) => {
     );
   };
 
+  const [selectedCardValue, setSelectedCardValue] = useState(I18n.t('please_choose_a_credit_card'));
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
       <Header
@@ -127,6 +148,30 @@ const PaymentScreen = ({route, navigation}) => {
           <View style={PaymentScreenLtrStyle.total_payment}>
             <Text style={PaymentScreenLtrStyle.total_payment_title}>{I18n.t('total_payment')}</Text>
             <Text style={PaymentScreenLtrStyle.total_payment_value}>{offer.advance_price + " RON"}</Text>
+          </View>
+        </View>
+        <View style={RequestListScreenLtrStyle.select_view}>
+          <View style={{width: '50%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+            <CustomIcons
+              style={{marginRight: 5}}
+              size={Fonts.regular}
+              color={Colors.black}
+              name="equalizer"
+            />
+            <Picker
+              style={{flex: 1, fontSize: Fonts.small}}
+              itemStyle={{fontSize: Fonts.small}}
+              selectedValue={selectedCardValue}
+              onValueChange={(value) => { if(value == I18n.t("add_new_card")) navigation.navigate("MyCardsScreen", {from: {request,offer}}); else setSelectedCardValue(value);}}
+            >
+              <Picker.Item key={1} color={Colors.primary} label={I18n.t('please_choose_a_credit_card')} value={I18n.t('please_choose_a_credit_card')}/>
+              {
+                myCards.map( (card, index) =>
+                  <Picker.Item color={Colors.black} label={card.type + " **** " + card.cardNumber.substr(-4, 4)} value={card.cardNumber} key={index+2}/>
+                )
+              }
+              <Picker.Item key={myCards.length + 2} color={Colors.green} label={" + " + I18n.t('add_new_card')} value={I18n.t('add_new_card')}/>
+            </Picker>
           </View>
         </View>
         <View style={PaymentScreenLtrStyle.card_details}>

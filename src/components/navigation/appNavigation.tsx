@@ -27,6 +27,7 @@ import RequestListScreen from "../../screens/requestListScreen";
 import OrderScreen from "../../screens/orderScreen";
 import DeliveryListScreen from "../../screens/deliveryListScreen";
 import ViewTruckMapScreen from "../../screens/viewTruckMapScreen";
+import MyCardsScreen from "../../screens/myCardsScreen";
 import DisplayScreen from "../../screens/displayScreen";
 import SupplierOpenOrdersScreen from "../../screens/SupplierOpenOrdersScreen";
 import SupplierOngoingOrdersScreen from "../../screens/SupplierOngoingOrdersScreen";
@@ -154,6 +155,7 @@ const MainAppNavigation = () => {
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen name="DeliveryListScreen" component={DeliveryListScreen} />
       <Stack.Screen name="ViewTruckMapScreen" component={ViewTruckMapScreen} />
+      <Stack.Screen name="MyCardsScreen" component={MyCardsScreen} />
 
       <Stack.Screen name="DoctorProfile" component={DoctorProfile} />
       <Stack.Screen name="ScheduleCalendar" component={ScheduleCalendar} />

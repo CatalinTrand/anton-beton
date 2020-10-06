@@ -7,12 +7,11 @@ import Fonts from "../../shared/themes/Fonts";
 import Colors from "../../shared/themes/Colors";
 import I18n from "../../shared/I18n/I18n";
 import Header from "../components/sections/header";
+import {useState} from "react";
 
 const DeliveryListScreen = ({route, navigation}) => {
 
-  const openSettings = () => {
-
-  };
+  const [openSettings, setOpenSettings] = useState(false);
 
   const deliveries = [
     {
@@ -93,7 +92,7 @@ const DeliveryListScreen = ({route, navigation}) => {
             size={Fonts.h6}
             color={Colors.black}
             name="cog"
-            onPress={() => openSettings()}
+            onPress={() => setOpenSettings(true)}
           />
         }
         centerComponent={
@@ -104,6 +103,55 @@ const DeliveryListScreen = ({route, navigation}) => {
         rightComponent={null}
         noBorder={false}
       />
+      {openSettings ?
+        [
+          <View style={{
+            backgroundColor: Colors.lightGrey,
+            opacity: 0.6,
+            position: 'absolute',
+            zIndex: 10,
+            top: 0,
+            left: 0,
+            display: 'flex',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}></View>,
+          <View style={{
+            opacity: 1,
+            borderRadius: 5,
+            backgroundColor: Colors.white,
+            borderWidth: 1,
+            borderColor: Colors.black,
+            display: 'flex',
+            flexDirection: 'column',
+            width: '80%',
+            paddingTop: 30,
+            paddingBottom: 30,
+            marginLeft: '10%',
+            marginRight: '10%',
+            marginTop: '40%',
+            marginBottom: 'auto',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            zIndex: 11
+          }}>
+            <Text style={{width: '100%', paddingBottom: 30, textAlign: "center", fontSize: Fonts.h6, fontWeight: 'bold', color: Colors.black}}>{I18n.t('settings')}</Text>
+            <TouchableOpacity style={{marginBottom: 40, display: 'flex', flexDirection: 'row'}} onPress={() => navigation.navigate('MyCardsScreen')}>
+              <CustomIcons
+                style={{marginRight: 5}}
+                size={Fonts.h6}
+                color={Colors.green}
+                name="credit-card"
+              /><Text style={{color: Colors.green, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('my_cards')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setOpenSettings(false)}>
+              <Text style={{color: Colors.primary, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('back')}</Text>
+            </TouchableOpacity>
+          </View>] : null
+      }
       <ScrollView contentContainerStyle={DeliveryListScreenLtrStyle.list}>
         {deliveries.map((delivery, idx) =>
           <TouchableOpacity key={idx}

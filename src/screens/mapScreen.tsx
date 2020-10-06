@@ -113,15 +113,62 @@ const MapScreen = ({route, navigation}) => {
     setWidth('100.01%');
   };
 
-  const openSettings = () => {
-
-  };
+  const [openSettings, setOpenSettings] = useState(false);
 
   let markerIcon = require("../assets/images/flag_marker.png");
   let calculatedHeight = Dimensions.get("window").height - 45;
 
   return (
     <View style={MapScreenLtrStyle.container}>
+      {openSettings ?
+        [
+          <View style={{
+            backgroundColor: Colors.lightGrey,
+            opacity: 0.6,
+            position: 'absolute',
+            zIndex: 11,
+            top: 0,
+            left: 0,
+            display: 'flex',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}></View>,
+          <View style={{
+            opacity: 1,
+            borderRadius: 5,
+            backgroundColor: Colors.white,
+            borderWidth: 1,
+            borderColor: Colors.black,
+            display: 'flex',
+            flexDirection: 'column',
+            width: '80%',
+            paddingTop: 30,
+            paddingBottom: 30,
+            marginLeft: '10%',
+            marginRight: '10%',
+            marginTop: '40%',
+            marginBottom: 'auto',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            zIndex: 11
+          }}>
+            <Text style={{width: '100%', paddingBottom: 30, textAlign: "center", fontSize: Fonts.h6, fontWeight: 'bold', color: Colors.black}}>{I18n.t('settings')}</Text>
+            <TouchableOpacity style={{marginBottom: 40, display: 'flex', flexDirection: 'row'}} onPress={() => navigation.navigate('MyCardsScreen')}>
+              <CustomIcons
+                style={{marginRight: 5}}
+                size={Fonts.h6}
+                color={Colors.green}
+                name="credit-card"
+              /><Text style={{color: Colors.green, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('my_cards')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setOpenSettings(false)}>
+              <Text style={{color: Colors.primary, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('back')}</Text>
+            </TouchableOpacity>
+          </View>] : null
+      }
       <View style={MapScreenLtrStyle.topPart}>
         <Header
           placement="left"
@@ -131,7 +178,7 @@ const MapScreen = ({route, navigation}) => {
               size={Fonts.h6}
               color={Colors.black}
               name="cog"
-              onPress={() => openSettings()}
+              onPress={() => setOpenSettings(true)}
             />
           }
           centerComponent={
@@ -162,7 +209,7 @@ const MapScreen = ({route, navigation}) => {
       {
         mapRegion.latitude == 0 ? null :
           <MapView
-            style={[MapScreenLtrStyle.map,{width: width, height: calculatedHeight}]}
+            style={[MapScreenLtrStyle.map,{zIndex: -1, width: width, height: calculatedHeight}]}
             onMapReady={() => setWidth( '100%' )}
             customMapStyle={MapStyle}
             initialRegion={mapRegion}
