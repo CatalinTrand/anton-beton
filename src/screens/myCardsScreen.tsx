@@ -12,27 +12,12 @@ import {useState} from "react";
 import GlobalLtrStyle from "../../shared/styles/global.ltr.style";
 import RegularButton from "../../shared/components/buttons/regularButton";
 import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
-import RequestListScreenLtrStyle from "../../shared/styles/RequestListScreen.ltr.style";
-import {Picker} from "@react-native-community/picker";
+import SyncStorage from 'sync-storage';
 
 const PaymentScreen = ({route, navigation}) => {
 
-  const myCards = [ // TODO - get from local storage
-    {
-      type: "Mastercard",
-      cardName: "Ionescu George",
-      cardNumber: "1234 1234 1234 1234",
-      expirationDate: "05/21",
-      cvv: "222"
-    },
-    {
-      type: "Visa",
-      cardName: "Popescu Vasile",
-      cardNumber: "2345 2345 2345 2345",
-      expirationDate: "08/23",
-      cvv: "345",
-    }
-  ];
+  let myCards = SyncStorage.get('cards');
+  myCards = myCards ? myCards : [];
 
   const [state, setState] = useState({
     cardName: "",
@@ -60,6 +45,8 @@ const PaymentScreen = ({route, navigation}) => {
   };
 
   const setCardExpirationDate = (date) => {
+    if(date.length > 2 && !date.includes("/"))
+      date = date.substr(0,2) + "/" + date.substr(2,2);
     setState({
       cardName: state.cardName,
       cardNumber: state.cardNumber,
@@ -78,7 +65,25 @@ const PaymentScreen = ({route, navigation}) => {
   };
 
   const saveCard = () => {
-    //TODO - set to local storage
+    if(state.cardName.length <= 6 || state.cardNumber.length != 16 || state.expirationDate.length != 5 || state.cvv.length != 3)
+      return;
+
+    myCards.push({
+      type: state.cardNumber[0] == '4' ? "Visa" : "Mastercard",
+      cardName: state.cardName,
+      cardNumber: state.cardNumber,
+      expirationDate: state.expirationDate,
+      cvv: state.cvv
+    });
+
+    SyncStorage.set('cards', myCards);
+
+    setState({
+      cardName: "",
+      cardNumber: "",
+      expirationDate: "",
+      cvv: ""
+    });
   };
 
   return (
@@ -128,7 +133,14 @@ const PaymentScreen = ({route, navigation}) => {
           }
         </View>
         <View style={{borderTopWidth: 1, borderTopColor: Colors.black, paddingTop: 10, marginTop: 10}}>
-          <Text style={{paddingTop: 10, paddingBottom: 10, paddingLeft: 15, color: Colors.orange, fontSize: Fonts.h6, fontWeight: 'bold'}}>{I18n.t('new_card')}</Text>
+          <Text style={{
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingLeft: 15,
+            color: Colors.orange,
+            fontSize: Fonts.h6,
+            fontWeight: 'bold'
+          }}>{I18n.t('new_card')}</Text>
           <View style={PaymentScreenLtrStyle.card_details}>
             <TextInput
               editable
@@ -148,7 +160,7 @@ const PaymentScreen = ({route, navigation}) => {
               editable
               style={[PaymentScreenLtrStyle.card_inputs, {width: '47%'}]}
               placeholder={I18n.t("card_expiration_date")}
-              maxLength={4}
+              maxLength={5}
               onChangeText={text => setCardExpirationDate(text)}
               value={state.expirationDate}/>
             <TextInput

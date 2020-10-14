@@ -14,27 +14,14 @@ import RegularButton from "../../shared/components/buttons/regularButton";
 import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
 import RequestListScreenLtrStyle from "../../shared/styles/RequestListScreen.ltr.style";
 import {Picker} from "@react-native-community/picker";
+import SyncStorage from 'sync-storage';
 
 const PaymentScreen = ({route, navigation}) => {
 
   const {request, offer} = route.params;
 
-  const myCards = [ // TODO - get from local storage
-    {
-      type: "Mastercard",
-      cardName: "Ionescu George",
-      cardNumber: "1234 1234 1234 1234",
-      expirationDate: "05/21",
-      cvv: "222"
-    },
-    {
-      type: "Visa",
-      cardName: "Popescu Vasile",
-      cardNumber: "2345 2345 2345 2345",
-      expirationDate: "08/23",
-      cvv: "345",
-    }
-  ];
+  let myCards = SyncStorage.get('cards');
+  myCards = myCards ? myCards : [];
 
   const [state, setState] = useState({
     cardName: "",
@@ -173,36 +160,6 @@ const PaymentScreen = ({route, navigation}) => {
               <Picker.Item key={myCards.length + 2} color={Colors.green} label={" + " + I18n.t('add_new_card')} value={I18n.t('add_new_card')}/>
             </Picker>
           </View>
-        </View>
-        <View style={PaymentScreenLtrStyle.card_details}>
-          <TextInput
-            editable
-            style={[PaymentScreenLtrStyle.card_inputs, {width: '100%'}]}
-            placeholder={I18n.t("card_holder")}
-            maxLength={40}
-            onChangeText={text => setCardName(text)}
-            value={state.cardName}/>
-          <TextInput
-            editable
-            style={[PaymentScreenLtrStyle.card_inputs, {width: '100%'}]}
-            placeholder={I18n.t("card_number")}
-            maxLength={16}
-            onChangeText={text => setCardNumber(text)}
-            value={state.cardNumber}/>
-          <TextInput
-            editable
-            style={[PaymentScreenLtrStyle.card_inputs, {width: '47%'}]}
-            placeholder={I18n.t("card_expiration_date")}
-            maxLength={4}
-            onChangeText={text => setCardExpirationDate(text)}
-            value={state.expirationDate}/>
-          <TextInput
-            editable
-            style={[PaymentScreenLtrStyle.card_inputs, {width: '47%'}]}
-            placeholder={I18n.t("card_cvv")}
-            maxLength={3}
-            onChangeText={text => setCardCvv(text)}
-            value={state.cvv}/>
         </View>
       </ScrollView>
       <RegularButton
