@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "510881295141",
+    "firebase_url": "https://anton-e18e5.firebaseio.com",
+    "project_id": "anton-e18e5",
+    "storage_bucket": "anton-e18e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510881295141:android:db21e2bf6452f4e41448cc",
+        "android_client_info": {
+          "package_name": "com.mutascu.bild"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510881295141-6fq886fsqbatk549aruk26cqteghdbt3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXwOdOD9tZ1qpY2MXUk69Rp_PdKsI7H38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510881295141-6fq886fsqbatk549aruk26cqteghdbt3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

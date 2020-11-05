@@ -10,70 +10,86 @@ import Colors from "../../shared/themes/Colors";
 import * as React from "react";
 import {useState} from "react";
 import BottomTabSupplierNavigator from "../components/navigation/bottomTabSupplierNavigator";
+import {getRequest} from "../requestHandler";
+import SyncStorage from "sync-storage";
 
 const SupplierOpenOrdersScreen = ({route, navigation}) => {
 
   const [selectedFilterValue, setSelectedFilterValue] = useState(I18n.t('all'));
   const [selectedSortValue, setSelectedSortValue] = useState(I18n.t('new'));
-  const [requests, setRequests] = useState([
-    {
-      id: 10005,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 5000,
-      maxPrice: 30000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: 4,
-      alreadyBid: true,
-    },
-    {
-      id: 10006,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 15000,
-      maxPrice: 300000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: 1,
-      alreadyBid: false,
-    },
-    {
-      id: 10007,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 3400,
-      maxPrice: 35000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: 0,
-      alreadyBid: true,
-    },
-    {
-      id: 10008,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 1000,
-      maxPrice: 10000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: 7,
-      alreadyBid: false,
-    },
-    {
-      id: 10009,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 4000,
-      maxPrice: 20000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: 3,
-      alreadyBid: true,
-    },
-  ].sort((a, b) => {
-    return b.id - a.id;
-  }));
+  const [requests, setRequests] = useState([] as {id,address,coordinates,quantity,maxPrice,date,time,offers,bid,alreadyBid}[]);
+
+  let token = SyncStorage();
+  getRequest("supplier/offer/list", token, response => {
+    if(response.data.success) {
+      setRequests(response.data.offers.sort(
+        (a,b) => {
+          return b.id - a.id;
+        }
+      ).map(offer => { return {...offer, alreadyBid: offer.bid !== null} }));
+    } else {
+      console.log(response.data.error);
+    }
+  });
+  //   [
+  //   {
+  //     id: 10005,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 5000,
+  //     maxPrice: 30000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: 4,
+  //     alreadyBid: true,
+  //   },
+  //   {
+  //     id: 10006,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 15000,
+  //     maxPrice: 300000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: 1,
+  //     alreadyBid: false,
+  //   },
+  //   {
+  //     id: 10007,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 3400,
+  //     maxPrice: 35000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: 0,
+  //     alreadyBid: true,
+  //   },
+  //   {
+  //     id: 10008,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 1000,
+  //     maxPrice: 10000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: 7,
+  //     alreadyBid: false,
+  //   },
+  //   {
+  //     id: 10009,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 4000,
+  //     maxPrice: 20000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: 3,
+  //     alreadyBid: true,
+  //   },
+  // ].sort((a, b) => {
+  //   return b.id - a.id;
+  // }));
 
   const openSettings = () => {
 

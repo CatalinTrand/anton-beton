@@ -4,22 +4,14 @@ import { PropTypes } from 'prop-types';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { CustomIcons, Fonts, Colors } from '../../../shared/themes';
-import DoctorProfile from '../../screens/doctorProfile';
-import GetDoctor from '../../screens/getDoctor';
 import LoginScreen from '../../screens/auth/loginScreen';
 import RegisterScreen from '../../screens/auth/registerScreen';
 import TermsAndConditions from '../../screens/staticScreens/termsAndConditions';
 import PrivacyPolicy from '../../screens/staticScreens/privacyPolicy';
 import PaymentVisitScreen from '../../screens/auth/paymentVisit';
-import SearchDoctorScreen from '../../screens/searchForDoctor';
 import AddCreditCardScreen from '../../screens/auth/addCreditCard';
 import ForgotPasswordScreen from '../../screens/auth/forgotPassword';
 import NewPasswordScreen from '../../screens/auth/newPassword';
-import NoInternetConnection from '../../screens/noInternetConnection';
-import FeedbackScreen from '../../screens/feedbackScreen';
-import ScheduleCalendar from '../../screens/scheduleCalendar';
-import ProfilePicker from '../../screens/profilePicker';
-import DocumentSelector from "../../screens/documentSelector";
 import PaymentScreen from "../../screens/paymentScreen";
 import MapScreen from "../../screens/mapScreen";
 import AppointmentScreen from "../../screens/appointmentScreen";
@@ -106,13 +98,10 @@ const AuthNavigation = () => {
       <AuthStack.Screen name="Register" component={RegisterScreen} />
       <AuthStack.Screen name="AddCreditCard" component={AddCreditCardScreen} />
       <AuthStack.Screen name="PaymentVisit" component={PaymentVisitScreen} />
-      <AuthStack.Screen name="SearchDoctor" component={SearchDoctorScreen} />
       <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <AuthStack.Screen name="NewPassword" component={NewPasswordScreen} />
       <AuthStack.Screen name="TermsAndConditions" component={TermsAndConditions} />
       <AuthStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-      <AuthStack.Screen name="NoInternetConnection" component={NoInternetConnection} />
-      <AuthStack.Screen name="FeedbackScreen" component={FeedbackScreen} />
     </AuthStack.Navigator>
   );
 };
@@ -156,12 +145,6 @@ const MainAppNavigation = () => {
       <Stack.Screen name="DeliveryListScreen" component={DeliveryListScreen} />
       <Stack.Screen name="ViewTruckMapScreen" component={ViewTruckMapScreen} />
       <Stack.Screen name="MyCardsScreen" component={MyCardsScreen} />
-
-      <Stack.Screen name="DoctorProfile" component={DoctorProfile} />
-      <Stack.Screen name="ScheduleCalendar" component={ScheduleCalendar} />
-      <Stack.Screen name="ProfilePicker" component={ProfilePicker} />
-      <Stack.Screen name="DocumentSelector" component={DocumentSelector} />
-      <Stack.Screen name="GetDoctor" component={GetDoctor} />
       <Stack.Screen name="Auth" component={AuthNavigation} />
     </Stack.Navigator>
   );

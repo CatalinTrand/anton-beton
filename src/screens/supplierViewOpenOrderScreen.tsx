@@ -16,6 +16,8 @@ import AppointmentScreenLtrStyle from "../../shared/styles/appointmentScreen.ltr
 import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
 import Constants from '../../shared/constants/otherConstants.json';
 import RNPickerSelect from 'react-native-picker-select';
+import {putRequest} from "../requestHandler";
+import SyncStorage from "sync-storage";
 
 let set = false;
 
@@ -32,12 +34,13 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
 
   const hasNotApplied = !request.alreadyBid;
 
-  const offerData = { //TODO - GET
-    concrete_type: 1,
-    time: new Date(),
-    price: "30000",
-    advance_price: "3000",
-  };
+  const offerData = request.bid;
+  // {
+  //   concrete_type: 1,
+  //   time: new Date(),
+  //   price: "30000",
+  //   advance_price: "3000",
+  // };
 
   const prettyDate = (date) => {
     let separator = "/";
@@ -45,19 +48,27 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
   };
 
   const sendOffer = () => {
-    //TODO - send offer to server with data
+    if(request.id == null || price.length == 0 || advance_price.length == 0)
+      return;
 
-    Alert.alert(
-      I18n.t('offer_made_title'),
-      I18n.t('offer_made_msg'),
-      [
-        {
-          text: "Ok", onPress: () => {
-          }
-        }
-      ],
-      {cancelable: false}
-    );
+    let token = SyncStorage.get("token");
+    putRequest("supplier/order/bid", {orderID: request.id, price: price, advancePrice: advance_price, time: time, concreteType: concreteType} , token, response => {
+      if(response.data.success) {
+        Alert.alert(
+          I18n.t('offer_made_title'),
+          I18n.t('offer_made_msg'),
+          [
+            {
+              text: "Ok", onPress: () => {
+              }
+            }
+          ],
+          {cancelable: false}
+        );
+      } else {
+        console.log(response.data.error);
+      }
+    });
   };
 
   const renderConcreteOptions = () => {

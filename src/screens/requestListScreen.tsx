@@ -9,79 +9,92 @@ import I18n from "../../shared/I18n/I18n";
 import Header from "../components/sections/header";
 import {useState} from "react";
 import {Picker} from "@react-native-community/picker";
+import {getRequest} from "../requestHandler";
+import SyncStorage from 'sync-storage';
 
 const RequestListScreen = ({route, navigation}) => {
 
-  const initial_requests = [
-    {
-      id: 10005,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 5000,
-      maxPrice: 30000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: 4,
-      state: 1, //1 = open, 2 = in derulare, 3 = finalizate, 4 = cancelled
-      inDelivery: null,
-    },
-    {
-      id: 10006,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 15000,
-      maxPrice: 300000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: 1,
-      state: 1,
-      inDelivery: null,
-    },
-    {
-      id: 10007,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 3400,
-      price: 35000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: null,
-      state: 2,
-      inDelivery: false,
-      supplier_id: 1,
-      supplier_name: 'Beton S.R.L.',
-    },
-    {
-      id: 10008,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 1000,
-      price: 10000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: null,
-      state: 2,
-      inDelivery: true,
-      supplier_id: 2,
-      supplier_name: 'LivrezBetonOriunde S.A.',
-    },
-    {
-      id: 10009,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 4000,
-      price: 20000,
-      date: '12/7/2021',
-      time: '12:00',
-      offers: null,
-      state: 2,
-      inDelivery: false,
-      supplier_id: 1,
-      supplier_name: 'Beton S.R.L.',
-    },
-  ];
+  // const initial_requests = [
+  //   {
+  //     id: 10005,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 5000,
+  //     maxPrice: 30000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: 4,
+  //     state: 1, //1 = open, 2 = in derulare, 3 = finalizate, 4 = cancelled
+  //     inDelivery: null,
+  //   },
+  //   {
+  //     id: 10006,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 15000,
+  //     maxPrice: 300000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: 1,
+  //     state: 1,
+  //     inDelivery: null,
+  //   },
+  //   {
+  //     id: 10007,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 3400,
+  //     price: 35000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: null,
+  //     state: 2,
+  //     inDelivery: false,
+  //     supplier_id: 1,
+  //     supplier_name: 'Beton S.R.L.',
+  //   },
+  //   {
+  //     id: 10008,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 1000,
+  //     price: 10000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: null,
+  //     state: 2,
+  //     inDelivery: true,
+  //     supplier_id: 2,
+  //     supplier_name: 'LivrezBetonOriunde S.A.',
+  //   },
+  //   {
+  //     id: 10009,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 4000,
+  //     price: 20000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     offers: null,
+  //     state: 2,
+  //     inDelivery: false,
+  //     supplier_id: 1,
+  //     supplier_name: 'Beton S.R.L.',
+  //   },
+  // ];
 
-  const [requests, setRequests] = useState(initial_requests);
+  const token = SyncStorage.get("token");
+  const [initial_requests, setInitialRequests] = useState([] as {id, address, coordinates, quantity, maxPrice, price, date, time, offers, state, inDelivery, suppplier_id, supplier_name}[]);
+  const [requests, setRequests] = useState([] as {id, address, coordinates, quantity, maxPrice, price, date, time, offers, state, inDelivery, suppplier_id, supplier_name}[]);
+
+  getRequest("user/order/list", token, response => {
+    console.log(response.data);
+    if (response.data.success) {
+      setInitialRequests(response.data.orders);
+      setRequests(response.data.orders);
+    }
+  });
+
   const [selectedFilterValue, setSelectedFilterValue] = useState(I18n.t('all'));
   const [openSettings, setOpenSettings] = useState(false);
 
@@ -92,7 +105,7 @@ const RequestListScreen = ({route, navigation}) => {
 
   const pressedDelivery = (delivery) => {
     if (delivery.inDelivery)
-      navigation.navigate('ViewTruckMapScreen', {id: delivery.id, supplier_id: delivery.supplier_id});
+      navigation.navigate('ViewTruckMapScreen', {id: delivery.id, coordinates: delivery.coordinates, supplier_id: delivery.supplier_id});
     else
       Alert.alert(
         I18n.t('cancel_order_title'),

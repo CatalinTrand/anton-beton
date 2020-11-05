@@ -13,6 +13,8 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import FloatPlaceholderTextInput from "../../shared/components/sections/floatPlaceholderTextInput";
 import GlobalLtrStyle from "../../shared/styles/global.ltr.style";
 import RegularButton from "../../shared/components/buttons/regularButton";
+import SyncStorage from 'sync-storage';
+import {postRequest} from "../requestHandler";
 
 const AppointmentScreen = ({route, navigation}) => {
 
@@ -23,19 +25,27 @@ const AppointmentScreen = ({route, navigation}) => {
   const [time, setTime] = useState(new Date());
   const [isVisibleTimePicker, setTimePickerVisibility] = useState(false);
   const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
 
   const sendRequest = () => {
-    //TODO - send request to server with data
+    if(destination_coords == null || destination_name == null)
+      return;
 
-    Alert.alert(
-      I18n.t('request_made_title'),
-      I18n.t('request_made_msg'),
-      [
-        { text: "Ok", onPress: () => navigation.navigate('RequestListScreen') }
-      ],
-      { cancelable: false }
-    );
+    let token = SyncStorage.get("token");
+
+    postRequest("client/order", {date: date, time: time, quantity: quantity, address: destination_name, coords: destination_coords}, token, response => {
+      if(response.data.success) {
+        Alert.alert(
+          I18n.t('request_made_title'),
+          I18n.t('request_made_msg'),
+          [
+            { text: "Ok", onPress: () => navigation.navigate('RequestListScreen') }
+          ],
+          { cancelable: false }
+        );
+      } else {
+        console.log(response.data.error);
+      }
+    });
   };
 
   return (
@@ -131,24 +141,6 @@ const AppointmentScreen = ({route, navigation}) => {
               onChangeText={(value) => setQuantity(value)}
             />
             <Text style={AppointmentScreenLtrStyle.quantity_unit}>m³</Text>
-          </View>
-          <Text style={[AppointmentScreenLtrStyle.delivery_date_title,{marginTop: 10}]}>{I18n.t('price')}</Text>
-          <View style={AppointmentScreenLtrStyle.quantity_container}>
-            <CustomIcons
-              size={Fonts.h4}
-              color={Colors.black}
-              style={{marginTop: 10, marginLeft: -10}}
-              name="coin-dollar"
-              onPress={navigation.goBack}
-            />
-            <TextInput
-              style={{backgroundColor: Colors.lightGrey, width: '50%', padding: 10, margin: 15, borderRadius: 7, marginBottom: 0}}
-              placeholder={I18n.t('enter_price')}
-              keyboardType="number-pad"
-              value={price}
-              onChangeText={(value) => setPrice(value)}
-            />
-            <Text style={AppointmentScreenLtrStyle.price_unit}>RON</Text>
           </View>
         </View>
       </ScrollView>

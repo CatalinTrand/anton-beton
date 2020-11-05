@@ -11,12 +11,14 @@ import MapStyle from "../assets/mapStyle";
 import MapView from "react-native-maps";
 import MapViewDirections from 'react-native-maps-directions';
 import {useState} from "react";
+import SyncStorage from "sync-storage";
+import {getRequest} from "../requestHandler";
 
 let _mapView: MapView | null;
 
 const ViewTruckMapScreen = ({route, navigation}) => {
 
-  const {id, supplier_id} = route.params;
+  const {id, request, supplier_id} = route.params;
 
   const [destinationMarker, setDestinationMarker] = useState({lat: 0, lng: 0});
   const [truckMarker, setTruckMarker] = useState({lat: 0, lng: 0});
@@ -48,30 +50,37 @@ const ViewTruckMapScreen = ({route, navigation}) => {
   };
 
   const initializeState = () => {
-    //TODO - get locations from server
-    let truckLocation = {lat: 45.0, lng: 21.0};
-    let destination = {lat: 45.2, lng: 21.2};
+    //TODO - get client/order/driver/location - { orderID }
+    let token = SyncStorage.get("token");
+    getRequest("client/order/driver/location?orderID=" + request.id, token, response => {
+      if(response.data.success) {
+        let truckLocation = {lat: 45.0, lng: 21.0};
+        let destination = request.coordinates;
 
-    let middleLat = (truckLocation.lat + destination.lat) / 2.0;
-    let middleLng = (truckLocation.lng + destination.lng) / 2.0;
+        let middleLat = (truckLocation.lat + destination.lat) / 2.0;
+        let middleLng = (truckLocation.lng + destination.lng) / 2.0;
 
-    setMapRegion({
-      latitude: middleLat,
-      longitude: middleLng,
-      latitudeDelta: 1,
-      longitudeDelta: 1
-    });
-    setDestinationMarker(destination);
-    setTruckMarker(truckLocation);
-
-    if (_mapView !== null)
-      _mapView.animateCamera({
-        center: {
+        setMapRegion({
           latitude: middleLat,
-          longitude: middleLng
-        },
-        zoom: middleZoom(truckLocation, destination),
-      });
+          longitude: middleLng,
+          latitudeDelta: 1,
+          longitudeDelta: 1
+        });
+        setDestinationMarker(destination);
+        setTruckMarker(truckLocation);
+
+        if (_mapView !== null)
+          _mapView.animateCamera({
+            center: {
+              latitude: middleLat,
+              longitude: middleLng
+            },
+            zoom: middleZoom(truckLocation, destination),
+          });
+      } else {
+        console.log(response.data.error);
+      }
+    });
   };
 
   const prettyDuration = (mins) => {

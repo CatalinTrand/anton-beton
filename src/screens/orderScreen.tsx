@@ -22,40 +22,41 @@ const OrderScreen = ({route, navigation}) => {
 
   };
 
-  const offer_list = [
-    {
-      supplier_id: 1,
-      supplier_name: "Beton S.R.L.",
-      time: "12:30",
-      price: 30000,
-      advance_price: 3000,
-      concrete_type: 1,
-    },
-    {
-      supplier_id: 2,
-      supplier_name: "ExpertConstruct",
-      time: "12:00",
-      price: 35000,
-      advance_price: 2000,
-      concrete_type: 2,
-    },
-    {
-      supplier_id: 3,
-      supplier_name: "LivrezBetonAcasa S.A.",
-      time: "12:45",
-      price: 20000,
-      advance_price: 5000,
-      concrete_type: 1,
-    },
-    {
-      supplier_id: 4,
-      supplier_name: "Beton S.R.L.",
-      time: "12:30",
-      price: 30000,
-      advance_price: 3000,
-      concrete_type: 2,
-    },
-  ];
+  const offer_list = request.bidders;
+  // [
+  //   {
+  //     supplier_id: 1,
+  //     supplier_name: "Beton S.R.L.",
+  //     time: "12:30",
+  //     price: 30000,
+  //     advance_price: 3000,
+  //     concrete_type: 1,
+  //   },
+  //   {
+  //     supplier_id: 2,
+  //     supplier_name: "ExpertConstruct",
+  //     time: "12:00",
+  //     price: 35000,
+  //     advance_price: 2000,
+  //     concrete_type: 2,
+  //   },
+  //   {
+  //     supplier_id: 3,
+  //     supplier_name: "LivrezBetonAcasa S.A.",
+  //     time: "12:45",
+  //     price: 20000,
+  //     advance_price: 5000,
+  //     concrete_type: 1,
+  //   },
+  //   {
+  //     supplier_id: 4,
+  //     supplier_name: "Beton S.R.L.",
+  //     time: "12:30",
+  //     price: 30000,
+  //     advance_price: 3000,
+  //     concrete_type: 2,
+  //   },
+  // ];
 
   const prettyDate = (date) => {
     let separator = "/";

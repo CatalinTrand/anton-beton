@@ -1,5 +1,14 @@
 import React, {useState} from 'react';
-import {Keyboard, Text, View, ScrollView, TouchableWithoutFeedback, TouchableOpacity, Image} from 'react-native';
+import {
+  Keyboard,
+  Text,
+  View,
+  ScrollView,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Image,
+  Switch
+} from 'react-native';
 import {useDispatch} from 'react-redux';
 import loginPageStyle from '../../../shared/styles/auth.ltr.style';
 import Header from '../../components/sections/header';
@@ -11,22 +20,58 @@ import DoctorProfileLtrStyle from '../../../shared/styles/doctorProfile.ltr.styl
 import LoginOptions from '../../components/sections/loginOptions';
 import RegularButton from '../../../shared/components/buttons/regularButton';
 import FloatPlaceholderTextInput from '../../../shared/components/sections/floatPlaceholderTextInput';
+import {getRequest, postRequest} from "../../requestHandler";
+import SyncStorage from 'sync-storage';
 
 const LoginScreen = ({navigation}): JSX.Element => {
 
   const [lng, setLng] = useState(I18n.locale);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const onLoginPress = () => {
-    navigation.navigate('DisplayScreen',{lng});
-    return;
-
-    const params = new URLSearchParams();
-    params.append('username', email);
-    params.append('password', password);
-    dispatch(requestLogin(params));
+    const params = {email: "", password: "", deviceID: "", firebaseToken: ""};
+    let deviceID = SyncStorage.get('deviceID');
+    console.log("device: " + deviceID);
+    if (deviceID == null)
+      getRequest("uuid", null, response => {
+        if (response.data.success) {
+          deviceID = response.data.uuid;
+          SyncStorage.set('deviceID', deviceID);
+          let firebaseToken = SyncStorage.get("firebaseToken");
+          if(firebaseToken == null)
+            firebaseToken = "token";
+          params.email = email;
+          params.password = password;
+          params.deviceID = deviceID;
+          params.firebaseToken = firebaseToken;
+          postRequest(isEnabled ? "supplier/user/login" : "client/user/login", params, null, response2 => {
+            console.log(response2.data);
+            if (response.data.success) {
+              SyncStorage.set('token', response.data.token);
+              navigation.navigate('DisplayScreen', {lng});
+            }
+          });
+        } else {
+          console.log(response);
+        }
+      });
+    else {
+      console.log("deviceID", deviceID);
+      params.email = email;
+      params.password = password;
+      params.deviceID = deviceID;
+      params.firebaseToken = SyncStorage.get("firebaseToken");
+      postRequest(isEnabled ? "supplier/user/login" : "client/user/login", params, null, response => {
+        console.log(response);
+        if (response.data.success) {
+          SyncStorage.set('token', response.data.token);
+          navigation.navigate('DisplayScreen', {lng});
+        }
+      });
+    }
   };
 
   return (
@@ -35,14 +80,33 @@ const LoginScreen = ({navigation}): JSX.Element => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={GlobalLtrStyle.centeredView}>
             <Image
-              style={{maxWidth: '50%', maxHeight: '20%', marginLeft: 'auto', marginRight: 'auto', marginBottom: 20, marginTop: 20}}
+              style={{
+                maxWidth: '50%',
+                maxHeight: '20%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginBottom: 20,
+                marginTop: 20
+              }}
               source={require("../../assets/images/bild.png")}
             />
-            <View style={[DoctorProfileLtrStyle.row, {justifyContent: 'space-between'}]}>
-              <LoginOptions navigation={navigation}/>
-            </View>
             <View style={[DoctorProfileLtrStyle.row, {marginVertical: Metrics.doubleBaseMargin}]}>
               <View style={[DoctorProfileLtrStyle.column, {width: '100%'}]}>
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <Switch
+                    trackColor={{false: "#767577", true: "#81b0ff"}}
+                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                  />
+                  <Text style={{
+                    paddingLeft: 5,
+                    color: isEnabled ? Colors.primary : Colors.darkGrey,
+                    fontWeight: 'bold',
+                    fontSize: Fonts.regular
+                  }}>{!isEnabled ? I18n.t('client') : I18n.t('supplier')}</Text>
+                </View>
                 <FloatPlaceholderTextInput
                   label={I18n.t('email')}
                   value={email}
@@ -84,11 +148,17 @@ const LoginScreen = ({navigation}): JSX.Element => {
                     <Text style={{marginLeft: 10}}>{I18n.t('forgot_password')}</Text>
                   </View>
                 </TouchableOpacity>
-                <View style={[GlobalLtrStyle.lang_switcher,{display: 'none'}]}>
-                  <TouchableOpacity onPress={() => {I18n.locale = 'ro'; setLng('ro')}}>
+                <View style={[GlobalLtrStyle.lang_switcher, {display: 'none'}]}>
+                  <TouchableOpacity onPress={() => {
+                    I18n.locale = 'ro';
+                    setLng('ro')
+                  }}>
                     <Text style={lng == 'ro' ? GlobalLtrStyle.selected_lang : GlobalLtrStyle.unselected_lang}>RO</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => {I18n.locale = 'en'; setLng('en')}}>
+                  <TouchableOpacity onPress={() => {
+                    I18n.locale = 'en';
+                    setLng('en')
+                  }}>
                     <Text style={lng != 'ro' ? GlobalLtrStyle.selected_lang : GlobalLtrStyle.unselected_lang}>EN</Text>
                   </TouchableOpacity>
                 </View>

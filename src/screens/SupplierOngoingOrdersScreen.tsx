@@ -9,38 +9,50 @@ import Colors from "../../shared/themes/Colors";
 import I18n from "../../shared/I18n/I18n";
 import Header from "../components/sections/header";
 import {useState} from "react";
+import SyncStorage from "sync-storage";
+import {getRequest} from "../requestHandler";
 
 const SupplierOngoingOrdersScreen = ({route, navigation}) => {
 
-  const [requests, setRequests] = useState([
-    {
-      id: 10005,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 5000,
-      maxPrice: 30000,
-      date: '12/7/2021',
-      time: '12:00',
-    },
-    {
-      id: 10006,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 15000,
-      maxPrice: 300000,
-      date: '12/7/2021',
-      time: '16:00',
-    },
-    {
-      id: 10007,
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 3400,
-      maxPrice: 35000,
-      date: '12/7/2021',
-      time: '14:00',
-    },
-  ]);
+  const [requests, setRequests] = useState([] as {id,address,coordinates,quantity,maxPrice,date,time}[]);
+
+  let token = SyncStorage.get("token");
+  getRequest("supplier/order/list/accepted", token, response => {
+    if(response.data.success) {
+      setRequests(response.data.orders);
+    } else {
+      console.log(response.data.success);
+    }
+  });
+  //   [
+  //   {
+  //     id: 10005,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 5000,
+  //     maxPrice: 30000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //   },
+  //   {
+  //     id: 10006,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 15000,
+  //     maxPrice: 300000,
+  //     date: '12/7/2021',
+  //     time: '16:00',
+  //   },
+  //   {
+  //     id: 10007,
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 3400,
+  //     maxPrice: 35000,
+  //     date: '12/7/2021',
+  //     time: '14:00',
+  //   },
+  // ]);
 
   const [openRequest, setOpenRequest] = useState(null as any);
 
@@ -58,7 +70,7 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
   };
 
   const finishOrder = () => {
-    //TODO - send request to server with data
+    //TODO - supplier/order/finish - to add
 
     Alert.alert(
       I18n.t('finish_order_title'),

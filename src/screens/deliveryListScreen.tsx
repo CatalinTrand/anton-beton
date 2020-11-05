@@ -8,58 +8,70 @@ import Colors from "../../shared/themes/Colors";
 import I18n from "../../shared/I18n/I18n";
 import Header from "../components/sections/header";
 import {useState} from "react";
+import {getRequest} from "../requestHandler";
+import SyncStorage from 'sync-storage';
 
 const DeliveryListScreen = ({route, navigation}) => {
 
-  const [openSettings, setOpenSettings] = useState(false);
+  // const deliveries = [
+  //   {
+  //     id: 10005,
+  //     supplier_id: 1,
+  //     supplier_name: 'Beton S.R.L.',
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 5000,
+  //     price: 30000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //     inDelivery: false,
+  //   },
+  //   {
+  //     id: 10006,
+  //     supplier_id: 2,
+  //     supplier_name: 'LivrezBetonOriunde S.A.',
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 4000,
+  //     price: 20000,
+  //     date: '15/7/2021',
+  //     time: '17:00',
+  //   },
+  //   {
+  //     id: 10007,
+  //     supplier_id: 1,
+  //     supplier_name: 'Beton S.R.L.',
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 5000,
+  //     price: 30000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //   },
+  //   {
+  //     id: 10008,
+  //     supplier_id: 1,
+  //     supplier_name: 'Beton S.R.L.',
+  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
+  //     coordinates: {lat: 45.34, lng: 21.55},
+  //     quantity: 5000,
+  //     price: 30000,
+  //     date: '12/7/2021',
+  //     time: '12:00',
+  //   },
+  // ];
 
-  const deliveries = [
-    {
-      id: 10005,
-      supplier_id: 1,
-      supplier_name: 'Beton S.R.L.',
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 5000,
-      price: 30000,
-      date: '12/7/2021',
-      time: '12:00',
-      inDelivery: false,
-    },
-    {
-      id: 10006,
-      supplier_id: 2,
-      supplier_name: 'LivrezBetonOriunde S.A.',
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 4000,
-      price: 20000,
-      date: '15/7/2021',
-      time: '17:00',
-    },
-    {
-      id: 10007,
-      supplier_id: 1,
-      supplier_name: 'Beton S.R.L.',
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 5000,
-      price: 30000,
-      date: '12/7/2021',
-      time: '12:00',
-    },
-    {
-      id: 10008,
-      supplier_id: 1,
-      supplier_name: 'Beton S.R.L.',
-      address: 'Str. Lujerului 42J, Bucuresti, Romania',
-      coordinates: {lat: 45.34, lng: 21.55},
-      quantity: 5000,
-      price: 30000,
-      date: '12/7/2021',
-      time: '12:00',
-    },
-  ];
+  const [openSettings, setOpenSettings] = useState(false);
+  const [deliveries, setDeliveries] = useState([] as {id,supplier_id,supplier_name,address,coordinates,quantity,price,date,time,inDelivery}[]);
+
+  const token = SyncStorage.get("token");
+
+  getRequest("user/order/list", token, response => {
+    console.log(response.data);
+    if (response.data.success) {
+      setDeliveries(response.data.orders);
+    }
+  });
 
   const prettyDate = (date) => {
     let separator = "/";

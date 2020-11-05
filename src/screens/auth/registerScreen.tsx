@@ -14,28 +14,72 @@ import RegularButton from '../../../shared/components/buttons/regularButton';
 import FloatPlaceholderTextInput from '../../../shared/components/sections/floatPlaceholderTextInput';
 import CustomCheckboxLtrStyle from '../../../shared/styles/customCheckbox.ltr.style';
 import LabeledDatePicker from '../../../shared/components/sections/customLabeledDatePicker';
+import {getRequest, postRequest} from "../../requestHandler";
+import SyncStorage from 'sync-storage';
 
 const RegisterScreen = ({navigation}): JSX.Element => {
 
   I18n.locale = 'ro';
   const [lng, setLng] = useState(I18n.locale);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const [password, setPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePolicy, setAgreePolicy] = useState(false);
 
   const onRegisterPress = () => {
-    navigation.navigate('DisplayScreen', {lng});
-    return;
+    const params = {email: "", password: "", deviceID: "", firstName: "", lastName: "", phone: "", companyName: ""};
+    let deviceID = SyncStorage.get('deviceID');
+    if (deviceID == null)
+      getRequest("uuid", null, response => {
+        if (response.data.success) {
+          deviceID = response.data.uuid;
+          SyncStorage.set('deviceID', deviceID);
 
-    const params = new URLSearchParams();
-    params.append('username', email);
-    params.append('password', password);
-    //dispatch(requestRegister(params));
+          params.email = email;
+          params.password = password;
+          params.deviceID = deviceID;
+          if(isEnabled)
+            params.companyName = companyName;
+          else {
+            params.firstName = firstName;
+            params.lastName = lastName;
+          }
+          params.phone = phone;
+          postRequest(isEnabled ? "supplier/user/account" : "client/user/account", {email, password}, null, response2 => {
+            console.log(response2.data);
+            if(response.data.success) {
+              SyncStorage.set('token', response.data.token);
+              navigation.navigate('DisplayScreen', {lng});
+            }
+          });
+        } else {
+          console.log(response);
+        }
+      });
+    else {
+      console.log("deviceID", deviceID);
+      params.email = email;
+      params.password = password;
+      params.deviceID = deviceID;
+      if(isEnabled)
+        params.companyName = companyName;
+      else {
+        params.firstName = firstName;
+        params.lastName = lastName;
+      }
+      params.phone = phone;
+      postRequest(isEnabled ? "supplier/user/account" : "client/user/account", {email, password}, null, response => {
+        console.log(response);
+        if(response.data.success) {
+          SyncStorage.set('token', response.data.token);
+          navigation.navigate('DisplayScreen', {lng});
+        }
+      });
+    }
   };
 
   const disabledNextStep = () => {
@@ -48,13 +92,15 @@ const RegisterScreen = ({navigation}): JSX.Element => {
       !firstName ||
       !phone
     ) {
-      return false;
+      return true;
     }
     return false;
   };
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const disableSwitch = true; //disable the switch that allows the user to login either as a client or supplier
 
   return (
     <>
@@ -74,26 +120,25 @@ const RegisterScreen = ({navigation}): JSX.Element => {
             <Text style={[GlobalLtrStyle.bigHeader, {color: Colors.orange}]}>
               {I18n.t('create_account')}
             </Text>
-            <View style={[DoctorProfileLtrStyle.row, {justifyContent: 'space-between'}]}>
-              <LoginOptions navigation={navigation}/>
-            </View>
             <View style={[DoctorProfileLtrStyle.row, {marginVertical: Metrics.doubleBaseMargin}]}>
               <View style={[DoctorProfileLtrStyle.column, {width: '100%'}]}>
-                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                  <Switch
-                    trackColor={{false: "#767577", true: "#81b0ff"}}
-                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
-                  />
-                  <Text style={{
-                    paddingLeft: 5,
-                    color: isEnabled ? Colors.primary : Colors.darkGrey,
-                    fontWeight: 'bold',
-                    fontSize: Fonts.regular
-                  }}>{!isEnabled ? I18n.t('client') : I18n.t('supplier')}</Text>
-                </View>
+                {disableSwitch ? null :
+                  <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <Switch
+                      trackColor={{false: "#767577", true: "#81b0ff"}}
+                      thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={toggleSwitch}
+                      value={isEnabled}
+                    />
+                    <Text style={{
+                      paddingLeft: 5,
+                      color: isEnabled ? Colors.primary : Colors.darkGrey,
+                      fontWeight: 'bold',
+                      fontSize: Fonts.regular
+                    }}>{!isEnabled ? I18n.t('client') : I18n.t('supplier')}</Text>
+                  </View>
+                }
                 <FloatPlaceholderTextInput
                   label={I18n.t('email')}
                   value={email}
@@ -130,7 +175,7 @@ const RegisterScreen = ({navigation}): JSX.Element => {
                   </>
                 }
                 <FloatPlaceholderTextInput
-                  label={I18n.t('phone_number')}
+                  label={I18n.t('phone_number')+""}
                   value={phone}
                   type="regular"
                   onChange={(value) => setPhone(value)}
