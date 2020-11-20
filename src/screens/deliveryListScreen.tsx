@@ -13,84 +13,25 @@ import SyncStorage from 'sync-storage';
 
 const DeliveryListScreen = ({route, navigation}) => {
 
-  // const deliveries = [
-  //   {
-  //     id: 10005,
-  //     supplier_id: 1,
-  //     supplier_name: 'Beton S.R.L.',
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 5000,
-  //     price: 30000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     inDelivery: false,
-  //   },
-  //   {
-  //     id: 10006,
-  //     supplier_id: 2,
-  //     supplier_name: 'LivrezBetonOriunde S.A.',
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 4000,
-  //     price: 20000,
-  //     date: '15/7/2021',
-  //     time: '17:00',
-  //   },
-  //   {
-  //     id: 10007,
-  //     supplier_id: 1,
-  //     supplier_name: 'Beton S.R.L.',
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 5000,
-  //     price: 30000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //   },
-  //   {
-  //     id: 10008,
-  //     supplier_id: 1,
-  //     supplier_name: 'Beton S.R.L.',
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 5000,
-  //     price: 30000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //   },
-  // ];
-
   const [openSettings, setOpenSettings] = useState(false);
-  const [deliveries, setDeliveries] = useState([] as {id,supplier_id,supplier_name,address,coordinates,quantity,price,date,time,inDelivery}[]);
+  const [deliveries, setDeliveries] = useState([] as {}[]);
+  const [got_list, setGotList] = useState(false);
 
   const token = SyncStorage.get("token");
 
-  getRequest("user/order/list", token, response => {
-    console.log(response.data);
-    if (response.data.success) {
-      setDeliveries(response.data.orders);
-    }
-  });
+  if(!got_list) {
+    getRequest("client/order/list", token, response => {
+      console.log(response.data);
+      if (response.data) {
+        setDeliveries(response.data.data.filter( order => order.delivered == true || order.canceledBySupplier == true ));
+      }
+    });
+    setGotList(true);
+  }
 
   const prettyDate = (date) => {
-    let separator = "/";
-    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
-  };
-
-  const pressedDelivery = (delivery) => {
-    if (delivery.inDelivery)
-      navigation.navigate('ViewTruckMapScreen', {id: delivery.id, supplier_id: delivery.supplier_id});
-    else
-      Alert.alert(
-        I18n.t('cancel_order_title'),
-        I18n.t('cancel_order_msg'),
-        [
-          { text: I18n.t("cancel_order"), onPress: () => {} },
-          { text: I18n.t("back"), onPress: () => {}, style: 'cancel' }
-        ],
-        { cancelable: false }
-      );
+    let separator = ".";
+    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
   };
 
   return (
@@ -172,11 +113,11 @@ const DeliveryListScreen = ({route, navigation}) => {
                               //pressedDelivery(delivery)
                             }}>
             <View style={DeliveryListScreenLtrStyle.title_contents}>
-              <Text style={DeliveryListScreenLtrStyle.list_item_title}>{I18n.t('request') + " #" + delivery.id}</Text>
+              <Text style={DeliveryListScreenLtrStyle.list_item_title}>{I18n.t('request') + " #" + delivery._id}</Text>
             </View>
             <Text style={DeliveryListScreenLtrStyle.list_item_supplier_name}>{delivery.supplier_name}</Text>
             <Text
-              style={DeliveryListScreenLtrStyle.list_item_date_time}>{prettyDate(delivery.date) + ", " + delivery.time}</Text>
+              style={DeliveryListScreenLtrStyle.list_item_date_time}>{prettyDate(delivery.deliveryDate) + ", " + delivery.deliveryTime}</Text>
             <View style={DeliveryListScreenLtrStyle.list_item_details}>
               <View style={DeliveryListScreenLtrStyle.list_item_address}>
                 <Text style={DeliveryListScreenLtrStyle.list_item_address_title}>{I18n.t('short_address')}</Text>
@@ -188,7 +129,7 @@ const DeliveryListScreen = ({route, navigation}) => {
                   <Text style={DeliveryListScreenLtrStyle.list_item_detail_value}>{delivery.quantity + " m³"}</Text>
                 </View>
                 <View style={DeliveryListScreenLtrStyle.list_item_detail}>
-                  <Text style={DeliveryListScreenLtrStyle.list_item_detail_title}>{I18n.t('price')}</Text>
+                  <Text style={DeliveryListScreenLtrStyle.list_item_detail_title}>{I18n.t('set_price')}</Text>
                   <Text style={DeliveryListScreenLtrStyle.list_item_detail_value}>{delivery.price + " RON"}</Text>
                 </View>
               </View>

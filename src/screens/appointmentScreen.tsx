@@ -32,7 +32,8 @@ const AppointmentScreen = ({route, navigation}) => {
 
     let token = SyncStorage.get("token");
 
-    postRequest("client/order", {date: date, time: time, quantity: quantity, address: destination_name, coords: destination_coords}, token, response => {
+    //TODO - test
+    postRequest("client/order", {date: date, time: time, quantity: quantity, address: destination_name, coordinates: destination_coords}, token, response => {
       if(response.data.success) {
         Alert.alert(
           I18n.t('request_made_title'),

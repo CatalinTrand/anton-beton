@@ -19,8 +19,9 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
   const [selectedSortValue, setSelectedSortValue] = useState(I18n.t('new'));
   const [requests, setRequests] = useState([] as {id,address,coordinates,quantity,maxPrice,date,time,offers,bid,alreadyBid}[]);
 
+  //TODO - to test
   let token = SyncStorage();
-  getRequest("supplier/offer/list", token, response => {
+  getRequest("supplier/order/list", token, response => {
     if(response.data.success) {
       setRequests(response.data.offers.sort(
         (a,b) => {
@@ -31,65 +32,6 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
       console.log(response.data.error);
     }
   });
-  //   [
-  //   {
-  //     id: 10005,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 5000,
-  //     maxPrice: 30000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: 4,
-  //     alreadyBid: true,
-  //   },
-  //   {
-  //     id: 10006,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 15000,
-  //     maxPrice: 300000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: 1,
-  //     alreadyBid: false,
-  //   },
-  //   {
-  //     id: 10007,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 3400,
-  //     maxPrice: 35000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: 0,
-  //     alreadyBid: true,
-  //   },
-  //   {
-  //     id: 10008,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 1000,
-  //     maxPrice: 10000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: 7,
-  //     alreadyBid: false,
-  //   },
-  //   {
-  //     id: 10009,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 4000,
-  //     maxPrice: 20000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: 3,
-  //     alreadyBid: true,
-  //   },
-  // ].sort((a, b) => {
-  //   return b.id - a.id;
-  // }));
 
   const openSettings = () => {
 
@@ -116,16 +58,6 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
       case I18n.t('quantity_asc'):
         newRequests.sort((a, b) => {
           return a.quantity - b.quantity;
-        });
-        break;
-      case I18n.t('price_desc'):
-        newRequests.sort((a, b) => {
-          return b.maxPrice - a.maxPrice;
-        });
-        break;
-      case I18n.t('price_asc'):
-        newRequests.sort((a, b) => {
-          return a.maxPrice - b.maxPrice;
         });
         break;
     }
@@ -199,8 +131,6 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
             <Picker.Item label={I18n.t('old')} value={I18n.t('old')}/>
             <Picker.Item label={I18n.t('quantity_desc')} value={I18n.t('quantity_desc')}/>
             <Picker.Item label={I18n.t('quantity_asc')} value={I18n.t('quantity_asc')}/>
-            <Picker.Item label={I18n.t('price_desc')} value={I18n.t('price_desc')}/>
-            <Picker.Item label={I18n.t('price_asc')} value={I18n.t('price_asc')}/>
           </Picker>
         </View>
       </View>

@@ -16,10 +16,13 @@ import RequestListScreenLtrStyle from "../../shared/styles/RequestListScreen.ltr
 import {Picker} from "@react-native-community/picker";
 import SyncStorage from 'sync-storage';
 import {putRequest} from "../requestHandler";
+import {useStripe} from "@stripe/react-stripe-js";
 
 const PaymentScreen = ({route, navigation}) => {
 
   const {request, offer} = route.params;
+
+  let stripe = useStripe();
 
   let myCards = SyncStorage.get('cards');
   myCards = myCards ? myCards : [];
@@ -72,25 +75,63 @@ const PaymentScreen = ({route, navigation}) => {
     return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
-  const paymentMade = () => {
-    let token = SyncStorage.get("token");
-    putRequest("client/order/confirm", {orderID: request.id, supplierEmail: offer.supplierEmail, advancePrice: offer.advance_price}, token,response => {
-      if(response.data.success) {
-        Alert.alert(
-          I18n.t('payment_made_title'),
-          I18n.t('payment_made_msg'),
-          [
-            {text: "Ok", onPress: () => navigation.navigate('DeliveryListScreen')}
-          ],
-          {cancelable: false}
-        );
-      } else {
-        console.log(response.data.error);
+  const [selectedCardValue, setSelectedCardValue] = useState(I18n.t('please_choose_a_credit_card'));
+
+  const paymentMade = async () => {
+    let selectedCardIdx = -1;
+    for(let i = 0; i < myCards.length; i++)
+      if(myCards[i].cardNumber == selectedCardValue)
+        selectedCardIdx = i;
+
+    if(selectedCardIdx == -1 || !stripe)
+      return;
+
+    const cardDetails = {
+      number: myCards[selectedCardIdx].cardNumber,
+      expMonth: myCards[selectedCardIdx].expiryDate.split("/")[0],
+      expYear: myCards[selectedCardIdx].expiryDate.split("/")[1],
+      cvc: myCards[selectedCardIdx].cvv,
+    };
+
+    //TODO - first create payment intent on the server and get client secret
+
+    const result = await stripe.confirmCardPayment('{CLIENT_SECRET}', {
+      payment_method: {
+        card: null, //TODO
+        billing_details: {
+          name: myCards[selectedCardIdx].cardName,
+        },
       }
     });
-  };
 
-  const [selectedCardValue, setSelectedCardValue] = useState(I18n.t('please_choose_a_credit_card'));
+    if (result.error) {
+      console.log('[error]', result.error);
+    } else {
+      console.log('[result]', result);
+      let token = SyncStorage.get("token");
+      if (result.paymentIntent.status === 'succeeded') {
+        putRequest("client/order/confirm", {
+          orderID: request.id,
+          supplierEmail: offer.supplierEmail,
+          advancePrice: offer.advance_price,
+          transactionID: "{PAYMENT_INTENT_RESPONSE.id}" //TODO
+        }, token, response => {
+          if (response.data.success) {
+            Alert.alert(
+              I18n.t('payment_made_title'),
+              I18n.t('payment_made_msg'),
+              [
+                {text: "Ok", onPress: () => navigation.navigate('DeliveryListScreen')}
+              ],
+              {cancelable: false}
+            );
+          } else {
+            console.log(response.data.error);
+          }
+        });
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>

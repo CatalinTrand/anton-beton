@@ -50,11 +50,11 @@ const ViewTruckMapScreen = ({route, navigation}) => {
   };
 
   const initializeState = () => {
-    //TODO - get client/order/driver/location - { orderID }
+    //TODO - test
     let token = SyncStorage.get("token");
-    getRequest("client/order/driver/location?orderID=" + request.id, token, response => {
-      if(response.data.success) {
-        let truckLocation = {lat: 45.0, lng: 21.0};
+    getRequest("client/order/driver/location?orderId=" + request._id, token, response => {
+      if(response.data) {
+        let truckLocation = response.data.data;
         let destination = request.coordinates;
 
         let middleLat = (truckLocation.lat + destination.lat) / 2.0;

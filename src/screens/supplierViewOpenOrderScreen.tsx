@@ -11,7 +11,6 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import {useState} from "react";
 import GlobalLtrStyle from "../../shared/styles/global.ltr.style";
 import RegularButton from "../../shared/components/buttons/regularButton";
-import moment from "moment";
 import AppointmentScreenLtrStyle from "../../shared/styles/appointmentScreen.ltr.style";
 import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
 import Constants from '../../shared/constants/otherConstants.json';

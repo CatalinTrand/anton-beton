@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "ringmed-tvOS.app"
-               BlueprintName = "ringmed-tvOS"
-               ReferencedContainer = "container:ringmed.xcodeproj">
+               BuildableName = "Bild-tvOS.app"
+               BlueprintName = "Bild-tvOS"
+               ReferencedContainer = "container:Bild.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "ringmed-tvOSTests.xctest"
-               BlueprintName = "ringmed-tvOSTests"
-               ReferencedContainer = "container:ringmed.xcodeproj">
+               BuildableName = "Bild-tvOSTests.xctest"
+               BlueprintName = "Bild-tvOSTests"
+               ReferencedContainer = "container:Bild.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "ringmed-tvOS.app"
-            BlueprintName = "ringmed-tvOS"
-            ReferencedContainer = "container:ringmed.xcodeproj">
+            BuildableName = "Bild-tvOS.app"
+            BlueprintName = "Bild-tvOS"
+            ReferencedContainer = "container:Bild.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "ringmed-tvOS.app"
-            BlueprintName = "ringmed-tvOS"
-            ReferencedContainer = "container:ringmed.xcodeproj">
+            BuildableName = "Bild-tvOS.app"
+            BlueprintName = "Bild-tvOS"
+            ReferencedContainer = "container:Bild.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

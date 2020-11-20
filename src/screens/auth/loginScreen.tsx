@@ -41,16 +41,19 @@ const LoginScreen = ({navigation}): JSX.Element => {
           deviceID = response.data.uuid;
           SyncStorage.set('deviceID', deviceID);
           let firebaseToken = SyncStorage.get("firebaseToken");
-          if(firebaseToken == null)
-            firebaseToken = "token";
-          params.email = email;
-          params.password = password;
+          if(firebaseToken == null) {
+            firebaseToken = "nuKaXrFuzjk8xTfoqkUWPxFrHeLA7pEJeqBotbdd";
+            SyncStorage.set("firebaseToken", firebaseToken);
+          }
+          params.email = "test2@test.com";//email; TODO
+          params.password = "Carche12345";//password; TODO
           params.deviceID = deviceID;
           params.firebaseToken = firebaseToken;
           postRequest(isEnabled ? "supplier/user/login" : "client/user/login", params, null, response2 => {
-            console.log(response2.data);
-            if (response.data.success) {
-              SyncStorage.set('token', response.data.token);
+            if (response2.data) {
+              console.log("token", response2.data.data.accessToken);
+              SyncStorage.set("token", response2.data.data.accessToken);
+              console.log(SyncStorage.get("token"));
               navigation.navigate('DisplayScreen', {lng});
             }
           });
@@ -60,14 +63,20 @@ const LoginScreen = ({navigation}): JSX.Element => {
       });
     else {
       console.log("deviceID", deviceID);
-      params.email = email;
-      params.password = password;
+      params.email = "test2@test.com";//email; TODO
+      params.password = "Carche12345";//password; TODO
       params.deviceID = deviceID;
-      params.firebaseToken = SyncStorage.get("firebaseToken");
+      let firebaseToken = SyncStorage.get("firebaseToken");
+      if(firebaseToken == null) {
+        firebaseToken = "nuKaXrFuzjk8xTfoqkUWPxFrHeLA7pEJeqBotbdd";
+        SyncStorage.set("firebaseToken", firebaseToken);
+      }
+      params.firebaseToken = firebaseToken;
       postRequest(isEnabled ? "supplier/user/login" : "client/user/login", params, null, response => {
-        console.log(response);
-        if (response.data.success) {
-          SyncStorage.set('token', response.data.token);
+        if (response.data) {
+          console.log("token", response.data.data.accessToken);
+          SyncStorage.set("token", response.data.data.accessToken);
+          console.log(SyncStorage.get("token"));
           navigation.navigate('DisplayScreen', {lng});
         }
       });

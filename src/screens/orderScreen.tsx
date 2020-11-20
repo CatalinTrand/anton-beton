@@ -23,44 +23,12 @@ const OrderScreen = ({route, navigation}) => {
   };
 
   const offer_list = request.bidders;
-  // [
-  //   {
-  //     supplier_id: 1,
-  //     supplier_name: "Beton S.R.L.",
-  //     time: "12:30",
-  //     price: 30000,
-  //     advance_price: 3000,
-  //     concrete_type: 1,
-  //   },
-  //   {
-  //     supplier_id: 2,
-  //     supplier_name: "ExpertConstruct",
-  //     time: "12:00",
-  //     price: 35000,
-  //     advance_price: 2000,
-  //     concrete_type: 2,
-  //   },
-  //   {
-  //     supplier_id: 3,
-  //     supplier_name: "LivrezBetonAcasa S.A.",
-  //     time: "12:45",
-  //     price: 20000,
-  //     advance_price: 5000,
-  //     concrete_type: 1,
-  //   },
-  //   {
-  //     supplier_id: 4,
-  //     supplier_name: "Beton S.R.L.",
-  //     time: "12:30",
-  //     price: 30000,
-  //     advance_price: 3000,
-  //     concrete_type: 2,
-  //   },
-  // ];
+
+  console.log("bidders",offer_list);
 
   const prettyDate = (date) => {
-    let separator = "/";
-    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
+    let separator = ".";
+    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
   };
 
   return (
@@ -79,7 +47,7 @@ const OrderScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request') + " #" + request.id}</Text>
+            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request')}<Text style={{fontSize: 12}}>{" #" + request._id}</Text></Text>
           </View>
         }
         rightComponent={null}
@@ -103,15 +71,11 @@ const OrderScreen = ({route, navigation}) => {
         <View style={[OrderScreenLtrStyle.order_additional_details, {height: height}]}>
           <View style={OrderScreenLtrStyle.order_detail}>
             <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('date')}</Text>
-            <Text style={OrderScreenLtrStyle.order_detail_value}>{prettyDate(request.date)}</Text>
+            <Text style={OrderScreenLtrStyle.order_detail_value}>{prettyDate(request.deliveryDate)}</Text>
           </View>
           <View style={OrderScreenLtrStyle.order_detail}>
             <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('time')}</Text>
-            <Text style={OrderScreenLtrStyle.order_detail_value}>{request.time}</Text>
-          </View>
-          <View style={OrderScreenLtrStyle.order_detail}>
-            <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('price')}</Text>
-            <Text style={OrderScreenLtrStyle.order_detail_value}>{request.maxPrice + " RON"}</Text>
+            <Text style={OrderScreenLtrStyle.order_detail_value}>{request.deliveryTime}</Text>
           </View>
         </View>
       </View>

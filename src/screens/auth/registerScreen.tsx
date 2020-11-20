@@ -53,6 +53,7 @@ const RegisterScreen = ({navigation}): JSX.Element => {
             console.log(response2.data);
             if(response.data.success) {
               SyncStorage.set('token', response.data.token);
+              SyncStorage.set("firebaseToken", "nuKaXrFuzjk8xTfoqkUWPxFrHeLA7pEJeqBotbdd");
               navigation.navigate('DisplayScreen', {lng});
             }
           });

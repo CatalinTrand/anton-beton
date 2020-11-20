@@ -12,106 +12,43 @@ import {Picker} from "@react-native-community/picker";
 import {getRequest} from "../requestHandler";
 import SyncStorage from 'sync-storage';
 
+
+
 const RequestListScreen = ({route, navigation}) => {
 
-  // const initial_requests = [
-  //   {
-  //     id: 10005,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 5000,
-  //     maxPrice: 30000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: 4,
-  //     state: 1, //1 = open, 2 = in derulare, 3 = finalizate, 4 = cancelled
-  //     inDelivery: null,
-  //   },
-  //   {
-  //     id: 10006,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 15000,
-  //     maxPrice: 300000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: 1,
-  //     state: 1,
-  //     inDelivery: null,
-  //   },
-  //   {
-  //     id: 10007,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 3400,
-  //     price: 35000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: null,
-  //     state: 2,
-  //     inDelivery: false,
-  //     supplier_id: 1,
-  //     supplier_name: 'Beton S.R.L.',
-  //   },
-  //   {
-  //     id: 10008,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 1000,
-  //     price: 10000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: null,
-  //     state: 2,
-  //     inDelivery: true,
-  //     supplier_id: 2,
-  //     supplier_name: 'LivrezBetonOriunde S.A.',
-  //   },
-  //   {
-  //     id: 10009,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 4000,
-  //     price: 20000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //     offers: null,
-  //     state: 2,
-  //     inDelivery: false,
-  //     supplier_id: 1,
-  //     supplier_name: 'Beton S.R.L.',
-  //   },
-  // ];
-
   const token = SyncStorage.get("token");
-  const [initial_requests, setInitialRequests] = useState([] as {id, address, coordinates, quantity, maxPrice, price, date, time, offers, state, inDelivery, suppplier_id, supplier_name}[]);
-  const [requests, setRequests] = useState([] as {id, address, coordinates, quantity, maxPrice, price, date, time, offers, state, inDelivery, suppplier_id, supplier_name}[]);
+  const [initial_requests, setInitialRequests] = useState([] as {}[]);
+  const [requests, setRequests] = useState([] as {}[]);
+  const [got_list, setGotList] = useState(false);
 
-  getRequest("user/order/list", token, response => {
-    console.log(response.data);
-    if (response.data.success) {
-      setInitialRequests(response.data.orders);
-      setRequests(response.data.orders);
-    }
-  });
+  if(!got_list) {
+    getRequest("client/order/list", token, response => {
+      if (response.data.success) {
+        let  data = response.data.data.filter( order => order.delivered == false && !order.canceledByCustomer && !order.canceledBySupplier);
+        setInitialRequests(data);
+        setRequests(data);
+      }
+    });
+    setGotList(true);
+  }
 
   const [selectedFilterValue, setSelectedFilterValue] = useState(I18n.t('all'));
   const [openSettings, setOpenSettings] = useState(false);
 
   const prettyDate = (date) => {
-    let separator = "/";
-    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
+    let separator = ".";
+    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
   };
 
   const pressedDelivery = (delivery) => {
-    if (delivery.inDelivery)
-      navigation.navigate('ViewTruckMapScreen', {id: delivery.id, coordinates: delivery.coordinates, supplier_id: delivery.supplier_id});
+    if (delivery.inProgress == true)
+      navigation.navigate('ViewTruckMapScreen', {id: delivery._id, coordinates: delivery.coordinates, supplier_id: delivery.supplier_id});
     else
       Alert.alert(
         I18n.t('cancel_order_title'),
         I18n.t('cancel_order_msg'),
         [
-          { text: I18n.t("cancel_order"), onPress: () => {} },
+          { text: I18n.t("cancel_order"), onPress: () => {/* TODO */} },
           { text: I18n.t("back"), onPress: () => {}, style: 'cancel' }
         ],
         { cancelable: false }
@@ -123,10 +60,10 @@ const RequestListScreen = ({route, navigation}) => {
     let newRequests = initial_requests;
 
     if(value == I18n.t('open'))
-      newRequests = initial_requests.filter(request => request.state == 1);
+      newRequests = initial_requests.filter(request => request.selectedBidder == null);
 
     if(value == I18n.t('ongoing'))
-      newRequests = initial_requests.filter(request => request.state == 2);
+      newRequests = initial_requests.filter(request => request.inProgress == true);
 
     setRequests(newRequests);
   };
@@ -231,16 +168,16 @@ const RequestListScreen = ({route, navigation}) => {
               }
               ]}
               onPress={() => {
-                if(request.state == 1)
+                if(request.selectedBidder == null)
                   navigation.navigate('OrderScreen', {request});
                 else
                   pressedDelivery(request);
               }}>
             <View style={RequestListScreenLtrStyle.title_contents}>
-              <Text style={[RequestListScreenLtrStyle.list_item_title,{color: request.state == 2 ? (request.inDelivery ? Colors.lightGreen : Colors.yellow) : Colors.black}]}>{I18n.t('request') + " #" + request.id}</Text>
+              <Text style={[RequestListScreenLtrStyle.list_item_title,{color: request.state == 2 ? (request.inDelivery ? Colors.lightGreen : Colors.yellow) : Colors.black}]}>{I18n.t('request')}<Text style={{fontSize:16}}>{" #" + request._id}</Text></Text>
               <Text style={RequestListScreenLtrStyle.offers_count}>{request.state == 1 ? (request.offers + " " + I18n.t('offers')) : (request.supplier_name)}</Text>
             </View>
-            <Text style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.date) + ", " + request.time}</Text>
+            <Text style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.deliveryDate) + ", " + request.deliveryTime}</Text>
             <View style={RequestListScreenLtrStyle.list_item_details}>
               <View style={RequestListScreenLtrStyle.list_item_address}>
                 <Text style={RequestListScreenLtrStyle.list_item_address_title}>{I18n.t('short_address')}</Text>
@@ -250,10 +187,6 @@ const RequestListScreen = ({route, navigation}) => {
                 <View style={RequestListScreenLtrStyle.list_item_detail}>
                   <Text style={RequestListScreenLtrStyle.list_item_detail_title}>{I18n.t('quantity')}</Text>
                   <Text style={RequestListScreenLtrStyle.list_item_detail_value}>{request.quantity + " m³"}</Text>
-                </View>
-                <View style={RequestListScreenLtrStyle.list_item_detail}>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_title}>{request.state == 1 ? I18n.t('price') : I18n.t('set_price')}</Text>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_value}>{(request.state == 1 ? request.maxPrice : request.price) + " RON"}</Text>
                 </View>
               </View>
             </View>
