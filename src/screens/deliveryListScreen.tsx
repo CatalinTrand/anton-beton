@@ -24,7 +24,7 @@ const DeliveryListScreen = ({route, navigation}) => {
       console.log(response.data);
       if (response.data) {
         setDeliveries(response.data.data.filter( order => order.delivered == true || order.canceledBySupplier == true ));
-      }
+      }//TODO - quantity to int
     });
     setGotList(true);
   }

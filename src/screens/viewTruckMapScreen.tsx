@@ -20,8 +20,8 @@ const ViewTruckMapScreen = ({route, navigation}) => {
 
   const {id, request, supplier_id} = route.params;
 
-  const [destinationMarker, setDestinationMarker] = useState({lat: 0, lng: 0});
-  const [truckMarker, setTruckMarker] = useState({lat: 0, lng: 0});
+  const [destinationMarker, setDestinationMarker] = useState({lat: 0, long: 0});
+  const [truckMarker, setTruckMarker] = useState({lat: 0, long: 0});
   const [mapRegion, setMapRegion] = useState({latitude: 10, longitude: 10, latitudeDelta: 1, longitudeDelta: 1});
   const [eta, setEta] = useState('Calculating...');
 
@@ -31,7 +31,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
     const t1 = p1.lat * Math.PI/180;
     const t2 = p2.lat * Math.PI/180;
     const dt = (p2.lat - p1.lat) * Math.PI/180;
-    const dg = (p2.lng - p1.lng) * Math.PI/180;
+    const dg = (p2.long - p1.long) * Math.PI/180;
 
     const a = Math.sin(dt/2) * Math.sin(dt/2) + Math.cos(t1) * Math.cos(t2) * Math.sin(dg/2) * Math.sin(dg/2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
@@ -58,7 +58,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
         let destination = request.coordinates;
 
         let middleLat = (truckLocation.lat + destination.lat) / 2.0;
-        let middleLng = (truckLocation.lng + destination.lng) / 2.0;
+        let middleLng = (truckLocation.long + destination.long) / 2.0;
 
         setMapRegion({
           latitude: middleLat,
@@ -78,7 +78,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
             zoom: middleZoom(truckLocation, destination),
           });
       } else {
-        console.log(response.data.error);
+        console.log(response);
       }
     });
   };
@@ -129,8 +129,8 @@ const ViewTruckMapScreen = ({route, navigation}) => {
         }}
       >
         <MapViewDirections
-          origin={{latitude: truckMarker.lat, longitude: truckMarker.lng}}
-          destination={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}
+          origin={{latitude: truckMarker.lat, longitude: truckMarker.long}}
+          destination={{latitude: destinationMarker.lat, longitude: destinationMarker.long}}
           apikey="AIzaSyD6mSS2a-dROWPXMaS6f8VFIj53B6uLSCU"
           strokeWidth={3}
           strokeColor={Colors.primary}
@@ -142,7 +142,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
             style={{}}
             key={1}
             title={I18n.t('truck')}
-            coordinate={{latitude: truckMarker.lat, longitude: truckMarker.lng}}
+            coordinate={{latitude: truckMarker.lat, longitude: truckMarker.long}}
             icon={truckIcon}
           /> : null
         }
@@ -152,7 +152,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
             title={I18n.t('destination')}
             style={{marginLeft: 2}}
             key={2}
-            coordinate={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}
+            coordinate={{latitude: destinationMarker.lat, longitude: destinationMarker.long}}
             icon={markerIcon}
           /> : null
         }

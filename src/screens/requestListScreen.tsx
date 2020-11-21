@@ -25,7 +25,7 @@ const RequestListScreen = ({route, navigation}) => {
     getRequest("client/order/list", token, response => {
       if (response.data.success) {
         let  data = response.data.data.filter( order => order.delivered == false && !order.canceledByCustomer && !order.canceledBySupplier);
-        setInitialRequests(data);
+        setInitialRequests(data);//TODO - quantity to int
         setRequests(data);
       }
     });

@@ -115,6 +115,8 @@
   "summary_and_payment": "Summary & Payment",
   "confirm_appointment": "Confirm appointment",
   "confirm_order": "Confirm order",
+  "confirm_payment_title": "Confirm payment",
+  "confirm_payment_msg": "Confirm payment to the selected supplier?",
   "card_expiration_date": "MM / YY",
   "card_cvv": "CVV",
   "no_records": "There are no records!",

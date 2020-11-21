@@ -116,6 +116,8 @@
   "summary_and_payment": "Sumar & Plata",
   "confirm_appointment": "Confirma programarea",
   "confirm_order": "Confirma comanda",
+  "confirm_payment_title": "Confirmarea platii",
+  "confirm_payment_msg": "Confirmi plata catre furnizorul selectat?",
   "card_expiration_date": "LL / AA",
   "card_cvv": "CVV",
   "no_records": "Nu sunt date!",

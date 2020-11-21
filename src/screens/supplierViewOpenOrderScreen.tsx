@@ -34,16 +34,10 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
   const hasNotApplied = !request.alreadyBid;
 
   const offerData = request.bid;
-  // {
-  //   concrete_type: 1,
-  //   time: new Date(),
-  //   price: "30000",
-  //   advance_price: "3000",
-  // };
 
   const prettyDate = (date) => {
-    let separator = "/";
-    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
+    let separator = ".";
+    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
   };
 
   const sendOffer = () => {
@@ -51,7 +45,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
       return;
 
     let token = SyncStorage.get("token");
-    putRequest("supplier/order/bid", {orderID: request.id, price: price, advancePrice: advance_price, time: time, concreteType: concreteType} , token, response => {
+    putRequest("supplier/order/bid", {orderId: request._id, price: price, advancePrice: advance_price, time: time, concreteType: concreteType} , token, response => {
       if(response.data.success) {
         Alert.alert(
           I18n.t('offer_made_title'),
@@ -102,7 +96,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[RequestListScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={[RequestListScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('order_details') + "#" + request.id}</Text>
+            <Text style={[RequestListScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('order_details') + "#" + request._id}</Text>
           </View>
         }
         rightComponent={null}
@@ -128,15 +122,11 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
             <View style={[OrderScreenLtrStyle.order_additional_details, {height: height}]}>
               <View style={OrderScreenLtrStyle.order_detail}>
                 <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('date')}</Text>
-                <Text style={OrderScreenLtrStyle.order_detail_value}>{prettyDate(request.date)}</Text>
+                <Text style={OrderScreenLtrStyle.order_detail_value}>{prettyDate(request.deliveryDate)}</Text>
               </View>
               <View style={OrderScreenLtrStyle.order_detail}>
                 <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('time')}</Text>
                 <Text style={OrderScreenLtrStyle.order_detail_value}>{request.time}</Text>
-              </View>
-              <View style={OrderScreenLtrStyle.order_detail}>
-                <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('price')}</Text>
-                <Text style={OrderScreenLtrStyle.order_detail_value}>{request.maxPrice + " RON"}</Text>
               </View>
             </View>
           </View>

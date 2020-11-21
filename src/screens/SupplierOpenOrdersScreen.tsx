@@ -17,19 +17,19 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
 
   const [selectedFilterValue, setSelectedFilterValue] = useState(I18n.t('all'));
   const [selectedSortValue, setSelectedSortValue] = useState(I18n.t('new'));
-  const [requests, setRequests] = useState([] as {id,address,coordinates,quantity,maxPrice,date,time,offers,bid,alreadyBid}[]);
+  const [requests, setRequests] = useState([] as {}[]);
 
   //TODO - to test
   let token = SyncStorage();
   getRequest("supplier/order/list", token, response => {
-    if(response.data.success) {
-      setRequests(response.data.offers.sort(
+    if(response.data) {
+      setRequests(response.data.data.sort(
         (a,b) => {
           return b.id - a.id;
         }
-      ).map(offer => { return {...offer, alreadyBid: offer.bid !== null} }));
+      ).map(offer => { return {...offer, alreadyBid: offer.bid !== null} })); //TODO - quantity to int
     } else {
-      console.log(response.data.error);
+      console.log(response);
     }
   });
 
@@ -66,8 +66,8 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
   };
 
   const prettyDate = (date) => {
-    let separator = "/";
-    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
+    let separator = ".";
+    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
   };
 
   const openOrder = (request) => {
@@ -139,10 +139,10 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
           (selectedFilterValue != I18n.t('all')) && (request.alreadyBid == (selectedFilterValue == I18n.t('no_licitation')) ) ? null :
           <TouchableOpacity key={idx} style={[RequestListScreenLtrStyle.list_item]} onPress={() => {openOrder(request)}}>
             <View style={RequestListScreenLtrStyle.title_contents}>
-              <Text style={[RequestListScreenLtrStyle.list_item_title, request.alreadyBid ? {color: Colors.green} : {color: Colors.black}]}>{I18n.t('request') + " #" + request.id}</Text>
+              <Text style={[RequestListScreenLtrStyle.list_item_title, request.alreadyBid ? {color: Colors.green} : {color: Colors.black}]}>{I18n.t('request') + " #" + request._id}</Text>
             </View>
             <Text
-              style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.date) + ", " + request.time}</Text>
+              style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.deliveryDate) + ", " + request.deliveryTime}</Text>
             <View style={RequestListScreenLtrStyle.list_item_details}>
               <View style={RequestListScreenLtrStyle.list_item_address}>
                 <Text style={RequestListScreenLtrStyle.list_item_address_title}>{I18n.t('short_address')}</Text>
@@ -152,10 +152,6 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
                 <View style={RequestListScreenLtrStyle.list_item_detail}>
                   <Text style={RequestListScreenLtrStyle.list_item_detail_title}>{I18n.t('quantity')}</Text>
                   <Text style={RequestListScreenLtrStyle.list_item_detail_value}>{request.quantity + " m³"}</Text>
-                </View>
-                <View style={RequestListScreenLtrStyle.list_item_detail}>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_title}>{I18n.t('price')}</Text>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_value}>{request.maxPrice + " RON"}</Text>
                 </View>
               </View>
             </View>

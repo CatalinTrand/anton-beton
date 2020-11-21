@@ -16,13 +16,11 @@ import RequestListScreenLtrStyle from "../../shared/styles/RequestListScreen.ltr
 import {Picker} from "@react-native-community/picker";
 import SyncStorage from 'sync-storage';
 import {putRequest} from "../requestHandler";
-import {useStripe} from "@stripe/react-stripe-js";
+import stripe from 'react-native-stripe-payments';
 
 const PaymentScreen = ({route, navigation}) => {
 
   const {request, offer} = route.params;
-
-  let stripe = useStripe();
 
   let myCards = SyncStorage.get('cards');
   myCards = myCards ? myCards : [];
@@ -78,12 +76,13 @@ const PaymentScreen = ({route, navigation}) => {
   const [selectedCardValue, setSelectedCardValue] = useState(I18n.t('please_choose_a_credit_card'));
 
   const paymentMade = async () => {
+    stripe.setOptions({ publishingKey: 'sk_test_51Hft5MFKh7yu6OY6RXod8xHUMajQeAPCqlpR0F8iq8dheM17vHC2bE7QKvqrgktO61aX2zpSlV8u01GM1p1z8l6U00hHLN0STF' });
     let selectedCardIdx = -1;
-    for(let i = 0; i < myCards.length; i++)
-      if(myCards[i].cardNumber == selectedCardValue)
+    for (let i = 0; i < myCards.length; i++)
+      if (myCards[i].cardNumber == selectedCardValue)
         selectedCardIdx = i;
 
-    if(selectedCardIdx == -1 || !stripe)
+    if (selectedCardIdx == -1 || !stripe)
       return;
 
     const cardDetails = {
@@ -93,44 +92,40 @@ const PaymentScreen = ({route, navigation}) => {
       cvc: myCards[selectedCardIdx].cvv,
     };
 
-    //TODO - first create payment intent on the server and get client secret
-
-    const result = await stripe.confirmCardPayment('{CLIENT_SECRET}', {
-      payment_method: {
-        card: null, //TODO
-        billing_details: {
-          name: myCards[selectedCardIdx].cardName,
-        },
+    let token = SyncStorage.get("token");
+    putRequest("client/order/confirm", {
+      orderID: request.id,
+      supplierEmail: offer.supplierEmail,
+      advancePrice: offer.advance_price,
+    }, token, response => {
+      if (response.data) {
+        Alert.alert(
+          I18n.t('confirm_payment_title'),
+          I18n.t('confirm_payment_msg'),
+          [
+            {text: "Ok", onPress: () => {
+                stripe.confirmPayment(response.data.data, cardDetails).then( result => {
+                  if (result) {
+                    console.log(result);
+                    Alert.alert(
+                      I18n.t('payment_made_title'),
+                      I18n.t('payment_made_msg'),
+                      [
+                        {text: "Ok", onPress: () => navigation.navigate('DeliveryListScreen')}
+                      ],
+                      {cancelable: false}
+                    );
+                  }
+                }).catch( error => console.log(error) );
+              }}
+          ],
+          {cancelable: true}
+        );
+      } else {
+        console.log(response.data.error);
       }
     });
 
-    if (result.error) {
-      console.log('[error]', result.error);
-    } else {
-      console.log('[result]', result);
-      let token = SyncStorage.get("token");
-      if (result.paymentIntent.status === 'succeeded') {
-        putRequest("client/order/confirm", {
-          orderID: request.id,
-          supplierEmail: offer.supplierEmail,
-          advancePrice: offer.advance_price,
-          transactionID: "{PAYMENT_INTENT_RESPONSE.id}" //TODO
-        }, token, response => {
-          if (response.data.success) {
-            Alert.alert(
-              I18n.t('payment_made_title'),
-              I18n.t('payment_made_msg'),
-              [
-                {text: "Ok", onPress: () => navigation.navigate('DeliveryListScreen')}
-              ],
-              {cancelable: false}
-            );
-          } else {
-            console.log(response.data.error);
-          }
-        });
-      }
-    }
   };
 
   return (

@@ -14,45 +14,16 @@ import {getRequest} from "../requestHandler";
 
 const SupplierOngoingOrdersScreen = ({route, navigation}) => {
 
-  const [requests, setRequests] = useState([] as {id,address,coordinates,quantity,maxPrice,date,time}[]);
+  const [requests, setRequests] = useState([] as {}[]);
 
   let token = SyncStorage.get("token");
   getRequest("supplier/order/list/accepted", token, response => {
-    if(response.data.success) {
-      setRequests(response.data.orders);
+    if(response.data) {
+      setRequests(response.data.data.orders); //TODO - quantity to int
     } else {
-      console.log(response.data.success);
+      console.log(response);
     }
   });
-  //   [
-  //   {
-  //     id: 10005,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 5000,
-  //     maxPrice: 30000,
-  //     date: '12/7/2021',
-  //     time: '12:00',
-  //   },
-  //   {
-  //     id: 10006,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 15000,
-  //     maxPrice: 300000,
-  //     date: '12/7/2021',
-  //     time: '16:00',
-  //   },
-  //   {
-  //     id: 10007,
-  //     address: 'Str. Lujerului 42J, Bucuresti, Romania',
-  //     coordinates: {lat: 45.34, lng: 21.55},
-  //     quantity: 3400,
-  //     maxPrice: 35000,
-  //     date: '12/7/2021',
-  //     time: '14:00',
-  //   },
-  // ]);
 
   const [openRequest, setOpenRequest] = useState(null as any);
 
@@ -61,8 +32,8 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
   };
 
   const prettyDate = (date) => {
-    let separator = "/";
-    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
+    let separator = ".";
+    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
   };
 
   const cancelOrder = () => {
@@ -84,7 +55,7 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
   };
 
   const wazeLink = (request) => {
-    let link = "https://waze.com/ul?q=" + request.address.split(" ").join("%20") + "&ll=" + request.coordinates.lat + "," + request.coordinates.lng + "&navigate=yes";
+    let link = "https://waze.com/ul?q=" + request.address.split(" ").join("%20") + "&ll=" + request.coordinates.lat + "," + request.coordinates.long + "&navigate=yes";
     console.log(link);
     return link;
   };
@@ -144,7 +115,7 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
             position: 'absolute',
             zIndex: 11
           }}>
-            <Text style={{width: '100%', paddingBottom: 20, textAlign: "center", fontSize: Fonts.regular, fontWeight: 'bold', color: Colors.black}}>{I18n.t('request') + " #" + openRequest.id}</Text>
+            <Text style={{width: '100%', paddingBottom: 20, textAlign: "center", fontSize: Fonts.regular, fontWeight: 'bold', color: Colors.black}}>{I18n.t('request') + " #" + openRequest._id}</Text>
             <TouchableOpacity style={{width: '70%'}} onPress={() => Linking.openURL(encodeURI(wazeLink(openRequest)))} >
               <Text style={{display: 'flex', fontSize: Fonts.medium, marginBottom: 20, textAlign: "center", backgroundColor: Colors.orange, width: '100%', paddingTop: 10, paddingBottom: 10}}>{I18n.t('start_delivery')}</Text>
             </TouchableOpacity>
@@ -166,10 +137,10 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
           }}>
             <View style={RequestListScreenLtrStyle.title_contents}>
               <Text
-                style={[RequestListScreenLtrStyle.list_item_title, {color: Colors.green}]}>{I18n.t('request') + " #" + request.id}</Text>
+                style={[RequestListScreenLtrStyle.list_item_title, {color: Colors.green}]}>{I18n.t('request') + " #" + request._id}</Text>
             </View>
             <Text
-              style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.date) + ", " + request.time}</Text>
+              style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.deliveryDate) + ", " + request.deliveryTime}</Text>
             <View style={RequestListScreenLtrStyle.list_item_details}>
               <View style={RequestListScreenLtrStyle.list_item_address}>
                 <Text style={RequestListScreenLtrStyle.list_item_address_title}>{I18n.t('short_address')}</Text>
@@ -179,10 +150,6 @@ const SupplierOngoingOrdersScreen = ({route, navigation}) => {
                 <View style={RequestListScreenLtrStyle.list_item_detail}>
                   <Text style={RequestListScreenLtrStyle.list_item_detail_title}>{I18n.t('quantity')}</Text>
                   <Text style={RequestListScreenLtrStyle.list_item_detail_value}>{request.quantity + " m³"}</Text>
-                </View>
-                <View style={RequestListScreenLtrStyle.list_item_detail}>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_title}>{I18n.t('price')}</Text>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_value}>{request.maxPrice + " RON"}</Text>
                 </View>
               </View>
             </View>
