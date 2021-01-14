@@ -6,19 +6,22 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     zIndex: 1,
     width: '100%',
     height: '100%',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.black,
   },
   title: {
+    fontFamily: "helvetica !important",
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    borderBottomColor: "#000000"
   },
   title_text: {
     fontSize: Fonts.h5,
-    fontWeight: 'bold',
-    color: Colors.black,
+    fontWeight: '600',
+    color: Colors.orange,
+    marginRight: 20,
   },
   select_view: {
     width: '100%',
@@ -30,50 +33,58 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGrey,
+    borderBottomColor: "#000000",
   },
   list: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    backgroundColor: Colors.black,
   },
   list_item: {
     paddingLeft: 5,
     paddingRight: 5,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.grey,
+    borderBottomColor: "#000000",
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    backgroundColor: Colors.black,
   },
   title_contents: {
+    width: "100%",
     paddingLeft: 10,
+    paddingRight: 10,
     paddingTop: 5,
+    paddingBottom: 15,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
   list_item_title: {
-    fontSize: Fonts.h6,
+    fontSize: 14,
     color: Colors.black,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   },
   offers_count: {
-    color: Colors.primary,
+    color: Colors.yellow,
     marginLeft: 12,
-    fontSize: Fonts.regular
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   list_item_date_time: {
     fontSize: Fonts.medium,
-    color: Colors.darkGrey,
+    color: Colors.white,
+    fontWeight: "bold",
     paddingLeft: 10,
+    paddingTop: 15,
   },
   list_item_details: {
     display: 'flex',
@@ -88,7 +99,9 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     justifyContent: 'flex-start',
     alignContent: 'center',
     padding: 10,
+    paddingTop: 0,
     paddingRight: 5,
+    paddingBottom: 5,
   },
   list_item_address_title: {
     fontSize: Fonts.regular,
@@ -97,8 +110,8 @@ const RequestListScreenLtrStyle = StyleSheet.create({
   },
   list_item_address_value: {
     fontSize: Fonts.small,
-    fontWeight: 'bold',
-    color: Colors.darkGrey,
+    fontWeight: 'normal',
+    color: Colors.white,
   },
   list_item_additional_details: {
     width: '49%',

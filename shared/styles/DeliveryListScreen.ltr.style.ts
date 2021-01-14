@@ -5,7 +5,7 @@ const DeliveryListScreen = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.black,
   },
   title: {
     display: 'flex',
@@ -15,9 +15,9 @@ const DeliveryListScreen = StyleSheet.create({
     marginRight: 'auto'
   },
   title_text: {
+    marginRight: 15,
     fontSize: Fonts.h5,
-    fontWeight: 'bold',
-    color: Colors.black,
+    color: Colors.orange,
   },
   list: {
     width: '100%',
@@ -29,23 +29,21 @@ const DeliveryListScreen = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.grey,
+    borderBottomColor: "#000000",
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
   },
   title_contents: {
-    paddingLeft: 10,
-    paddingTop: 5,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingBottom: 10,
   },
   list_item_title: {
-    fontSize: Fonts.h6,
-    color: Colors.orange,
+    fontSize: 12,
+    color: Colors.black,
     fontWeight: 'bold',
     display: 'flex',
     flexDirection: 'row',
@@ -58,14 +56,14 @@ const DeliveryListScreen = StyleSheet.create({
     fontSize: Fonts.regular
   },
   list_item_supplier_name: {
-    fontSize: Fonts.regular,
+    fontSize: 14,
     color: Colors.darkGrey,
-    paddingLeft: 10,
+    fontWeight: "bold",
+    paddingTop: 5,
   },
   list_item_date_time: {
-    fontSize: Fonts.medium,
-    color: Colors.darkGrey,
-    paddingLeft: 10,
+    fontSize: 12,
+    color: Colors.white,
   },
   list_item_details: {
     display: 'flex',
@@ -74,7 +72,7 @@ const DeliveryListScreen = StyleSheet.create({
     alignContent: 'center',
   },
   list_item_address: {
-    width: '53%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -87,9 +85,9 @@ const DeliveryListScreen = StyleSheet.create({
     paddingBottom: 10,
   },
   list_item_address_value: {
-    fontSize: Fonts.small,
+    fontSize: 14,
     fontWeight: 'bold',
-    color: Colors.darkGrey,
+    color: Colors.white,
   },
   list_item_additional_details: {
     width: '47%',

@@ -32,8 +32,11 @@ const AppointmentScreen = ({route, navigation}) => {
 
     let token = SyncStorage.get("token");
 
-    //TODO - test
-    postRequest("client/order", {date: date, time: time, quantity: quantity, address: destination_name, coordinates: destination_coords}, token, response => {
+    let formattedDate = new Date(date);
+    let formattedDatetring = formattedDate.getDay() + "." + (formattedDate.getMonth() + 1) + "." + formattedDate.getFullYear();
+    let formattedTimeString = time.getHours() + ":" + time.getMinutes();
+
+    postRequest("client/order", {date: formattedDatetring, time: formattedTimeString, quantity: quantity, address: destination_name, coordinates: destination_coords, type: "F1"}, token, response => {
       if(response.data.success) {
         Alert.alert(
           I18n.t('request_made_title'),
@@ -57,21 +60,21 @@ const AppointmentScreen = ({route, navigation}) => {
         leftComponent={
           <CustomIcons
             size={Fonts.medium}
-            color={Colors.black}
-            style={{marginTop: 10}}
+            color={Colors.orange}
+            style={{marginTop: 10, marginLeft: 5}}
             name="arrow-back"
             onPress={navigation.goBack}
           />
         }
         centerComponent={
-          <View style={[AppointmentScreenLtrStyle.title, {marginTop: 10}]}>
-            <Text style={[AppointmentScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('delivery_requirements')}</Text>
+          <View style={[AppointmentScreenLtrStyle.title, {marginTop: 10, paddingRight: 15}]}>
+            <Text style={[AppointmentScreenLtrStyle.title_text, {color: Colors.orange}]}>{I18n.t('delivery_requirements').toLowerCase()}</Text>
           </View>
         }
         rightComponent={null}
         noBorder={false}
       />
-      <ScrollView>
+      <ScrollView contentContainerStyle={{backgroundColor: Colors.black}}>
         <View style={AppointmentScreenLtrStyle.inputs}>
           <View style={AppointmentScreenLtrStyle.delivery_address}>
             <Text style={AppointmentScreenLtrStyle.delivery_address_title}>{I18n.t('delivery_address')}</Text>
@@ -96,6 +99,9 @@ const AppointmentScreen = ({route, navigation}) => {
               dateInput: {
                 marginLeft: 45,
                 borderRadius: 7,
+                borderColor: Colors.white,
+                backgroundColor: Colors.lightGrey,
+                color: "#fff"
               }
             }}
             onDateChange={(date) => {
@@ -106,7 +112,7 @@ const AppointmentScreen = ({route, navigation}) => {
           <View style={AppointmentScreenLtrStyle.delivery_time_container}>
             <CustomIcons
               size={Fonts.h4}
-              color={Colors.black}
+              color={Colors.white}
               style={{marginTop: 0}}
               name="clock"
             />
@@ -129,13 +135,13 @@ const AppointmentScreen = ({route, navigation}) => {
           <View style={AppointmentScreenLtrStyle.quantity_container}>
             <CustomIcons
               size={Fonts.h4}
-              color={Colors.black}
+              color={Colors.white}
               style={{marginTop: 0, marginLeft: -10}}
               name="truck"
               onPress={navigation.goBack}
             />
             <TextInput
-              style={{backgroundColor: Colors.lightGrey, width: '50%', padding: 10, margin: 15, borderRadius: 7}}
+              style={{backgroundColor: Colors.lightGrey, width: '50%', padding: 10, margin: 15, borderRadius: 7, color: "#000"}}
               placeholder={I18n.t('enter_quantity')}
               keyboardType="number-pad"
               value={quantity}
@@ -154,9 +160,10 @@ const AppointmentScreen = ({route, navigation}) => {
             width: '90%',
             marginTop: 20,
             backgroundColor: Colors.orange,
+            color: Colors.black
           },
         ]}
-        containerStyle={{justifyContent: 'center', alignItems: 'center'}}
+        containerStyle={{justifyContent: 'center', alignItems: 'center', color: Colors.black}}
       />
     </View>
   );

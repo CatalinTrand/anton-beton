@@ -12,7 +12,7 @@ const SupplierOpenOrdersScreenLtrStyle = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGrey,
+    borderBottomColor: "#000000",
   },
   filter: {
 

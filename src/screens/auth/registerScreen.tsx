@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Keyboard, Text, View, TouchableWithoutFeedback, ScrollView, Switch} from 'react-native';
-import {CheckBox} from 'react-native-elements';
+import CheckBox from '@react-native-community/checkbox';
 import {Picker} from '@react-native-community/picker';
 import {doFormat} from 'date-dealer';
 import loginPageStyle from '../../../shared/styles/auth.ltr.style';
@@ -186,12 +186,8 @@ const RegisterScreen = ({navigation}): JSX.Element => {
                 >
                   <View>
                     <CheckBox
-                      checked={agreeTerms}
-                      checkedIcon="check-square"
-                      uncheckedIcon="square"
-                      checkedColor={Colors.orange}
-                      onPress={() => setAgreeTerms(!agreeTerms)}
-                      center
+                      value={agreeTerms}
+                      onValueChange={() => setAgreeTerms(!agreeTerms)}
                     />
                   </View>
                   <View style={[CustomCheckboxLtrStyle.textWrapper]}>
@@ -208,12 +204,8 @@ const RegisterScreen = ({navigation}): JSX.Element => {
                 </View>
                 <View style={[CustomCheckboxLtrStyle.wrapper]}>
                   <CheckBox
-                    checked={agreePolicy}
-                    checkedIcon="check-square"
-                    uncheckedIcon="square"
-                    checkedColor={Colors.orange}
-                    onPress={() => setAgreePolicy(!agreePolicy)}
-                    center
+                    value={agreePolicy}
+                    onValueChange={() => setAgreePolicy(!agreePolicy)}
                   />
                   <View style={[CustomCheckboxLtrStyle.textWrapper]}>
                     <Text style={{fontSize: Fonts.small, color: Colors.grey}}>

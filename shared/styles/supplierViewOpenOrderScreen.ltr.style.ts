@@ -23,6 +23,7 @@ const SupplierViewOpenOrderScreenLtrStyle = StyleSheet.create({
   offer_details_entry_title: {
     fontWeight: "bold",
     paddingRight: 20,
+    color: Colors.white,
   },
 });
 

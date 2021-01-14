@@ -31,9 +31,13 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
   const [isVisibleTimePicker, setTimePickerVisibility] = useState(false);
   const [height, setHeight] = useState(100);
 
-  const hasNotApplied = !request.alreadyBid;
-
   const offerData = request.bid;
+  console.log(request);
+  let hasNotApplied;
+  if(offerData)
+    hasNotApplied = false;
+  else
+    hasNotApplied = true;
 
   const prettyDate = (date) => {
     let separator = ".";
@@ -41,38 +45,45 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
   };
 
   const sendOffer = () => {
-    if(request.id == null || price.length == 0 || advance_price.length == 0)
+    if (request._id == null || price.length == 0 || advance_price.length == 0)
       return;
 
     let token = SyncStorage.get("token");
-    putRequest("supplier/order/bid", {orderId: request._id, price: price, advancePrice: advance_price, time: time, concreteType: concreteType} , token, response => {
-      if(response.data.success) {
-        Alert.alert(
-          I18n.t('offer_made_title'),
-          I18n.t('offer_made_msg'),
-          [
-            {
-              text: "Ok", onPress: () => {
+    Alert.alert(
+      I18n.t('offer_made_title'),
+      I18n.t('offer_made_msg'),
+      [
+        {
+          text: "Ok", onPress: () => {
+            putRequest("supplier/order/bid", {
+              orderId: request._id,
+              price: price,
+              advancePrice: advance_price,
+              time: time,
+              concreteType: concreteType
+            }, token, response => {
+              if (response.data.success) {
+                navigation.navigate("SupplierOpenOrdersScreen");
+              } else {
+                console.log(response.data.error);
               }
-            }
-          ],
-          {cancelable: false}
-        );
-      } else {
-        console.log(response.data.error);
-      }
-    });
+            });
+          }
+        }
+      ],
+      {cancelable: false}
+    );
   };
 
   const renderConcreteOptions = () => {
 
     let result = [] as any;
 
-    for(let i = 1; i <= Constants.NR_OF_CONCRETE_TYPES; i++) {
+    for (let i = 1; i <= Constants.NR_OF_CONCRETE_TYPES; i++) {
       // @ts-ignore
       result.push(
         {
-          value: i+"",
+          value: i + "",
           label: I18n.t("concrete_type_" + i)
         });
     }
@@ -89,14 +100,15 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
           <CustomIcons
             style={{marginTop: 15, marginLeft: 10}}
             size={Fonts.medium}
-            color={Colors.black}
+            color={Colors.orange}
             name="arrow-back"
             onPress={() => navigation.navigate('SupplierOpenOrdersScreen')}
           />
         }
         centerComponent={
           <View style={[RequestListScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={[RequestListScreenLtrStyle.title_text, {color: Colors.black}]}>{I18n.t('order_details') + "#" + request._id}</Text>
+            <Text
+              style={[RequestListScreenLtrStyle.title_text, {color: Colors.orange, fontSize: 19}]}>{I18n.t('order_details').toLowerCase() + " #" + request._id.substring(0,9)}</Text>
           </View>
         }
         rightComponent={null}
@@ -126,7 +138,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
               </View>
               <View style={OrderScreenLtrStyle.order_detail}>
                 <Text style={OrderScreenLtrStyle.order_detail_title}>{I18n.t('time')}</Text>
-                <Text style={OrderScreenLtrStyle.order_detail_value}>{request.time}</Text>
+                <Text style={OrderScreenLtrStyle.order_detail_value}>{request.deliveryTime}</Text>
               </View>
             </View>
           </View>
@@ -137,20 +149,27 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
               <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry, {paddingLeft: 15}]}>
                 <Text
                   style={SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title}>{I18n.t("concrete_type")}</Text>
-                <Text>{I18n.t("concrete_type_" + offerData.concrete_type)}</Text>
+                <Text style={{color: Colors.white}}>{I18n.t("concrete_type_" + offerData.concreteType)}</Text>
               </View>
-              <View style={[AppointmentScreenLtrStyle.delivery_time_container, {paddingLeft: 15, paddingTop: 20, paddingBottom: 20}]}>
+              <View style={[AppointmentScreenLtrStyle.delivery_time_container, {
+                paddingLeft: 15,
+                paddingTop: 20,
+                paddingBottom: 20
+              }]}>
                 <CustomIcons
                   size={Fonts.h4}
-                  color={Colors.black}
+                  color={Colors.white}
                   style={{marginTop: 0, paddingRight: 20}}
                   name="clock"
                 />
-                <Text
-                  style={[AppointmentScreenLtrStyle.delivery_time_value, {fontSize: Fonts.regular}]}>{time == undefined ? (new Date()).getHours() + ":" + ((new Date()).getMinutes() < 10 ? "0" : "") + (new Date()).getMinutes() : time.getHours() + ":" + (time.getMinutes() < 10 ? "0" : "") + time.getMinutes()}</Text>
+                <Text style={[AppointmentScreenLtrStyle.delivery_time_value, {fontSize: Fonts.regular, color: Colors.white}]}>{offerData.time}</Text>
               </View>
-              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
-                <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 20}]}>{I18n.t("set_price")}</Text>
+              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry, {
+                alignItems: 'flex-start',
+                flexDirection: "column"
+              }]}>
+                <Text
+                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 20}]}>{I18n.t("set_price")}</Text>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                     style={{
@@ -159,18 +178,23 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                       padding: 10,
                       margin: 15,
                       borderRadius: 7,
-                      marginBottom: 20
+                      marginBottom: 20,
+                      color: "#000"
                     }}
                     placeholder={I18n.t('enter_price')}
                     keyboardType="number-pad"
-                    value={offerData.price}
+                    value={offerData.price + ""}
                     editable={false}
                   />
                   <Text style={{fontSize: Fonts.regular, paddingBottom: 10}}>RON</Text>
                 </View>
               </View>
-              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
-                <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 20}]}>{I18n.t("appointment_price")}</Text>
+              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry, {
+                alignItems: 'flex-start',
+                flexDirection: "column"
+              }]}>
+                <Text
+                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 20}]}>{I18n.t("advance_price")}</Text>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                     style={{
@@ -179,19 +203,26 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                       padding: 10,
                       margin: 15,
                       borderRadius: 7,
-                      marginBottom: 0
+                      marginBottom: 0,
+                      color: "#000"
                     }}
                     placeholder={I18n.t('enter_price')}
                     keyboardType="number-pad"
-                    value={offerData.advance_price}
+                    value={offerData.advance_price + ""}
                     editable={false}
                   />
                   <Text style={{fontSize: Fonts.regular, paddingTop: 10}}>RON</Text>
                 </View>
               </View>
             </View> :
-            <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_input,{height: 'auto', paddingLeft: 10}]}>
-              <Text style={{paddingLeft: 5, paddingBottom: 10, fontSize: Fonts.regular, fontWeight: 'bold'}}>{I18n.t("concrete_type")}</Text>
+            <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_input, {height: 'auto', paddingLeft: 10}]}>
+              <Text style={{
+                paddingLeft: 5,
+                paddingBottom: 10,
+                fontSize: Fonts.regular,
+                fontWeight: 'bold',
+                color: Colors.white
+              }}>{I18n.t("concrete_type")}</Text>
               <RNPickerSelect
                 onValueChange={(value) => setConcreteType(value)}
                 items={renderConcreteOptions()}
@@ -199,7 +230,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
               <View style={AppointmentScreenLtrStyle.delivery_time_container}>
                 <CustomIcons
                   size={Fonts.h4}
-                  color={Colors.black}
+                  color={Colors.white}
                   style={{marginTop: 0}}
                   name="clock"
                 />
@@ -221,8 +252,12 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                   }}
                 />
                 : null}
-              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
-                <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("appointment_price")}</Text>
+              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry, {
+                alignItems: 'flex-start',
+                flexDirection: "column"
+              }]}>
+                <Text
+                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("advance_price")}</Text>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: 20}}>
                   <TextInput
                     style={{
@@ -232,18 +267,23 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                       margin: 15,
                       marginLeft: 10,
                       borderRadius: 7,
-                      marginBottom: 0
+                      marginBottom: 0,
+                      color: "#000"
                     }}
                     placeholder={I18n.t('enter_price')}
                     keyboardType="number-pad"
                     value={price}
                     onChangeText={(value) => setPrice(value)}
                   />
-                  <Text style={{fontSize: Fonts.regular, paddingTop: 10}}>RON</Text>
+                  <Text style={{fontSize: Fonts.regular, paddingTop: 10, color: Colors.white}}>RON</Text>
                 </View>
               </View>
-              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry,{alignItems: 'flex-start', flexDirection: "column"}]}>
-                <Text style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("set_price")}</Text>
+              <View style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry, {
+                alignItems: 'flex-start',
+                flexDirection: "column"
+              }]}>
+                <Text
+                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("set_price")}</Text>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                     style={{
@@ -253,16 +293,17 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                       margin: 15,
                       marginLeft: 10,
                       borderRadius: 7,
-                      marginBottom: 0
+                      marginBottom: 0,
+                      color: "#000"
                     }}
                     placeholder={I18n.t('enter_price')}
                     keyboardType="number-pad"
                     value={advance_price}
                     onChangeText={(value) => setAdvancePrice(value)}
                   />
-                  <Text style={{fontSize: Fonts.regular, paddingTop: 10}}>RON</Text>
+                  <Text style={{fontSize: Fonts.regular, paddingTop: 10, color: Colors.white}}>RON</Text>
                 </View>
-            </View>
+              </View>
               <RegularButton
                 title={I18n.t('send_offer')}
                 onPress={() => sendOffer()}
@@ -273,6 +314,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                     marginTop: 40,
                     marginRight: 15,
                     backgroundColor: Colors.orange,
+                    color: Colors.black
                   },
                 ]}
                 containerStyle={{justifyContent: 'center', alignItems: 'center'}}

@@ -21,8 +21,7 @@ const MapScreenLtrStyle = StyleSheet.create({
   },
   title_text: {
     fontSize: Fonts.h5,
-    fontWeight: 'bold',
-    color: Colors.black,
+    color: Colors.orange,
   },
   searchAddress: {
     zIndex: 0,
@@ -31,20 +30,26 @@ const MapScreenLtrStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.black,
     paddingBottom: 10,
+    borderTopColor: "#000000",
+    borderTopWidth: 1,
+    borderBottomColor: "#000000",
+    borderBottomWidth: 1,
   },
   searchAddressInput: {
     zIndex: 0,
     fontSize: Fonts.medium,
+    color: Colors.white,
     marginLeft: 10,
     borderRadius: 7,
-    width: '85%'
+    width: '85%',
   },
   searchIcon: {
     padding: 10,
     marginRight: 25,
     marginTop: 15,
+    color: Colors.white,
   },
   map: {
     position: 'absolute',
@@ -58,7 +63,7 @@ const MapScreenLtrStyle = StyleSheet.create({
     marginBottom: 70,
     padding: 10,
     borderRadius: 7,
-    backgroundColor: Colors.orange,
+    backgroundColor: Colors.yellow,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

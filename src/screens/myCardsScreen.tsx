@@ -3,10 +3,8 @@ import Colors from "../../shared/themes/Colors";
 import Header from "../components/sections/header";
 import {CustomIcons} from "../../shared/themes";
 import Fonts from "../../shared/themes/Fonts";
-import {Alert, SafeAreaView, ScrollView, Text, TextInput, View} from "react-native";
+import {SafeAreaView, ScrollView, Text, TextInput, View} from "react-native";
 import I18n from "../../shared/I18n/I18n";
-import UserAvatar from "../../shared/components/sections/userAvatar";
-import Metrics from "../../shared/themes/Metrics";
 import * as React from "react";
 import {useState} from "react";
 import GlobalLtrStyle from "../../shared/styles/global.ltr.style";
@@ -14,7 +12,7 @@ import RegularButton from "../../shared/components/buttons/regularButton";
 import OrderScreenLtrStyle from "../../shared/styles/orderScreen.ltr.style";
 import SyncStorage from 'sync-storage';
 
-const PaymentScreen = ({route, navigation}) => {
+const MyCardsScreen = ({route, navigation}) => {
 
   let myCards = SyncStorage.get('cards');
   myCards = myCards ? myCards : [];
@@ -85,17 +83,18 @@ const PaymentScreen = ({route, navigation}) => {
       cvv: ""
     });
   };
-
+  let invalidInput = state.cardName.length <= 6 || state.cardNumber.length != 16 || state.expirationDate.length != 5 || state.cvv.length != 3;
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: Colors.black}}>
       <Header
         placement="left"
         leftComponent={
           <CustomIcons
-            size={Fonts.medium}
-            color={Colors.black}
+            size={Fonts.regular}
+            color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}
+            style={{paddingTop: 15, paddingLeft: 5}}
           />
         }
         centerComponent={
@@ -106,9 +105,9 @@ const PaymentScreen = ({route, navigation}) => {
         rightComponent={null}
         noBorder={true}
       />
-      <ScrollView>
-        <View style={{borderTopWidth: 1, borderTopColor: Colors.black, paddingTop: 10, marginTop: 20}}>
-          {
+      <ScrollView contentContainerStyle={{backgroundColor: Colors.black}}>
+        <View style={{borderTopWidth: 1, borderTopColor: Colors.darkGrey, paddingTop: 10, marginTop: 20}}>
+          { myCards.length === 0 ? <Text style={{paddingTop: 10, paddingBottom: 10, fontSize: 18, color: Colors.white, paddingLeft: 10}}>No cards available</Text> :
             myCards.map(
               (card, index) =>
                 <View style={{
@@ -117,22 +116,22 @@ const PaymentScreen = ({route, navigation}) => {
                   justifyContent: 'flex-start',
                   alignItems: 'flex-start',
                   borderWidth: 1,
-                  borderColor: Colors.black,
-                  borderRadius: 4,
+                  borderColor: Colors.white,
+                  borderRadius: 3,
                   padding: 10,
                   margin: 10
                 }} key={index + 1}>
                   <Text style={{
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: Fonts.regular,
                     fontWeight: 'bold'
                   }}>{card.type + " " + card.expirationDate + " - " + card.cardName}</Text>
-                  <Text style={{color: Colors.darkGrey, fontSize: Fonts.medium}}>{card.cardNumber}</Text>
+                  <Text style={{color: Colors.white, fontSize: Fonts.medium}}>{card.cardNumber}</Text>
                 </View>
             )
           }
         </View>
-        <View style={{borderTopWidth: 1, borderTopColor: Colors.black, paddingTop: 10, marginTop: 10}}>
+        <View style={{borderTopWidth: 1, borderTopColor: Colors.darkGrey, paddingTop: 10, marginTop: 10}}>
           <Text style={{
             paddingTop: 10,
             paddingBottom: 10,
@@ -178,7 +177,7 @@ const PaymentScreen = ({route, navigation}) => {
           buttonStyle={[
             GlobalLtrStyle.buttonStyle,
             {
-              backgroundColor: Colors.orange,
+              backgroundColor: !invalidInput ? Colors.orange : Colors.grey,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -188,7 +187,7 @@ const PaymentScreen = ({route, navigation}) => {
               marginBottom: 20
             },
           ]}
-          titleStyle={{color: 'white', fontSize: Fonts.regular}}
+          titleStyle={{color: Colors.black, fontSize: Fonts.regular}}
           containerStyle={{marginLeft: 15, marginRight: 15, justifyContent: 'center', alignItems: 'center'}}
         />
       </ScrollView>
@@ -196,4 +195,4 @@ const PaymentScreen = ({route, navigation}) => {
   );
 };
 
-export default PaymentScreen;
+export default MyCardsScreen;

@@ -6,9 +6,9 @@ const DisplayScreen = ({route,navigation}) => {
 
   const [lng, setLng] = useState(I18n.locale);
 
-  const userType = 1; //1 - client, 2 - furnizor
+  const isSupplier = route.params.isSupplier;
 
-  if(userType == 1)
+  if(!isSupplier)
     navigation.navigate('MapScreen',{lng});
   else
     navigation.navigate('SupplierOpenOrdersScreen',{lng});

@@ -59,6 +59,7 @@ const GlobalLtrStyle = StyleSheet.create({
     margin: Metrics.baseMargin,
     borderRadius: 10,
     padding: 12,
+    color: Colors.black
   },
   column: {
     flexDirection: 'column',

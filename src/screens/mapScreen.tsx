@@ -13,12 +13,13 @@ import Colors from "../../shared/themes/Colors";
 import Header from "../components/sections/header";
 import FloatPlaceholderTextInput from "../../shared/components/sections/floatPlaceholderTextInput";
 import BottomTabNavigator from "../components/navigation/bottomTabNavigator";
+import SyncStorage from "sync-storage";
 
 let _mapView: MapView | null;
 
 const MapScreen = ({route, navigation}) => {
 
-  let once = false;
+  let [once, setOnce] = useState(false);
   let { lng } = route.params;
   I18n.locale = lng;
   const defaultLatZoom = 3.88 * 0.00522;
@@ -50,7 +51,7 @@ const MapScreen = ({route, navigation}) => {
 
   if (!once) {
     monitorPosition();
-    once = true;
+    setOnce(true);
   }
 
   const handleMapPress = (e) => {
@@ -64,6 +65,14 @@ const MapScreen = ({route, navigation}) => {
   const loadAppointmentScreen = () => {
     if (marker.latitude == null)
       return;
+
+    navigation.navigate('AppointmentScreen', {
+      destination_coords: marker,
+      destination_name: "Strada Lujerului 42J"
+    });
+    return;
+
+    //TODO - fix google billing
 
     // @ts-ignore
     Geocoder.from(marker.latitude, marker.longitude)
@@ -118,6 +127,12 @@ const MapScreen = ({route, navigation}) => {
   let markerIcon = require("../assets/images/flag_marker.png");
   let calculatedHeight = Dimensions.get("window").height - 45;
 
+  const logoutUser = () => {
+    SyncStorage.set('token', null);
+    SyncStorage.set('cards', null);
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={MapScreenLtrStyle.container}>
       {openSettings ?
@@ -155,17 +170,25 @@ const MapScreen = ({route, navigation}) => {
             position: 'absolute',
             zIndex: 11
           }}>
-            <Text style={{width: '100%', paddingBottom: 30, textAlign: "center", fontSize: Fonts.h6, fontWeight: 'bold', color: Colors.black}}>{I18n.t('settings')}</Text>
-            <TouchableOpacity style={{marginBottom: 40, display: 'flex', flexDirection: 'row'}} onPress={() => navigation.navigate('MyCardsScreen')}>
+            <Text style={{width: '100%', display: "flex", justifyContent: "center", paddingBottom: 30, textAlign: "center", fontSize: Fonts.h6, fontWeight: 'bold', color: Colors.black}}>{I18n.t('settings')}</Text>
+            <TouchableOpacity style={{marginLeft: 25, width: 170, marginBottom: 20, display: 'flex', flexDirection: 'row', justifyContent: "center"}} onPress={() => navigation.navigate('MyCardsScreen')}>
               <CustomIcons
-                style={{marginRight: 5}}
+                style={{marginRight: 8}}
                 size={Fonts.h6}
-                color={Colors.green}
+                color={Colors.orange}
                 name="credit-card"
-              /><Text style={{color: Colors.green, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('my_cards')}</Text>
+              /><Text style={{width: 140, color: Colors.orange, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('my_cards')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setOpenSettings(false)}>
-              <Text style={{color: Colors.primary, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('back')}</Text>
+            <TouchableOpacity style={{marginLeft: 25, width: 170, marginBottom: 10, display: 'flex', flexDirection: 'row', justifyContent: "center"}} onPress={() => logoutUser()}>
+              <CustomIcons
+                style={{marginRight: 5, marginLeft: 3}}
+                size={Fonts.h6}
+                color={Colors.orange}
+                name="exit"
+              /><Text style={{width: 140, color: Colors.orange, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('logout_button')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{position: "absolute", top: 2, right: 10}} onPress={() => setOpenSettings(false)}>
+              <Text style={{color: Colors.black, fontWeight: 'bold', fontSize: Fonts.h5}}>&times;</Text>
             </TouchableOpacity>
           </View>] : null
       }
@@ -174,15 +197,15 @@ const MapScreen = ({route, navigation}) => {
           placement="left"
           leftComponent={
             <CustomIcons
-              style={{marginTop: 15,marginLeft: 10}}
+              style={{marginLeft: 10}}
               size={Fonts.h6}
-              color={Colors.black}
+              color={Colors.orange}
               name="cog"
               onPress={() => setOpenSettings(true)}
             />
           }
           centerComponent={
-            <View style={[MapScreenLtrStyle.title, {marginTop: 15}]}>
+            <View style={[MapScreenLtrStyle.title]}>
               <Text style={MapScreenLtrStyle.title_text}>{I18n.t('address_search')}</Text>
             </View>
           }
@@ -200,7 +223,7 @@ const MapScreen = ({route, navigation}) => {
           <CustomIcons
             style={MapScreenLtrStyle.searchIcon}
             size={Fonts.h5}
-            color={Colors.black}
+            color={Colors.white}
             name="search"
             onPress={() => searchAddress(address)}
           />

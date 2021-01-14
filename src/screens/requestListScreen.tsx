@@ -9,7 +9,7 @@ import I18n from "../../shared/I18n/I18n";
 import Header from "../components/sections/header";
 import {useState} from "react";
 import {Picker} from "@react-native-community/picker";
-import {getRequest} from "../requestHandler";
+import {getRequest, putRequest} from "../requestHandler";
 import SyncStorage from 'sync-storage';
 
 
@@ -24,9 +24,10 @@ const RequestListScreen = ({route, navigation}) => {
   if(!got_list) {
     getRequest("client/order/list", token, response => {
       if (response.data.success) {
+        console.log(response.data);
         let  data = response.data.data.filter( order => order.delivered == false && !order.canceledByCustomer && !order.canceledBySupplier);
-        setInitialRequests(data);//TODO - quantity to int
-        setRequests(data);
+        setInitialRequests(data.map(req => ({...req, address: req.address ? req.address : "Str. Lujerului 42J, Bucuresti"})));//TODO - quantity to int, state, supplierName, selectedBidder, ongoings
+        setRequests(data.map(req => ({...req, address: req.address ? req.address : "Str. Lujerului 42J, Bucuresti"})));
       }
     });
     setGotList(true);
@@ -41,14 +42,19 @@ const RequestListScreen = ({route, navigation}) => {
   };
 
   const pressedDelivery = (delivery) => {
-    if (delivery.inProgress == true)
+    if (delivery.inDelivery == true)
       navigation.navigate('ViewTruckMapScreen', {id: delivery._id, coordinates: delivery.coordinates, supplier_id: delivery.supplier_id});
     else
       Alert.alert(
         I18n.t('cancel_order_title'),
         I18n.t('cancel_order_msg'),
         [
-          { text: I18n.t("cancel_order"), onPress: () => {/* TODO */} },
+          { text: I18n.t("cancel_order"), onPress: () => {
+              putRequest('client/order/cancel',{orderId: delivery._id},token, response => {
+                if(response.data)
+                  navigation.reload();
+              });
+            } },
           { text: I18n.t("back"), onPress: () => {}, style: 'cancel' }
         ],
         { cancelable: false }
@@ -63,9 +69,18 @@ const RequestListScreen = ({route, navigation}) => {
       newRequests = initial_requests.filter(request => request.selectedBidder == null);
 
     if(value == I18n.t('ongoing'))
-      newRequests = initial_requests.filter(request => request.inProgress == true);
+      newRequests = initial_requests.filter(request => request.selectedBidder && !request.inDelivery == true);
+
+    if(value == I18n.t('inDelivery'))
+      newRequests = initial_requests.filter(request => request.inDelivery == true);
 
     setRequests(newRequests);
+  };
+
+  const logoutUser = () => {
+    SyncStorage.set('token', null);
+    SyncStorage.set('cards', null);
+    navigation.navigate('Login');
   };
 
   return (
@@ -77,7 +92,7 @@ const RequestListScreen = ({route, navigation}) => {
           <CustomIcons
             style={{marginTop: 15, marginLeft: 10}}
             size={Fonts.h6}
-            color={Colors.black}
+            color={Colors.orange}
             name="cog"
             onPress={() => setOpenSettings(true)}
           />
@@ -126,16 +141,24 @@ const RequestListScreen = ({route, navigation}) => {
             zIndex: 11
           }}>
             <Text style={{width: '100%', paddingBottom: 30, textAlign: "center", fontSize: Fonts.h6, fontWeight: 'bold', color: Colors.black}}>{I18n.t('settings')}</Text>
-            <TouchableOpacity style={{marginBottom: 40, display: 'flex', flexDirection: 'row'}} onPress={() => navigation.navigate('MyCardsScreen')}>
+            <TouchableOpacity style={{marginLeft: 25, width: 170, marginBottom: 20, display: 'flex', flexDirection: 'row', justifyContent: "center"}} onPress={() => navigation.navigate('MyCardsScreen')}>
               <CustomIcons
-                style={{marginRight: 5}}
+                style={{marginRight: 8}}
                 size={Fonts.h6}
-                color={Colors.green}
+                color={Colors.orange}
                 name="credit-card"
-              /><Text style={{color: Colors.green, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('my_cards')}</Text>
+              /><Text style={{width: 140, color: Colors.orange, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('my_cards')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setOpenSettings(false)}>
-              <Text style={{color: Colors.primary, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('back')}</Text>
+            <TouchableOpacity style={{marginLeft: 25, width: 170, marginBottom: 10, display: 'flex', flexDirection: 'row', justifyContent: "center"}} onPress={() => logoutUser()}>
+              <CustomIcons
+                style={{marginRight: 5, marginLeft: 3}}
+                size={Fonts.h6}
+                color={Colors.orange}
+                name="exit"
+              /><Text style={{width: 140, color: Colors.orange, fontWeight: 'bold', fontSize: Fonts.regular}}>{I18n.t('logout_button')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{position: "absolute", top: 2, right: 10}} onPress={() => setOpenSettings(false)}>
+              <Text style={{color: Colors.black, fontWeight: 'bold', fontSize: Fonts.h5}}>&times;</Text>
             </TouchableOpacity>
           </View>] : null
       }
@@ -144,18 +167,19 @@ const RequestListScreen = ({route, navigation}) => {
           <CustomIcons
             style={{marginRight: 5}}
             size={Fonts.regular}
-            color={Colors.black}
+            color={Colors.white}
             name="equalizer"
           />
           <Picker
-            style={{flex: 1, fontSize: Fonts.small}}
-            itemStyle={{fontSize: Fonts.small}}
+            style={{flex: 1, fontSize: Fonts.small, color: Colors.white}}
+            itemStyle={{fontSize: Fonts.small, color: Colors.white}}
             selectedValue={selectedFilterValue}
             onValueChange={(value) => filterRequests(value)}
           >
             <Picker.Item label={I18n.t('all')} value={I18n.t('all')}/>
             <Picker.Item label={I18n.t('open')} value={I18n.t('open')}/>
             <Picker.Item label={I18n.t('ongoing')} value={I18n.t('ongoing')}/>
+            <Picker.Item label={I18n.t('inDelivery')} value={I18n.t('inDelivery')}/>
           </Picker>
         </View>
       </View>
@@ -164,7 +188,7 @@ const RequestListScreen = ({route, navigation}) => {
           <TouchableOpacity key={idx} style={
             [RequestListScreenLtrStyle.list_item,
               {
-                backgroundColor: Colors.white
+                backgroundColor: Colors.black
               }
               ]}
               onPress={() => {
@@ -173,22 +197,15 @@ const RequestListScreen = ({route, navigation}) => {
                 else
                   pressedDelivery(request);
               }}>
-            <View style={RequestListScreenLtrStyle.title_contents}>
-              <Text style={[RequestListScreenLtrStyle.list_item_title,{color: request.state == 2 ? (request.inDelivery ? Colors.lightGreen : Colors.yellow) : Colors.black}]}>{I18n.t('request')}<Text style={{fontSize:16}}>{" #" + request._id}</Text></Text>
-              <Text style={RequestListScreenLtrStyle.offers_count}>{request.state == 1 ? (request.offers + " " + I18n.t('offers')) : (request.supplier_name)}</Text>
-            </View>
-            <Text style={RequestListScreenLtrStyle.list_item_date_time}>{prettyDate(request.deliveryDate) + ", " + request.deliveryTime}</Text>
+            <Text style={RequestListScreenLtrStyle.list_item_date_time}>{request.address}</Text>
             <View style={RequestListScreenLtrStyle.list_item_details}>
               <View style={RequestListScreenLtrStyle.list_item_address}>
-                <Text style={RequestListScreenLtrStyle.list_item_address_title}>{I18n.t('short_address')}</Text>
-                <Text style={RequestListScreenLtrStyle.list_item_address_value}>{request.address}</Text>
+                <Text style={RequestListScreenLtrStyle.list_item_address_value}>{prettyDate(request.deliveryDate) + ", " + request.deliveryTime}</Text>
               </View>
-              <View style={RequestListScreenLtrStyle.list_item_additional_details}>
-                <View style={RequestListScreenLtrStyle.list_item_detail}>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_title}>{I18n.t('quantity')}</Text>
-                  <Text style={RequestListScreenLtrStyle.list_item_detail_value}>{request.quantity + " m³"}</Text>
-                </View>
-              </View>
+            </View>
+            <View style={RequestListScreenLtrStyle.title_contents}>
+              <Text style={[RequestListScreenLtrStyle.list_item_title,{fontSize: 14,color: request.state == 2 ? (request.inDelivery ? Colors.orange : Colors.yellow) : Colors.white}]}>{request.state == 2 ? (request.inDelivery ? "In curs de livrare" : "Acceptata de furnizor") : "In curs de licitare"}<Text style={{fontSize:18}}></Text></Text>
+              <Text style={RequestListScreenLtrStyle.offers_count}>{request.state == 1 ? (request.offers + " " + I18n.t('offers')) : (request.supplier_name)}</Text>
             </View>
           </TouchableOpacity>
         )}

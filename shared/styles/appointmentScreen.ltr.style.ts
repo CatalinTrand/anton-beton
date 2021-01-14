@@ -5,7 +5,7 @@ const appointmentScreenLtrStyle = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.black,
   },
   title: {
     display: 'flex',
@@ -16,7 +16,6 @@ const appointmentScreenLtrStyle = StyleSheet.create({
   },
   title_text: {
     fontSize: Fonts.h5,
-    fontWeight: 'bold',
     color: Colors.orange,
   },
   inputs: {
@@ -34,13 +33,13 @@ const appointmentScreenLtrStyle = StyleSheet.create({
   delivery_address_value: {
     fontWeight: 'bold',
     paddingTop: 5,
-    color: Colors.darkGrey,
+    color: Colors.white,
     fontSize: Fonts.medium,
   },
   delivery_date_title: {
     fontWeight: 'bold',
     fontSize: Fonts.regular,
-    color: Colors.black,
+    color: Colors.white,
     marginTop: 30,
   },
   date_picker: {
@@ -62,11 +61,13 @@ const appointmentScreenLtrStyle = StyleSheet.create({
     paddingLeft: 35,
     paddingRight: 35,
     borderWidth: 1,
-    borderColor: Colors.darkGrey,
+    borderColor: Colors.white,
+    backgroundColor: Colors.white,
     borderRadius: 7,
   },
   delivery_time_value: {
-    fontSize: Fonts.medium
+    fontSize: Fonts.medium,
+    color: "#000"
   },
   quantity_container: {
     width: '100%',
@@ -82,6 +83,7 @@ const appointmentScreenLtrStyle = StyleSheet.create({
     marginLeft: 0,
     paddingLeft: 0,
     fontSize: Fonts.h6,
+    color: Colors.white
   },
   price_unit: {
     marginTop: 10,

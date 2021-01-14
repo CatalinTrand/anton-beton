@@ -16,7 +16,6 @@ const OrderScreenLtrStyle = StyleSheet.create({
   },
   title_text: {
     fontSize: Fonts.h5,
-    fontWeight: 'bold',
     color: Colors.orange,
   },
   order_details: {
@@ -29,6 +28,7 @@ const OrderScreenLtrStyle = StyleSheet.create({
     paddingRight : 5,
     borderBottomWidth: 0.5,
     borderBottomColor: Colors.grey,
+    backgroundColor: Colors.black,
   },
   order_address: {
     width: '53%',
@@ -42,11 +42,12 @@ const OrderScreenLtrStyle = StyleSheet.create({
   order_address_title: {
     fontSize: Fonts.regular,
     fontWeight: 'bold',
+    color: Colors.white
   },
   order_address_value: {
     fontSize: Fonts.small,
     fontWeight: 'bold',
-    color: Colors.darkGrey,
+    color: Colors.white
   },
   order_additional_details: {
     width: '47%',
@@ -67,12 +68,12 @@ const OrderScreenLtrStyle = StyleSheet.create({
   order_detail_title: {
     fontSize: Fonts.medium,
     fontWeight: 'bold',
-    color: Colors.black,
+    color: Colors.white
   },
   order_detail_value: {
     paddingTop: 2,
     fontSize: Fonts.small,
-    color: Colors.darkGrey,
+    color: Colors.white
   },
   offers_received: {
     fontSize: Fonts.h6,
@@ -80,12 +81,14 @@ const OrderScreenLtrStyle = StyleSheet.create({
     padding: 13,
     borderBottomWidth: 2,
     borderBottomColor: Colors.grey,
+    backgroundColor: Colors.black
   },
   list: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
+    backgroundColor: Colors.black
   },
   list_item: {
     borderBottomWidth: 1,
@@ -116,6 +119,7 @@ const OrderScreenLtrStyle = StyleSheet.create({
     paddingRight: 15,
     borderRightWidth: 1,
     borderRightColor: Colors.lightGrey,
+    color: Colors.white,
   },
   list_item_time: {
     paddingTop: 7,
@@ -128,12 +132,12 @@ const OrderScreenLtrStyle = StyleSheet.create({
   list_item_time_title: {
     fontSize: Fonts.medium,
     fontWeight: 'bold',
-    color: Colors.black,
+    color: Colors.white,
   },
   list_item_time_value: {
     paddingTop: 2,
     fontSize: Fonts.small,
-    color: Colors.darkGrey,
+    color: Colors.white,
   },
   list_item_right: {
     width: '40%',
@@ -155,12 +159,12 @@ const OrderScreenLtrStyle = StyleSheet.create({
   list_item_detail_title: {
     fontSize: Fonts.medium,
     fontWeight: 'bold',
-    color: Colors.black,
+    color: Colors.white,
   },
   list_item_detail_value: {
     paddingTop: 2,
     fontSize: Fonts.small,
-    color: Colors.darkGrey,
+    color: Colors.white,
   },
 });
 

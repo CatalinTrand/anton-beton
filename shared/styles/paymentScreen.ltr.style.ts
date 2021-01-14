@@ -37,13 +37,13 @@ const PaymentScreenLtrStyle = StyleSheet.create({
   },
   address_title: {
     fontSize: Fonts.medium,
-    color: Colors.darkGrey,
+    color: Colors.white,
     fontWeight: 'bold',
     paddingBottom: 5,
   },
   address_value: {
     fontSize: Fonts.small,
-    color: Colors.darkGrey,
+    color: Colors.white,
   },
   detail: {
     width: '70%',
@@ -54,12 +54,12 @@ const PaymentScreenLtrStyle = StyleSheet.create({
   },
   detail_title: {
     fontSize: Fonts.small,
-    color: Colors.black,
+    color: Colors.white,
     fontWeight: 'bold',
   },
   detail_value: {
     fontSize: Fonts.small,
-    color: Colors.darkGrey,
+    color: Colors.white,
   },
   total_payment: {
     width: '100%',
@@ -70,12 +70,12 @@ const PaymentScreenLtrStyle = StyleSheet.create({
   },
   total_payment_title: {
     fontSize: Fonts.h6,
-    color: Colors.black,
+    color: Colors.white,
     fontWeight: 'bold',
   },
   total_payment_value: {
     fontSize: Fonts.regular,
-    color: Colors.darkGrey,
+    color: Colors.white,
   },
   card_details: {
     padding: 15,

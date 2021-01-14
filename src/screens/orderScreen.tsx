@@ -18,11 +18,7 @@ const OrderScreen = ({route, navigation}) => {
 
   const [height, setHeight] = useState(100);
 
-  const openSettings = () => {
-
-  };
-
-  const offer_list = request.bidders;
+  const offer_list = request.bidders.map( offer => ({...offer, concrete_type: 1, advance_price: 1000}));
 
   console.log("bidders",offer_list);
 
@@ -32,7 +28,7 @@ const OrderScreen = ({route, navigation}) => {
   };
 
   return (
-    <View style={OrderScreenLtrStyle.container}>
+    <View style={[OrderScreenLtrStyle.container, {backgroundColor: Colors.black}]}>
       <Header
         placement="left"
         containerPaddingBottom={10}
@@ -40,14 +36,14 @@ const OrderScreen = ({route, navigation}) => {
           <CustomIcons
             style={{marginTop: 15, marginLeft: 5}}
             size={Fonts.medium}
-            color={Colors.black}
+            color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}
           />
         }
         centerComponent={
           <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request')}<Text style={{fontSize: 12}}>{" #" + request._id}</Text></Text>
+            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request')}<Text style={{fontSize: 18}}>{" #" + request._id.substr(0,9)}</Text></Text>
           </View>
         }
         rightComponent={null}
@@ -81,7 +77,9 @@ const OrderScreen = ({route, navigation}) => {
       </View>
       <Text style={OrderScreenLtrStyle.offers_received}>{I18n.t('offers_received')}</Text>
       <ScrollView contentContainerStyle={OrderScreenLtrStyle.list}>
-        {offer_list.map((offer, idx) =>
+        { offer_list.length === 0 ?
+          <Text style={{color: Colors.white, paddingTop: 15, paddingLeft: 15, fontSize: 16}}>Nicio oferta primita momentan.</Text>
+          : offer_list.map((offer, idx) =>
           <TouchableOpacity key={idx} style={OrderScreenLtrStyle.list_item}
                             onPress={() => navigation.navigate('PaymentScreen', {
                               request: request,
@@ -89,7 +87,7 @@ const OrderScreen = ({route, navigation}) => {
                             })}>
             <View style={OrderScreenLtrStyle.list_item_details}>
               <View style={OrderScreenLtrStyle.list_item_left}>
-                <Text style={OrderScreenLtrStyle.list_item_title}>{offer.supplier_name}</Text>
+                <Text style={OrderScreenLtrStyle.list_item_title}>{offer.company}</Text>
                 <View style={OrderScreenLtrStyle.list_item_time}>
                   <Text style={OrderScreenLtrStyle.list_item_time_title}>{I18n.t('time')}</Text>
                   <Text style={OrderScreenLtrStyle.list_item_time_value}>{offer.time}</Text>

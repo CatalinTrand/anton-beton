@@ -7,7 +7,7 @@ const CustomCheckboxLtrStyle = StyleSheet.create({
     justifyContent: 'center',
   },
   textWrapper: {
-    marginLeft: -20,
+    marginLeft: 5,
     paddingLeft: 0,
     flex: 1,
     flexDirection: 'row',

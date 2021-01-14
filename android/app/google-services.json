@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:510881295141:android:3181631171fa27121448cc",
+        "android_client_info": {
+          "package_name": "com.bild"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510881295141-6fq886fsqbatk549aruk26cqteghdbt3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXwOdOD9tZ1qpY2MXUk69Rp_PdKsI7H38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510881295141-6fq886fsqbatk549aruk26cqteghdbt3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "510881295141-cqu25idn0me98o37ciuuc18bh58235d2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mutascu.bild"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:510881295141:android:db21e2bf6452f4e41448cc",
         "android_client_info": {
           "package_name": "com.mutascu.bild"
@@ -30,6 +66,13 @@
             {
               "client_id": "510881295141-6fq886fsqbatk549aruk26cqteghdbt3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "510881295141-cqu25idn0me98o37ciuuc18bh58235d2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mutascu.bild"
+              }
             }
           ]
         }

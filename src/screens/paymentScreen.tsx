@@ -69,14 +69,95 @@ const PaymentScreen = ({route, navigation}) => {
   };
 
   const prettyDate = (date) => {
-    let separator = "/";
-    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
+    let separator = ".";
+    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
   };
 
   const [selectedCardValue, setSelectedCardValue] = useState(I18n.t('please_choose_a_credit_card'));
 
+  const createPaymentMethod = (number, month, year, cvc) => {
+    const cardDetails = {
+      "card[number]": number,
+      "card[exp_month]": month,
+      "card[exp_year]": year,
+      "card[cvc]": cvc
+    };
+    let formBody = [] as String[];
+    for (let property in cardDetails) {
+      let encodedKey = encodeURIComponent(property);
+      let encodedValue = encodeURIComponent(cardDetails[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+    let formBodyJoined = formBody.join("&");
+    fetch('https://api.stripe.com/v1/payment_methods?type=card&' + formBodyJoined, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + 'sk_test_51Hft5MFKh7yu6OY6RXod8xHUMajQeAPCqlpR0F8iq8dheM17vHC2bE7QKvqrgktO61aX2zpSlV8u01GM1p1z8l6U00hHLN0STF'
+      },
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          return response.json();
+        }
+      })
+      .then((responseJson) => {
+        return responseJson;
+      })
+      .catch((error) => {
+        return error;
+      });
+  };
+
+  const createPaymentIntent = (amount, currency, payment_method, description) => {
+    let truncated = parseFloat(parseFloat(amount).toFixed(2));
+    let stripeAmount = truncated * 100;
+    fetch('https://api.stripe.com/v1/payment_intents?amount=' + stripeAmount + '&currency='+ currency +'&payment_method_types[]=card&payment_method=' + payment_method + '&confirmation_method=automatic&confirm=true&description=' + description, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + 'sk_test_51Hft5MFKh7yu6OY6RXod8xHUMajQeAPCqlpR0F8iq8dheM17vHC2bE7QKvqrgktO61aX2zpSlV8u01GM1p1z8l6U00hHLN0STF'
+      },
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          return response.json();
+        }
+      })
+      .then((responseJson) => {
+        return responseJson;
+      })
+      .catch((error) => {
+        return error;
+      });
+  };
+
+  const confirmPaymentIntent = (payment_method) => {
+    fetch('https://api.stripe.com/v1/payment_intents/' + payment_method, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + 'sk_test_51Hft5MFKh7yu6OY6RXod8xHUMajQeAPCqlpR0F8iq8dheM17vHC2bE7QKvqrgktO61aX2zpSlV8u01GM1p1z8l6U00hHLN0STF'    },
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          return response.json();
+        }
+      })
+      .then((responseJson) => {
+        return responseJson;
+      })
+      .catch((error) => {
+        return error;
+      });
+  };
+
   const paymentMade = async () => {
-    stripe.setOptions({ publishingKey: 'sk_test_51Hft5MFKh7yu6OY6RXod8xHUMajQeAPCqlpR0F8iq8dheM17vHC2bE7QKvqrgktO61aX2zpSlV8u01GM1p1z8l6U00hHLN0STF' });
+    stripe.setOptions({ publishingKey: 'pk_test_51Hft5MFKh7yu6OY6zH710XMr6hM8Nz6aW5fs12nUf2MTDcjjTCiR4fiibsFObOjESOaTF2ycpdIVfhzL6w6UL24700xFdU58mN' });
+    console.log("stripe", stripe);
     let selectedCardIdx = -1;
     for (let i = 0; i < myCards.length; i++)
       if (myCards[i].cardNumber == selectedCardValue)
@@ -96,7 +177,7 @@ const PaymentScreen = ({route, navigation}) => {
     putRequest("client/order/confirm", {
       orderID: request.id,
       supplierEmail: offer.supplierEmail,
-      advancePrice: offer.advance_price,
+      advancePrice: 1000,
     }, token, response => {
       if (response.data) {
         Alert.alert(
@@ -129,19 +210,20 @@ const PaymentScreen = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: Colors.black}}>
       <Header
         placement="left"
         leftComponent={
           <CustomIcons
             size={Fonts.medium}
-            color={Colors.black}
+            color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}
+            style={{marginLeft: 5}}
           />
         }
         centerComponent={
-          <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
+          <View style={[OrderScreenLtrStyle.title, {marginTop: 5, paddingRight: 10}]}>
             <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('summary_and_payment')}</Text>
           </View>
         }
@@ -150,15 +232,15 @@ const PaymentScreen = ({route, navigation}) => {
       />
       <ScrollView style={{marginTop: 10}}>
         <View style={PaymentScreenLtrStyle.order_details}>
-          <Text style={PaymentScreenLtrStyle.order_title}>{I18n.t('request') + " #" + request.id}</Text>
-          <Text style={PaymentScreenLtrStyle.supplier_name}>{offer.supplier_name}</Text>
+          <Text style={PaymentScreenLtrStyle.order_title}>{I18n.t('request') + " #" + request._id}</Text>
+          <Text style={PaymentScreenLtrStyle.supplier_name}>{offer.company}</Text>
           <View style={PaymentScreenLtrStyle.address}>
             <Text style={PaymentScreenLtrStyle.address_title}>{I18n.t('short_address')}</Text>
             <Text style={PaymentScreenLtrStyle.address_value}>{request.address}</Text>
           </View>
           <View style={PaymentScreenLtrStyle.detail}>
             <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('date_time')}</Text>
-            <Text style={PaymentScreenLtrStyle.detail_value}>{prettyDate(request.date) + ", " + request.time}</Text>
+            <Text style={PaymentScreenLtrStyle.detail_value}>{prettyDate(request.deliveryDate) + ", " + request.deliveryTime}</Text>
           </View>
           <View style={PaymentScreenLtrStyle.detail}>
             <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('concrete_type')}</Text>
@@ -190,14 +272,14 @@ const PaymentScreen = ({route, navigation}) => {
             alignItems: 'center'
           }}>
             <CustomIcons
-              style={{marginRight: 5}}
+              style={{marginRight: 2, marginLeft: 7}}
               size={Fonts.regular}
-              color={Colors.black}
+              color={Colors.white}
               name="equalizer"
             />
             <Picker
-              style={{flex: 1, fontSize: Fonts.small}}
-              itemStyle={{fontSize: Fonts.small}}
+              style={{flex: 1, fontSize: Fonts.small,color: Colors.white}}
+              itemStyle={{fontSize: Fonts.smal}}
               selectedValue={selectedCardValue}
               onValueChange={(value) => {
                 if (value == I18n.t("add_new_card")) navigation.navigate("MyCardsScreen", {
@@ -237,7 +319,7 @@ const PaymentScreen = ({route, navigation}) => {
             borderRadius: 7,
           },
         ]}
-        titleStyle={{color: 'white', fontSize: Fonts.regular}}
+        titleStyle={{color: Colors.black, fontSize: Fonts.regular}}
         containerStyle={{marginLeft: 15, marginRight: 15, justifyContent: 'center', alignItems: 'center'}}
       />
     </SafeAreaView>
