@@ -66,14 +66,6 @@ const MapScreen = ({route, navigation}) => {
     if (marker.latitude == null)
       return;
 
-    navigation.navigate('AppointmentScreen', {
-      destination_coords: {lat: marker.latitude + "", long: marker.longitude + ""},
-      destination_name: "Strada Lujerului 42J, Bucuresti"
-    });
-    return;
-
-    //TODO - fix google billing
-
     // @ts-ignore
     Geocoder.from(marker.latitude, marker.longitude)
       .then(json => {
