@@ -76,8 +76,8 @@ const RegisterScreen = ({navigation}): JSX.Element => {
       postRequest(isEnabled ? "supplier/user/account" : "client/user/account", {email, password}, null, response => {
         console.log(response);
         if(response.data.success) {
-          SyncStorage.set('token', response.data.token);
-          navigation.navigate('DisplayScreen', {lng});
+          //SyncStorage.set('token', response.data.token);
+          navigation.navigate('LoginScreen', {lng});
         }
       });
     }
@@ -220,7 +220,7 @@ const RegisterScreen = ({navigation}): JSX.Element => {
                   </View>
                 </View>
                 <RegularButton
-                  disabledStyle={[{backgroundColor: Colors.orangeOpacity}]}
+                  disabledStyle={[{backgroundColor: Colors.grey}]}
                   disabledTitleStyle={[{color: Colors.white}]}
                   disabled={disabledNextStep()}
                   title={I18n.t('create_account')}

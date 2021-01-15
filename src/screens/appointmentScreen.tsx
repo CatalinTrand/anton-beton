@@ -31,12 +31,11 @@ const AppointmentScreen = ({route, navigation}) => {
       return;
 
     let token = SyncStorage.get("token");
-
     let formattedDate = new Date(date);
     let formattedDatetring = formattedDate.getDay() + "." + (formattedDate.getMonth() + 1) + "." + formattedDate.getFullYear();
     let formattedTimeString = time.getHours() + ":" + time.getMinutes();
 
-    postRequest("client/order", {date: formattedDatetring, time: formattedTimeString, quantity: quantity, address: destination_name, coordinates: destination_coords, type: "F1"}, token, response => {
+    postRequest("client/order", {date: formattedDatetring, time: formattedTimeString, quantity: quantity, address: destination_name, coordinates: destination_coords}, token, response => {
       if(response.data.success) {
         Alert.alert(
           I18n.t('request_made_title'),
@@ -47,7 +46,7 @@ const AppointmentScreen = ({route, navigation}) => {
           { cancelable: false }
         );
       } else {
-        console.log(response.data.error);
+        console.log('error: ', response.data.error);
       }
     });
   };

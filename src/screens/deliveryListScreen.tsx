@@ -64,7 +64,7 @@ const DeliveryListScreen = ({route, navigation}) => {
 
   const prettyDate = (date) => {
     let separator = ".";
-    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
+    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
   const logoutUser = () => {

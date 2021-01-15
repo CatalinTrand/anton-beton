@@ -70,7 +70,7 @@ const PaymentScreen = ({route, navigation}) => {
 
   const prettyDate = (date) => {
     let separator = ".";
-    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
+    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
   const [selectedCardValue, setSelectedCardValue] = useState(I18n.t('please_choose_a_credit_card'));
@@ -156,6 +156,28 @@ const PaymentScreen = ({route, navigation}) => {
   };
 
   const paymentMade = async () => {
+    let token = SyncStorage.get("token");
+    putRequest("client/order/confirm", {
+      orderId: request.orderId,
+      supplierId: offer.supplierId,
+      supplierEmail: offer.email,
+      company: offer.company,
+      concreteType: offer.concreteType,
+      price: offer.price,
+      advancePrice: offer.advancePrice,
+    }, token, response => {
+      if(response)
+        Alert.alert(
+          I18n.t('payment_made_title'),
+          I18n.t('payment_made_msg'),
+          [
+            {text: "Ok", onPress: () => navigation.navigate('RequestListScreen', {reload: true})}
+          ],
+          {cancelable: false}
+        );
+    });
+    return;
+    //TODO
     stripe.setOptions({ publishingKey: 'pk_test_51Hft5MFKh7yu6OY6zH710XMr6hM8Nz6aW5fs12nUf2MTDcjjTCiR4fiibsFObOjESOaTF2ycpdIVfhzL6w6UL24700xFdU58mN' });
     console.log("stripe", stripe);
     let selectedCardIdx = -1;
@@ -173,9 +195,8 @@ const PaymentScreen = ({route, navigation}) => {
       cvc: myCards[selectedCardIdx].cvv,
     };
 
-    let token = SyncStorage.get("token");
     putRequest("client/order/confirm", {
-      orderID: request.id,
+      orderID: request._id,
       supplierEmail: offer.supplierEmail,
       advancePrice: 1000,
     }, token, response => {
@@ -232,7 +253,7 @@ const PaymentScreen = ({route, navigation}) => {
       />
       <ScrollView style={{marginTop: 10}}>
         <View style={PaymentScreenLtrStyle.order_details}>
-          <Text style={PaymentScreenLtrStyle.order_title}>{I18n.t('request') + " #" + request._id}</Text>
+          <Text style={PaymentScreenLtrStyle.order_title}>{I18n.t('request') + " #" + request.orderId}</Text>
           <Text style={PaymentScreenLtrStyle.supplier_name}>{offer.company}</Text>
           <View style={PaymentScreenLtrStyle.address}>
             <Text style={PaymentScreenLtrStyle.address_title}>{I18n.t('short_address')}</Text>
@@ -244,7 +265,7 @@ const PaymentScreen = ({route, navigation}) => {
           </View>
           <View style={PaymentScreenLtrStyle.detail}>
             <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('concrete_type')}</Text>
-            <Text style={PaymentScreenLtrStyle.address_value}>{I18n.t('concrete_type_' + offer.concrete_type)}</Text>
+            <Text style={PaymentScreenLtrStyle.address_value}>{I18n.t('concrete_type_' + offer.concreteType)}</Text>
           </View>
           <View style={PaymentScreenLtrStyle.detail}>
             <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('quantity')}</Text>
@@ -256,11 +277,11 @@ const PaymentScreen = ({route, navigation}) => {
           </View>
           <View style={PaymentScreenLtrStyle.detail}>
             <Text style={PaymentScreenLtrStyle.detail_title}>{I18n.t('advance_price')}</Text>
-            <Text style={PaymentScreenLtrStyle.address_value}>{offer.advance_price + " RON"}</Text>
+            <Text style={PaymentScreenLtrStyle.address_value}>{offer.advancePrice + " RON"}</Text>
           </View>
           <View style={PaymentScreenLtrStyle.total_payment}>
             <Text style={PaymentScreenLtrStyle.total_payment_title}>{I18n.t('total_payment')}</Text>
-            <Text style={PaymentScreenLtrStyle.total_payment_value}>{offer.advance_price + " RON"}</Text>
+            <Text style={PaymentScreenLtrStyle.total_payment_value}>{offer.advancePrice + " RON"}</Text>
           </View>
         </View>
         <View style={RequestListScreenLtrStyle.select_view}>

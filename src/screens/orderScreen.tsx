@@ -18,13 +18,13 @@ const OrderScreen = ({route, navigation}) => {
 
   const [height, setHeight] = useState(100);
 
-  const offer_list = request.bidders.map( offer => ({...offer, concrete_type: 1, advance_price: 1000}));
+  const offer_list = request.bidders;
 
-  console.log("bidders",offer_list);
+  console.log("request",request);
 
   const prettyDate = (date) => {
     let separator = ".";
-    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
+    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
   return (
@@ -43,7 +43,7 @@ const OrderScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request')}<Text style={{fontSize: 18}}>{" #" + request._id.substr(0,9)}</Text></Text>
+            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request')}<Text style={{fontSize: 18}}>{" #" + request.orderId}</Text></Text>
           </View>
         }
         rightComponent={null}
@@ -94,7 +94,7 @@ const OrderScreen = ({route, navigation}) => {
                 </View>
                 <View style={OrderScreenLtrStyle.list_item_time}>
                   <Text style={OrderScreenLtrStyle.list_item_detail_title}>{I18n.t('concrete_type')}</Text>
-                  <Text style={OrderScreenLtrStyle.list_item_detail_value}>{I18n.t('concrete_type_' + offer.concrete_type)}</Text>
+                  <Text style={OrderScreenLtrStyle.list_item_detail_value}>{I18n.t('concrete_type_' + offer.concreteType)}</Text>
                 </View>
               </View>
               <View style={OrderScreenLtrStyle.list_item_right}>
@@ -104,7 +104,7 @@ const OrderScreen = ({route, navigation}) => {
                 </View>
                 <View style={OrderScreenLtrStyle.list_item_detail}>
                   <Text style={OrderScreenLtrStyle.list_item_detail_title}>{I18n.t('advance_price')}</Text>
-                  <Text style={OrderScreenLtrStyle.list_item_detail_value}>{offer.advance_price + " RON"}</Text>
+                  <Text style={OrderScreenLtrStyle.list_item_detail_value}>{offer.advancePrice + " RON"}</Text>
                 </View>
               </View>
             </View>

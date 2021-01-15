@@ -32,7 +32,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
   const [height, setHeight] = useState(100);
 
   const offerData = request.bid;
-  console.log(request);
+  console.log('request', request);
   let hasNotApplied;
   if(offerData)
     hasNotApplied = false;
@@ -41,7 +41,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
 
   const prettyDate = (date) => {
     let separator = ".";
-    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
+    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
   const sendOffer = () => {
@@ -56,11 +56,11 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
         {
           text: "Ok", onPress: () => {
             putRequest("supplier/order/bid", {
-              orderId: request._id,
+              orderId: request.orderId,
               price: price,
               advancePrice: advance_price,
-              time: time,
-              concreteType: concreteType
+              //time: time,
+              concreteType: concreteType + ""
             }, token, response => {
               if (response.data.success) {
                 navigation.navigate("SupplierOpenOrdersScreen");
@@ -108,7 +108,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
         centerComponent={
           <View style={[RequestListScreenLtrStyle.title, {marginTop: 15}]}>
             <Text
-              style={[RequestListScreenLtrStyle.title_text, {color: Colors.orange, fontSize: 19}]}>{I18n.t('order_details').toLowerCase() + " #" + request._id.substring(0,9)}</Text>
+              style={[RequestListScreenLtrStyle.title_text, {color: Colors.orange, fontSize: 19}]}>{I18n.t('order_details').toLowerCase() + " #" + request.orderId}</Text>
           </View>
         }
         rightComponent={null}
@@ -257,7 +257,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                 flexDirection: "column"
               }]}>
                 <Text
-                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("advance_price")}</Text>
+                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("set_price")}</Text>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: 20}}>
                   <TextInput
                     style={{
@@ -283,7 +283,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
                 flexDirection: "column"
               }]}>
                 <Text
-                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("set_price")}</Text>
+                  style={[SupplierViewOpenOrderScreenLtrStyle.offer_details_entry_title, {paddingLeft: 10}]}>{I18n.t("advance_price")}</Text>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                     style={{

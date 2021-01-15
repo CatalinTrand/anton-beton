@@ -18,7 +18,6 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
   const [openSettings, setOpenSettings] = useState(false);
   const [selectedFilterValue, setSelectedFilterValue] = useState(I18n.t('all'));
   const [selectedSortValue, setSelectedSortValue] = useState(I18n.t('new'));
-  const [initial_requests, setInitialRequests] = useState([] as {}[]);
   const [requests, setRequests] = useState([] as {}[]);
   const [bidRequests, setBidRequests] = useState([] as {}[]);
   const [allRequests, setAllRequests] = useState([] as {}[]);
@@ -73,16 +72,16 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
       if (response.data) {
         setRequests(response.data.data.map(offer => {
           return {...offer, address: offer.address ? offer.address : "Str. Lujerului 42J, Bucuresti"}
-        })); //TODO - quantity to int
+        }).sort((a,b) => b.orderId - a.orderId)); //TODO - quantity to int
       } else {
         console.log(response);
       }
     });
     getRequest("supplier/order/list/bidded", token, response => {
       if (response.data) {
-        setRequests(response.data.data.map(offer => {
+        setBidRequests(response.data.data.map(offer => {
           return {...offer, address: offer.address ? offer.address : "Str. Lujerului 42J, Bucuresti"}
-        })); //TODO - quantity to int
+        }).sort((a,b) => b.orderId - a.orderId)); //TODO - quantity to int
       } else {
         console.log(response);
       }
@@ -91,7 +90,7 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
   }
 
   if(allRequests.length !== bidRequests.length + requests.length){
-    setAllRequests([...requests, ...bidRequests]);
+    setAllRequests([...requests, ...bidRequests].sort((a,b) => b.orderId - a.orderId));
   }
 
   const filterRequests = (value) => {
@@ -107,35 +106,63 @@ const SupplierOpenOrdersScreen = ({route, navigation}) => {
 
   const sortRequests = (type) => {
     let newRequests = requests;
+    let newBidRequests = bidRequests;
+    let newAllRequests = allRequests;
     switch(type) {
       case I18n.t('new'):
         newRequests.sort((a, b) => {
-          return b.id - a.id;
+          return b.orderId - a.orderId;
+        });
+        newBidRequests.sort((a, b) => {
+          return b.orderId - a.orderId;
+        });
+        newAllRequests.sort((a, b) => {
+          return b.orderId - a.orderId;
         });
         break;
       case I18n.t('old'):
         newRequests.sort((a, b) => {
-          return a.id - b.id;
+          return a.orderId - b.orderId;
+        });
+        newBidRequests.sort((a, b) => {
+          return a.orderId - b.orderId;
+        });
+        newAllRequests.sort((a, b) => {
+          return a.orderId - b.orderId;
         });
         break;
       case I18n.t('quantity_desc'):
         newRequests.sort((a, b) => {
-          return b.quantity - a.quantity;
+          return parseInt(b.quantity) - parseInt(a.quantity);
+        });
+        newBidRequests.sort((a, b) => {
+          return parseInt(b.quantity) - parseInt(a.quantity);
+        });
+        newAllRequests.sort((a, b) => {
+          return parseInt(b.quantity) - parseInt(a.quantity);
         });
         break;
       case I18n.t('quantity_asc'):
         newRequests.sort((a, b) => {
-          return a.quantity - b.quantity;
+          return parseInt(a.quantity) - parseInt(b.quantity);
+        });
+        newBidRequests.sort((a, b) => {
+          return parseInt(a.quantity) - parseInt(b.quantity);
+        });
+        newAllRequests.sort((a, b) => {
+          return parseInt(a.quantity) - parseInt(b.quantity);
         });
         break;
     }
 
     setRequests(newRequests);
+    setBidRequests(newBidRequests);
+    setAllRequests(newAllRequests);
   };
 
   const prettyDate = (date) => {
     let separator = ".";
-    return date.split(separator)[1] + " " + I18n.t("month_" + date.split(separator)[0]) + " " + date.split(separator)[2];
+    return date.split(separator)[0] + " " + I18n.t("month_" + date.split(separator)[1]) + " " + date.split(separator)[2];
   };
 
   const openOrder = (request) => {

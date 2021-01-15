@@ -67,8 +67,8 @@ const MapScreen = ({route, navigation}) => {
       return;
 
     navigation.navigate('AppointmentScreen', {
-      destination_coords: marker,
-      destination_name: "Strada Lujerului 42J"
+      destination_coords: {lat: marker.latitude + "", long: marker.longitude + ""},
+      destination_name: "Strada Lujerului 42J, Bucuresti"
     });
     return;
 

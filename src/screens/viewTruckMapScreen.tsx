@@ -18,7 +18,7 @@ let _mapView: MapView | null;
 
 const ViewTruckMapScreen = ({route, navigation}) => {
 
-  const {id, request, supplier_id} = route.params;
+  const {id, coordinates, driverLocation} = route.params;
 
   const [destinationMarker, setDestinationMarker] = useState({lat: 0, long: 0});
   const [truckMarker, setTruckMarker] = useState({lat: 0, long: 0});
@@ -28,21 +28,21 @@ const ViewTruckMapScreen = ({route, navigation}) => {
   const distanceBetween2Points = (p1, p2) => {
     // in metres
     const R = 6371000; // metres
-    const t1 = p1.lat * Math.PI/180;
-    const t2 = p2.lat * Math.PI/180;
-    const dt = (p2.lat - p1.lat) * Math.PI/180;
-    const dg = (p2.long - p1.long) * Math.PI/180;
+    const t1 = p1.lat * Math.PI / 180;
+    const t2 = p2.lat * Math.PI / 180;
+    const dt = (p2.lat - p1.lat) * Math.PI / 180;
+    const dg = (p2.long - p1.long) * Math.PI / 180;
 
-    const a = Math.sin(dt/2) * Math.sin(dt/2) + Math.cos(t1) * Math.cos(t2) * Math.sin(dg/2) * Math.sin(dg/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a = Math.sin(dt / 2) * Math.sin(dt / 2) + Math.cos(t1) * Math.cos(t2) * Math.sin(dg / 2) * Math.sin(dg / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c;
   };
 
   const middleZoom = (pos1, pos2) => {
-    let middleLat = (pos1.lat + pos2.lat ) / 2;
+    let middleLat = (pos1.lat + pos2.lat) / 2;
     let deviceWidth = Dimensions.get('window').width - 30;
-    let distance = distanceBetween2Points(pos1,pos2);
+    let distance = distanceBetween2Points(pos1, pos2);
 
     let zoom = Math.log2(156543.03392 * Math.cos(middleLat * Math.PI / 180) * (deviceWidth - 30) / distance);
 
@@ -50,45 +50,44 @@ const ViewTruckMapScreen = ({route, navigation}) => {
   };
 
   const initializeState = () => {
-    //TODO - test
-    let token = SyncStorage.get("token");
-    getRequest("client/order/driver/location?orderId=" + request._id, token, response => {
-      if(response.data) {
-        let truckLocation = response.data.data;
-        let destination = request.coordinates;
+    let truckLocation = driverLocation;
+    truckLocation = {
+      lat: parseFloat(truckLocation.lat),
+      long: parseFloat(truckLocation.long),
+    };
+    let destination = {
+      lat: parseFloat(coordinates.lat),
+      long: parseFloat(coordinates.long)
+    };
 
-        let middleLat = (truckLocation.lat + destination.lat) / 2.0;
-        let middleLng = (truckLocation.long + destination.long) / 2.0;
+    let middleLat = (truckLocation.lat + destination.lat) / 2.0;
+    let middleLng = (truckLocation.long + destination.long) / 2.0;
 
-        setMapRegion({
-          latitude: middleLat,
-          longitude: middleLng,
-          latitudeDelta: 1,
-          longitudeDelta: 1
-        });
-        setDestinationMarker(destination);
-        setTruckMarker(truckLocation);
-
-        if (_mapView !== null)
-          _mapView.animateCamera({
-            center: {
-              latitude: middleLat,
-              longitude: middleLng
-            },
-            zoom: middleZoom(truckLocation, destination),
-          });
-      } else {
-        console.log(response);
-      }
+    setMapRegion({
+      latitude: middleLat,
+      longitude: middleLng,
+      latitudeDelta: 1,
+      longitudeDelta: 1
     });
+    setDestinationMarker(destination);
+    setTruckMarker(truckLocation);
+
+    if (_mapView !== null)
+      _mapView.animateCamera({
+        center: {
+          latitude: middleLat,
+          longitude: middleLng
+        },
+        zoom: middleZoom(truckLocation, destination),
+      });
   };
 
   const prettyDuration = (mins) => {
     let hours = mins / 60;
-    if(hours < 1) {
+    if (hours < 1) {
       return Math.floor(mins) + "m";
     } else {
-      return Math.floor(hours) + "h " + (mins - Math.floor(hours)*60)+ "m";
+      return Math.floor(hours) + "h " + (mins - Math.floor(hours) * 60) + "m";
     }
   };
 
@@ -104,14 +103,15 @@ const ViewTruckMapScreen = ({route, navigation}) => {
           <CustomIcons
             style={{marginTop: 15}}
             size={Fonts.medium}
-            color={Colors.black}
+            color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}
           />
         }
         centerComponent={
           <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={[OrderScreenLtrStyle.title_text,{color: Colors.black}]}>{I18n.t('delivery_progress') + " #" + id}</Text>
+            <Text
+              style={[OrderScreenLtrStyle.title_text, {color: Colors.orange}]}>{I18n.t('delivery_progress') + " #" + id}</Text>
           </View>
         }
         rightComponent={null}
