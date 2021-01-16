@@ -108,8 +108,8 @@ const RegisterScreen = ({navigation}): JSX.Element => {
       <Header
         leftComponent={
           <CustomIcons
-            size={Fonts.medium}
-            color={Colors.black}
+            size={Fonts.regular}
+            color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}
           />

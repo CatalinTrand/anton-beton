@@ -116,7 +116,7 @@ const MapScreen = ({route, navigation}) => {
 
   const [openSettings, setOpenSettings] = useState(false);
 
-  let markerIcon = require("../assets/images/flag_marker.png");
+  let markerIcon = require("../assets/images/flag_marker2.png");
   let calculatedHeight = Dimensions.get("window").height - 45;
 
   const logoutUser = () => {
@@ -237,7 +237,7 @@ const MapScreen = ({route, navigation}) => {
             {marker.latitude != null ?
               // @ts-ignore
               <MapView.Marker
-                style={{marginLeft: 2}}
+                style={{marginLeft: 2, height: 20, minWidth: 15, maxWidth: 25}}
                 key={1}
                 coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
                 title={I18n.t('destination')}

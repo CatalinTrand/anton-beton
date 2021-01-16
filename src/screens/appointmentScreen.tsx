@@ -58,7 +58,7 @@ const AppointmentScreen = ({route, navigation}) => {
         containerPaddingBottom={10}
         leftComponent={
           <CustomIcons
-            size={Fonts.medium}
+            size={Fonts.regular}
             color={Colors.orange}
             style={{marginTop: 10, marginLeft: 5}}
             name="arrow-back"

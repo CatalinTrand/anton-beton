@@ -99,7 +99,7 @@ const SupplierViewOpenOrderScreen = ({route, navigation}) => {
         leftComponent={
           <CustomIcons
             style={{marginTop: 15, marginLeft: 10}}
-            size={Fonts.medium}
+            size={Fonts.regular}
             color={Colors.orange}
             name="arrow-back"
             onPress={() => navigation.navigate('SupplierOpenOrdersScreen')}

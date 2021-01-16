@@ -17,7 +17,9 @@ const MapScreenLtrStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   title_text: {
     fontSize: Fonts.h5,
@@ -60,7 +62,7 @@ const MapScreenLtrStyle = StyleSheet.create({
   },
   button: {
     marginTop: 'auto',
-    marginBottom: 70,
+    marginBottom: 100,
     padding: 10,
     borderRadius: 7,
     backgroundColor: Colors.yellow,
@@ -73,7 +75,7 @@ const MapScreenLtrStyle = StyleSheet.create({
   },
   button_disabled: {
     marginTop: 'auto',
-    marginBottom: 70,
+    marginBottom: 100,
     padding: 10,
     borderRadius: 7,
     borderColor: Colors.lightGrey,

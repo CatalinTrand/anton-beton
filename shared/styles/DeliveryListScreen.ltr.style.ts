@@ -12,7 +12,9 @@ const DeliveryListScreen = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   title_text: {
     marginRight: 15,

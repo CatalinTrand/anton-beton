@@ -94,11 +94,13 @@ const LoginScreen = ({navigation}): JSX.Element => {
           <View style={GlobalLtrStyle.centeredView}>
             <Image
               style={{
+                minWidth: '25%',
                 maxWidth: '50%',
-                maxHeight: '20%',
+                minHeight: '10%',
+                maxHeight: '15%',
                 marginLeft: 'auto',
                 marginRight: 'auto',
-                marginBottom: 20,
+                marginBottom: 60,
                 marginTop: 20
               }}
               source={require("../../assets/images/bild.png")}

@@ -91,7 +91,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
     }
   };
 
-  let markerIcon = require("../assets/images/flag_marker.png");
+  let markerIcon = require("../assets/images/flag_marker2.png");
   let truckIcon = require("../assets/images/truck_marker.png");
 
   return (
@@ -102,7 +102,7 @@ const ViewTruckMapScreen = ({route, navigation}) => {
         leftComponent={
           <CustomIcons
             style={{marginTop: 15}}
-            size={Fonts.medium}
+            size={Fonts.regular}
             color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}

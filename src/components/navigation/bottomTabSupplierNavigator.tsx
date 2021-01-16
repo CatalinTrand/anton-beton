@@ -10,7 +10,7 @@ const BottomTabSupplierNavigator = ({route, navigation, selected}) => {
   const [selectedItem, setSelected] = useState(selected);
 
   return (
-    <View style={{position: 'absolute', top: 'auto', bottom: 0, left: 0,display: 'flex', flexDirection: 'row',width: '100%', height: 50, zIndex: 1, borderTopWidth: 2, borderColor: "#000000", marginBottom: 0}}>
+    <View style={{position: 'absolute', top: 'auto', bottom: 0, left: 0,display: 'flex', flexDirection: 'row',width: '100%', height: '8.3%', zIndex: 1, borderTopWidth: 2, borderColor: "#000000", marginBottom: 0}}>
       <TouchableOpacity style={selectedItem == 1 ?
         {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.orange} :
         {width: '50%', display: 'flex',justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.black, borderColor: Colors.black, borderWidth: 1}

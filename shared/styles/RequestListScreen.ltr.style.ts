@@ -15,7 +15,9 @@ const RequestListScreenLtrStyle = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 'auto',
     marginRight: 'auto',
-    borderBottomColor: "#000000"
+    borderBottomColor: "#000000",
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   title_text: {
     fontSize: Fonts.h5,

@@ -35,7 +35,7 @@ const OrderScreen = ({route, navigation}) => {
         leftComponent={
           <CustomIcons
             style={{marginTop: 15, marginLeft: 5}}
-            size={Fonts.medium}
+            size={Fonts.regular}
             color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}
@@ -43,7 +43,7 @@ const OrderScreen = ({route, navigation}) => {
         }
         centerComponent={
           <View style={[OrderScreenLtrStyle.title, {marginTop: 15}]}>
-            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request')}<Text style={{fontSize: 18}}>{" #" + request.orderId}</Text></Text>
+            <Text style={OrderScreenLtrStyle.title_text}>{I18n.t('request') + " #" + request.orderId}</Text>
           </View>
         }
         rightComponent={null}

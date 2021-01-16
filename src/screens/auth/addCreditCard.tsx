@@ -26,7 +26,7 @@ const AddCreditCardScreen = ({ navigation }): JSX.Element => {
       <Header
         leftComponent={
           <CustomIcons
-            size={Fonts.medium}
+            size={Fonts.regular}
             color={Colors.black}
             name="arrow-back"
             onPress={navigation.goBack}

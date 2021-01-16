@@ -11,6 +11,7 @@ const Header = (props): JSX.Element => {
         marginTop: 20,
         backgroundColor: Colors.black,
         justifyContent: 'space-around',
+        alignItems: 'center',
         shadowColor: Colors.black,
         borderBottomColor: "#000000",
         borderBottomWidth: 1,
@@ -21,9 +22,10 @@ const Header = (props): JSX.Element => {
         shadowRadius: 2,
         elevation: props.noBorder ? 0 : 1,
         ...Platform.select({ android: { paddingTop: 0 }, ios: {} }),
-        ...Platform.select({ android: { height: 50 }, ios: {} }),
+        ...Platform.select({ android: {}, ios: {} }),
+        height: '7%',
       }}
-      statusBarProps={{ height: 60 }}
+      statusBarProps={{ height: '7.5%' }}
     />
   );
 };

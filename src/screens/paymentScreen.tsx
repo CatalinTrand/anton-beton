@@ -236,7 +236,7 @@ const PaymentScreen = ({route, navigation}) => {
         placement="left"
         leftComponent={
           <CustomIcons
-            size={Fonts.medium}
+            size={Fonts.regular}
             color={Colors.orange}
             name="arrow-back"
             onPress={navigation.goBack}
